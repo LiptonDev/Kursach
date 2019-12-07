@@ -16,7 +16,7 @@
                      Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             
             <PasswordBox Style="{StaticResource MaterialPasswordBox}"
-                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
             
             <Button Content="Войти"
                     Command="{Binding TryLoginCommand}"/>

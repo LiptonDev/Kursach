@@ -1,0 +1,58 @@
+﻿<UserControl 
+    x:Class="Kursach.Views.SignUpView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:uihelper="clr-namespace:Kursach.UIHelper"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:models="clr-namespace:Kursach.Models"
+    xmlns:converters="clr-namespace:Kursach.Converters"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <UserControl.Resources>
+
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+
+        <ObjectDataProvider x:Key="UserMods" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:UserMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <material:DialogHost Identifier="{Binding Identifier}">
+        <StackPanel Margin="5">
+            <TextBlock Text="Регистрация нового пользователя"
+                   Style="{StaticResource TitleBlock}"/>
+
+            <TextBox Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 material:HintAssist.Hint="Логин"/>
+
+            <PasswordBox Style="{StaticResource MaterialPasswordBox}"
+                     uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+
+            <ComboBox ItemsSource="{Binding Source={StaticResource UserMods}}"
+                  SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                  material:HintAssist.Hint="Права пользователя"
+                  material:HintAssist.IsFloating="True"
+                  Margin="5">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <UniformGrid Rows="1">
+                <Button Content="Закрыть"
+                    Style="{StaticResource CancelDialogButton}"/>
+
+                <Button Content="Регистрация"
+                    Style="{StaticResource FlatButton}"
+                    Command="{Binding SignUpCommand}"/>
+            </UniformGrid>
+        </StackPanel>
+    </material:DialogHost>
+
+</UserControl>
