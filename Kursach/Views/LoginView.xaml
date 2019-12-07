@@ -1,0 +1,26 @@
+﻿<UserControl 
+    x:Class="Kursach.Views.LoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:uihelper="clr-namespace:Kursach.UIHelper"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <material:ColorZone Style="{StaticResource CornerZone}">
+        <StackPanel Margin="15">
+            <TextBlock Text="Авторизация"
+                       Style="{StaticResource TitleBlock}"/>
+
+            <TextBox material:HintAssist.Hint="Логин"
+                     Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            
+            <PasswordBox Style="{StaticResource MaterialPasswordBox}"
+                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            
+            <Button Content="Войти"
+                    Command="{Binding TryLoginCommand}"/>
+        </StackPanel>
+    </material:ColorZone>
+
+</UserControl>
