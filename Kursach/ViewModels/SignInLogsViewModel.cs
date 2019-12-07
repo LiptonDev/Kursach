@@ -37,6 +37,8 @@ namespace Kursach.ViewModels
         {
             var res = await dataBase.GetSignInLogsAsync();
             Logs.AddRange(res.Reverse());
+
+            Logger.Log.Info("Получен список входов пользователей");
         }
     }
 }

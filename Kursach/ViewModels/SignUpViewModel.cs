@@ -64,9 +64,11 @@ namespace Kursach.ViewModels
             if (user != null)
             {
                 await this.ShowMessageBoxAsync("Такой пользователь уже есть", MaterialMessageBoxButtons.Ok);
+                Logger.Log.Info($"Ошибка регистрации нового пользователя: {{login: {User.Login}, mode: {Mode}}}");
                 return;
             }
 
+            Logger.Log.Info($"Регистрация нового пользователя: {{login: {User.Login}, mode: {Mode}}}");
             await dataBase.SignUpAsync(User.Login, User.Password, Mode);
             await this.ShowMessageBoxAsync("Пользователь успешно зарегистрирован", MaterialMessageBoxButtons.Ok);
             User.Login = "";

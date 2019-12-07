@@ -68,6 +68,7 @@ namespace Kursach.ViewModels
                 return;
 
             LeftMenuOpened = false;
+            Logger.Log.Info("Выход из приложения");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
         }
     }
