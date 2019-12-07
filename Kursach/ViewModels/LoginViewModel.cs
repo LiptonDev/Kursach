@@ -3,6 +3,7 @@ using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -28,14 +29,20 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
+        /// База данных.
+        /// </summary>
+        readonly IDataBase dataBase;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier)
+        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = dialogIdentifier;
+            this.dataBase = dataBase;
 
-            TryLoginCommand = new DelegateCommand(TryLogin);
+            TryLoginCommand = new AsyncCommand(TryLogin);
 
             User = new LoginUser();
         }
@@ -48,12 +55,27 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Попытка входа в систему.
         /// </summary>
-        private void TryLogin()
+        private async Task TryLogin()
         {
             if (!User.IsValid)
             {
-                dialogIdentifier.ShowMessageBoxAsync(User.Error, MaterialMessageBoxButtons.Ok);
+                await dialogIdentifier.ShowMessageBoxAsync(User.Error, MaterialMessageBoxButtons.Ok);
                 return;
+            }
+
+            var user = await dataBase.GetUserAsync(User.Login, User.Password, true);
+
+            if (user == null)
+            {
+                await dialogIdentifier.ShowMessageBoxAsync("Проверьте логин и пароль", MaterialMessageBoxButtons.Ok);
+                Logger.Log.Info($"Неудачная попытка входа в систему: {{login: {User.Login}}}");
+                return;
+            }
+            else
+            {
+                Logger.Log.Info($"Успешный вход в систему: {{login: {User.Login}}}");
+                await dataBase.AddSignInLogAsync(user);
+                regionManager.RequestNavigateInRootRegion(RegionViews.MainView);
             }
         }
     }
