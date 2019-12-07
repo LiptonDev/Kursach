@@ -1,4 +1,6 @@
 ﻿using DryIoc;
+using Kursach.DataBase;
+using Kursach.Dialogs;
 using Kursach.Models;
 using Kursach.ViewModels;
 using Kursach.Views;
@@ -7,6 +9,8 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Windows;
 
 namespace Kursach
@@ -18,6 +22,9 @@ namespace Kursach
     {
         protected override Window CreateShell()
         {
+#if !design
+            Container.Resolve<Context>().Users.AsNoTracking().Take(0);
+#endif
             return Container.Resolve<MainWindow>();
         }
 
@@ -27,6 +34,9 @@ namespace Kursach
 
             ViewModelLocationProvider.Register<MainWindow>(() => Container.Resolve<MainWindowViewModel>());
             ViewModelLocationProvider.Register<LoginView>(() => Container.Resolve<LoginViewModel>());
+            ViewModelLocationProvider.Register<MainView>(() => Container.Resolve<MainViewModel>());
+            ViewModelLocationProvider.Register<SignUpView>(() => Container.Resolve<SignUpViewModel>());
+            ViewModelLocationProvider.Register<SignInLogsView, SignInLogsViewModel>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -36,16 +46,32 @@ namespace Kursach
 
             //views
             containerRegistry.RegisterSingleton<LoginView>();
+            containerRegistry.RegisterSingleton<MainView>();
+            containerRegistry.RegisterSingleton<SignUpView>();
 
             //vm's
             containerRegistry.RegisterSingleton<MainWindowViewModel>();
             containerRegistry.RegisterSingleton<LoginViewModel>();
+            containerRegistry.RegisterSingleton<MainViewModel>();
+            containerRegistry.RegisterSingleton<SignUpViewModel>();
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton);
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
+            containerRegistry.RegisterForNavigation<MainView>(RegionViews.MainView);
+
+            //db
+            containerRegistry.RegisterSingleton<Context>();
+#if !design
+            containerRegistry.RegisterSingleton<IDataBase, Models.DataBase>();
+#else
+            containerRegistry.RegisterSingleton<IDataBase, Models.DesignDataBase>();
+#endif
+
+            //dialogs
+            containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();
         }
     }
 

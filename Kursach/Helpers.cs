@@ -8,5 +8,10 @@ namespace Kursach
         {
             regionManager.RequestNavigate(RegionNames.RootRegion, view);
         }
+
+        public static void RequstNavigateInMainRegion(this IRegionManager regionManager, string view)
+        {
+            regionManager.RequestNavigate(RegionNames.MainRegion, view);
+        }
     }
 }
