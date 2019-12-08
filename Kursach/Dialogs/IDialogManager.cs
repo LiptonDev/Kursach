@@ -1,4 +1,6 @@
-﻿namespace Kursach.Dialogs
+﻿using Kursach.DataBase;
+
+namespace Kursach.Dialogs
 {
     /// <summary>
     /// Менеджер диалогов.
@@ -8,16 +10,11 @@
         /// <summary>
         /// Окно логов входа.
         /// </summary>
-        void ShowLogs();
+        void ShowLogs(User user);
 
         /// <summary>
         /// Окно регистрации нового пользователя.
         /// </summary>
         void SignUp();
-
-        /// <summary>
-        /// Окно сброса пароля.
-        /// </summary>
-        void ResetPassword();
     }
 }

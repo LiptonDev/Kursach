@@ -1,4 +1,6 @@
 ﻿using DryIoc;
+using Kursach.DataBase;
+using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
 
@@ -20,28 +22,29 @@ namespace Kursach.Dialogs
         readonly IContainer container;
 
         /// <summary>
+        /// View factory.
+        /// </summary>
+        readonly IViewFactory viewFactory;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public DialogManager(IDialogIdentifier dialogIdentifier, IContainer container)
+        public DialogManager(IDialogIdentifier dialogIdentifier, IContainer container, IViewFactory viewFactory)
         {
             this.dialogIdentifier = dialogIdentifier;
             this.container = container;
-        }
-
-        /// <summary>
-        /// Окно сброса пароля.
-        /// </summary>
-        public void ResetPassword()
-        {
-            //dialogIdentifier.ShowAsync(container.Resolve<ResetPasswordView>());
+            this.viewFactory = viewFactory;
         }
 
         /// <summary>
         /// Окно логов входа.
         /// </summary>
-        public void ShowLogs()
+        public void ShowLogs(User user)
         {
-            //dialogIdentifier.ShowAsync(container.Resolve<SignInLogsView>());
+            var vm = container.Resolve<SignInLogsViewModel>(args: new[] { user });
+            var view = viewFactory.GetView(vm);
+
+            dialogIdentifier.ShowAsync(view);
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace Kursach.Dialogs
         /// </summary>
         public void SignUp()
         {
-            //dialogIdentifier.ShowAsync(container.Resolve<SignUpView>());
+            dialogIdentifier.ShowAsync(container.Resolve<SignUpView>());
         }
     }
 }
