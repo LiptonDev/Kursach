@@ -20,13 +20,18 @@
                        Margin="5"/>
         </materialDesign:ColorZone>
 
+        <Button Content="Группы"
+                Command="{Binding GroupsCommand}"/>
+
+        <Button Content="Регистрация пользователей"
+                Command="{Binding SignUpCommand}"
+                Visibility="{Binding User.Mode, Converter={StaticResource UserModeToVisibility}}"/>
+
         <Button Content="База пользователей"
-                ToolTip="Открывает базу всех пользователей системы"
                 Command="{Binding OpenUsersCommand}"
                 Visibility="{Binding User.Mode, Converter={StaticResource UserModeToVisibility}}"/>
 
         <Button Content="Выйти"
-                ToolTip="Выйти"
                 Command="{Binding ExitCommand}"/>
     </StackPanel>
 
