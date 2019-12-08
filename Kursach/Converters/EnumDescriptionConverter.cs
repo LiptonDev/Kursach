@@ -6,6 +6,7 @@ using System.Windows.Data;
 
 namespace Kursach.Converters
 {
+    [ValueConversion(typeof(Enum), typeof(string))]
     class EnumDescriptionConverter : IValueConverter
     {
         private string GetEnumDescription(Enum enumObj)
