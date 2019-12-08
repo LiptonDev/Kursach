@@ -124,16 +124,16 @@
     </ApplicationDefinition>
     <Compile Include="Converters\ActualSizeConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
+    <Compile Include="Converters\UserModeToVisibility.cs" />
     <Compile Include="Dialogs\DialogManager.cs" />
     <Compile Include="Dialogs\IDialogManager.cs" />
-    <Compile Include="Models\DesignDataBase.cs" />
-    <Compile Include="ViewModels\SignInLogsViewModel.cs" />
-    <Compile Include="ViewModels\SignUpViewModel.cs" />
-    <Compile Include="Views\SignInLogsView.xaml.cs">
-      <DependentUpon>SignInLogsView.xaml</DependentUpon>
+    <Compile Include="DataBase\DesignDataBase.cs" />
+    <Compile Include="ViewModels\UsersViewModel.cs" />
+    <Compile Include="Views\UsersView.xaml.cs">
+      <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignUpView.xaml.cs">
-      <DependentUpon>SignUpView.xaml</DependentUpon>
+    <Compile Include="Views\WelcomeView.xaml.cs">
+      <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\MainLeftMenu.xaml">
       <SubType>Designer</SubType>
@@ -185,14 +185,14 @@
     <Compile Include="DataBase\Context.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Models\DataBase.cs" />
-    <Compile Include="Models\IDataBase.cs" />
+    <Compile Include="DataBase\DataBase.cs" />
+    <Compile Include="DataBase\IDataBase.cs" />
     <Compile Include="Models\IProgramSettings.cs" />
     <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Models\ProgramSettings.cs" />
-    <Compile Include="Models\SignInLog.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserMode.cs" />
+    <Compile Include="DataBase\SignInLog.cs" />
+    <Compile Include="DataBase\User.cs" />
+    <Compile Include="DataBase\UserMode.cs" />
     <Compile Include="Regions.cs" />
     <Compile Include="UIHelper\PasswordBox.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -209,11 +209,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\SignInLogsView.xaml">
+    <Page Include="Views\UsersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignUpView.xaml">
+    <Page Include="Views\WelcomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

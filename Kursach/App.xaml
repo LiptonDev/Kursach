@@ -22,6 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
+            <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 
