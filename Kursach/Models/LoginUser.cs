@@ -1,10 +1,13 @@
-﻿using Kursach.ViewModels;
+﻿using Kursach.DataBase;
+using Kursach.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kursach.Models
 {
     class LoginUser : ValidateViewModel
     {
+        public User ToUser(UserMode mode) => new User { Login = Login, Password = Password, Mode = mode };
+
         /// <summary>
         /// User login.
         /// </summary>
