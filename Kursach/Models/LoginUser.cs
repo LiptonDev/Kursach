@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Kursach.Models
 {
+    /// <summary>
+    /// Пользователь для авторизации.
+    /// </summary>
     class LoginUser : ValidateViewModel
     {
         public User ToUser(UserMode mode) => new User { Login = Login, Password = Password, Mode = mode };
