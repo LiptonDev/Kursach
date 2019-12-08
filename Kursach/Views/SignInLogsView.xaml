@@ -1,0 +1,34 @@
+﻿<UserControl 
+    x:Class="Kursach.Views.SignInLogsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    MaxHeight="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Converter={StaticResource ActualSizeConverter}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Логи авторизации"
+                   Style="{StaticResource TitleBlock}"/>
+
+        <ListBox ItemsSource="{Binding Logs}"
+                 Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Date, StringFormat='Дата входа: {0}'}"/>
+                        <Separator/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Content="Закрыть"
+                Grid.Row="2"
+                Style="{StaticResource CancelDialogButton}"/>
+    </Grid>
+
+</UserControl>

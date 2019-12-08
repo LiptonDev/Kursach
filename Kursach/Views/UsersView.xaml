@@ -36,7 +36,7 @@
                             <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"
                                        Margin="5 5 0 0"/>
 
-                            <TextBox Text="{Binding Password}"
+                            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      material:HintAssist.Hint="Пароль"/>
 
                             <ComboBox ItemsSource="{Binding Source={StaticResource UserMods}}"
@@ -51,28 +51,19 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <Button Content="Сохранить"/>
-                            <Button Content="Удалить"/>
-                            <Button Content="Получить логи входов"/>
-                            <Separator/>
+                            <Button Content="Сохранить"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.SaveUserCommand}"
+                                    CommandParameter="{Binding}"/>
+                            <Button Content="Удалить"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteUserCommand}"
+                                    CommandParameter="{Binding}"/>
+                            <Button Content="Получить логи входов"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.ShowLogsCommand}"
+                                    CommandParameter="{Binding}"/>
                         </StackPanel>
                     </material:Card>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-
-            <ItemsControl.Template>
-                <ControlTemplate>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsPresenter />
-                    </ScrollViewer>
-                </ControlTemplate>
-            </ItemsControl.Template>
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
         </ItemsControl>
     </Grid>
 

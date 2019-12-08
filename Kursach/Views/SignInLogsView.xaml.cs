@@ -3,11 +3,11 @@
 namespace Kursach.Views
 {
     /// <summary>
-    /// Логика взаимодействия для LoginView.xaml
+    /// Логика взаимодействия для SignInLogsView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class SignInLogsView : UserControl
     {
-        public LoginView()
+        public SignInLogsView()
         {
             InitializeComponent();
         }
