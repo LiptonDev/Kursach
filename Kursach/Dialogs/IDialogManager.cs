@@ -14,5 +14,10 @@
         /// Окно регистрации нового пользователя.
         /// </summary>
         void SignUp();
+
+        /// <summary>
+        /// Окно сброса пароля.
+        /// </summary>
+        void ResetPassword();
     }
 }

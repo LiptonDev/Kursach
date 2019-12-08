@@ -29,11 +29,19 @@ namespace Kursach.Dialogs
         }
 
         /// <summary>
+        /// Окно сброса пароля.
+        /// </summary>
+        public void ResetPassword()
+        {
+            //dialogIdentifier.ShowAsync(container.Resolve<ResetPasswordView>());
+        }
+
+        /// <summary>
         /// Окно логов входа.
         /// </summary>
         public void ShowLogs()
         {
-            dialogIdentifier.ShowAsync(container.Resolve<SignInLogsView>());
+            //dialogIdentifier.ShowAsync(container.Resolve<SignInLogsView>());
         }
 
         /// <summary>
@@ -41,7 +49,7 @@ namespace Kursach.Dialogs
         /// </summary>
         public void SignUp()
         {
-            dialogIdentifier.ShowAsync(container.Resolve<SignUpView>());
+            //dialogIdentifier.ShowAsync(container.Resolve<SignUpView>());
         }
     }
 }
