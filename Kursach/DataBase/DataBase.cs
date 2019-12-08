@@ -93,34 +93,12 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> SignUpAsync(LoginUser user, UserMode mode)
         {
+            if (await GetUserAsync(user.Login, null, false) != null)
+                return false;
+
             return await query(async () =>
             {
                 context.Users.Add(user.ToUser(mode));
-                await context.SaveChangesAsync();
-
-                return true;
-            });
-        }
-
-        /// <summary>
-        /// Смена пароля на новый.
-        /// </summary>
-        /// <param name="loginUser">Пользователь.</param>
-        /// <returns></returns>
-        public async Task<bool> ChangePassword(LoginUser loginUser)
-        {
-            return await query(async () =>
-            {
-                var user = await GetUserAsync(loginUser.Login, null, false);
-
-                if (user == null)
-                    return false;
-
-                user.Password = loginUser.Password;
-
-                context.Users.Attach(user);
-                context.Entry(user).Property(x => x.Password).IsModified = true;
-
                 await context.SaveChangesAsync();
 
                 return true;
@@ -151,6 +129,36 @@ namespace Kursach.DataBase
                 await context.SaveChangesAsync();
 
                 return true;
+            });
+        }
+
+        /// <summary>
+        /// Сохранить пользователя.
+        /// </summary>
+        /// <param name="user">Пользователь.</param>
+        /// <returns></returns>
+        public async Task<bool> SaveUserAsync(User user)
+        {
+            return await query(async () =>
+            {
+                context.Users.Attach(user);
+                context.Entry(user).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Получение всех групп.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Group>> GetGroupsAsync()
+        {
+            return await query(async () =>
+            {
+                return await context.Groups.AsNoTracking().Include(x => x.Curator).ToListAsync();
             });
         }
     }

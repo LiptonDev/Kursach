@@ -8,14 +8,31 @@ namespace Kursach.DataBase
     {
         const int Delay = 100;
 
-        public async Task<bool> AddSignInLogAsync(User user)
+        public async Task<IEnumerable<Group>> GetGroupsAsync()
         {
             await Task.Delay(Delay);
 
-            return true;
+            List<Group> groups = new List<Group>();
+
+            for (int i = 0; i < 25; i++)
+            {
+                groups.Add(new Group
+                {
+                    Name = $"Группа-{i}",
+                    Curator = new Staff
+                    {
+                        FirstName = "Имя",
+                        LastName = "Фамилия",
+                        MiddleName = "Отчество",
+                        Position = "Шестерка"
+                    }
+                });
+            }
+
+            return groups;
         }
 
-        public async Task<bool> ChangePassword(LoginUser user)
+        public async Task<bool> AddSignInLogAsync(User user)
         {
             await Task.Delay(Delay);
 
@@ -53,6 +70,12 @@ namespace Kursach.DataBase
         }
 
         public async Task<bool> RemoveUserAsync(User user)
+        {
+            await Task.Delay(Delay);
+            return true;
+        }
+
+        public async Task<bool> SaveUserAsync(User user)
         {
             await Task.Delay(Delay);
             return true;

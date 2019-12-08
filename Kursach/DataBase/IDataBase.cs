@@ -41,13 +41,6 @@ namespace Kursach.DataBase
         Task<bool> SignUpAsync(LoginUser user, UserMode mode);
 
         /// <summary>
-        /// Смена пароля на новый.
-        /// </summary>
-        /// <param name="user">Пользователь.</param>
-        /// <returns></returns>
-        Task<bool> ChangePassword(LoginUser user);
-
-        /// <summary>
         /// Получение списка всех пользователей.
         /// </summary>
         /// <returns></returns>
@@ -59,5 +52,18 @@ namespace Kursach.DataBase
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
         Task<bool> RemoveUserAsync(User user);
+
+        /// <summary>
+        /// Сохранить пользователя.
+        /// </summary>
+        /// <param name="user">Пользователь.</param>
+        /// <returns></returns>
+        Task<bool> SaveUserAsync(User user);
+
+        /// <summary>
+        /// Получение всех групп.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Group>> GetGroupsAsync();
     }
 }

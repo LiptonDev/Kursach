@@ -1,5 +1,4 @@
-﻿using DevExpress.Mvvm;
-using Kursach.ViewModels;
+﻿using Kursach.ViewModels;
 using PropertyChanged;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -36,5 +35,10 @@ namespace Kursach.DataBase
         /// Права пользователя.
         /// </summary>
         public UserMode Mode { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is User user) && user.Id == Id;
+        }
     }
 }
