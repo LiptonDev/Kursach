@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using Kursach.DataBase;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -9,6 +10,11 @@ namespace Kursach.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Текущий пользователь.
+        /// </summary>
+        public User User { get; }
+
         /// <summary>
         /// Статус меню.
         /// </summary>
@@ -32,26 +38,21 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDialogManager dialogManager)
+        public MainViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDialogManager dialogManager, User me)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = dialogIdentifier;
             this.dialogManager = dialogManager;
+            User = me;
 
+            OpenUsersCommand = new DelegateCommand(OpenUsers);
             ExitCommand = new DelegateCommand(Exit);
-            GetLogsCommand = new DelegateCommand(dialogManager.ShowLogs);
-            SignUpCommand = new DelegateCommand(dialogManager.SignUp);
         }
 
         /// <summary>
-        /// Команда открытия окна регистрации нового пользователя.
+        /// Команда открытия базы данных пользователей.
         /// </summary>
-        public ICommand SignUpCommand { get; }
-
-        /// <summary>
-        /// Команда открытия окна получения логов.
-        /// </summary>
-        public ICommand GetLogsCommand { get; }
+        public ICommand OpenUsersCommand { get; }
 
         /// <summary>
         /// Команда выхода.
@@ -70,6 +71,15 @@ namespace Kursach.ViewModels
             LeftMenuOpened = false;
             Logger.Log.Info("Выход из приложения");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
+        }
+
+        /// <summary>
+        /// Открыть базу пользователей.
+        /// </summary>
+        private void OpenUsers()
+        {
+            regionManager.RequstNavigateInMainRegion(RegionViews.UsersView);
+            LeftMenuOpened = false;
         }
     }
 }

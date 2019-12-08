@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using Kursach.DataBase;
 using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -34,13 +35,19 @@ namespace Kursach.ViewModels
         readonly IDataBase dataBase;
 
         /// <summary>
+        /// Текущий пользователь.
+        /// </summary>
+        User me;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase, User me)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = dialogIdentifier;
             this.dataBase = dataBase;
+            this.me = me;
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
@@ -67,15 +74,20 @@ namespace Kursach.ViewModels
 
             if (user == null)
             {
-                await dialogIdentifier.ShowMessageBoxAsync("Проверьте логин и пароль", MaterialMessageBoxButtons.Ok);
+                await dialogIdentifier.ShowMessageBoxAsync("Неверный логин или пароль", MaterialMessageBoxButtons.Ok);
                 Logger.Log.Info($"Неудачная попытка входа в систему: {{login: {User.Login}}}");
                 return;
             }
             else
             {
+                me.Id = user.Id;
+                me.Login = user.Login;
+                me.Mode = user.Mode;
+                me.Password = user.Password;
                 Logger.Log.Info($"Успешный вход в систему: {{login: {User.Login}}}");
                 await dataBase.AddSignInLogAsync(user);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView);
+                regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
             }
         }
     }
