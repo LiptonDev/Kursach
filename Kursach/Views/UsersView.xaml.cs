@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Kursach.Views
 {
     /// <summary>
-    /// Логика взаимодействия для SignUpView.xaml
+    /// Логика взаимодействия для UsersView.xaml
     /// </summary>
-    public partial class SignUpView : UserControl
+    public partial class UsersView : UserControl
     {
-        public SignUpView()
+        public UsersView()
         {
             InitializeComponent();
         }
