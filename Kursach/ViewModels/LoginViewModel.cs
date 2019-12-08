@@ -35,19 +35,13 @@ namespace Kursach.ViewModels
         readonly IDataBase dataBase;
 
         /// <summary>
-        /// Текущий пользователь.
-        /// </summary>
-        User me;
-
-        /// <summary>
         /// Ctor.
         /// </summary>
-        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase, User me)
+        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = dialogIdentifier;
             this.dataBase = dataBase;
-            this.me = me;
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
@@ -80,13 +74,13 @@ namespace Kursach.ViewModels
             }
             else
             {
-                me.Id = user.Id;
-                me.Login = user.Login;
-                me.Mode = user.Mode;
-                me.Password = user.Password;
                 Logger.Log.Info($"Успешный вход в систему: {{login: {User.Login}}}");
                 await dataBase.AddSignInLogAsync(user);
-                regionManager.RequestNavigateInRootRegion(RegionViews.MainView);
+
+                NavigationParameters parameters = new NavigationParameters();
+                parameters.Add("user", user);
+                parameters.Add("fromLogin", true);
+                regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
                 regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
             }
         }
