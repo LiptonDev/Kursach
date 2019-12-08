@@ -9,6 +9,7 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 
@@ -34,14 +35,13 @@ namespace Kursach
             ViewModelLocationProvider.Register<MainWindow>(() => Container.Resolve<MainWindowViewModel>());
             ViewModelLocationProvider.Register<LoginView>(() => Container.Resolve<LoginViewModel>());
             ViewModelLocationProvider.Register<MainView>(() => Container.Resolve<MainViewModel>());
+            ViewModelLocationProvider.Register<SignUpView>(() => Container.Resolve<SignUpViewModel>());
+            ViewModelLocationProvider.Register<GroupsView>(() => Container.Resolve<GroupsViewModel>());
             ViewModelLocationProvider.Register<UsersView, UsersViewModel>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //user
-            containerRegistry.RegisterSingleton<User>();
-
             //settings
             containerRegistry.RegisterDelegate<IProgramSettings>(x => ProgramSettings.Load(), Reuse.Singleton);
 
@@ -50,20 +50,27 @@ namespace Kursach
             containerRegistry.RegisterSingleton<MainView>();
             containerRegistry.RegisterSingleton<WelcomeView>();
             containerRegistry.RegisterSingleton<UsersView>();
+            containerRegistry.RegisterSingleton<SignUpView>();
+            containerRegistry.RegisterSingleton<GroupsView>();
 
             //vm's
             containerRegistry.RegisterSingleton<MainWindowViewModel>();
             containerRegistry.RegisterSingleton<LoginViewModel>();
             containerRegistry.RegisterSingleton<MainViewModel>();
+            containerRegistry.RegisterSingleton<SignUpViewModel>();
+            containerRegistry.RegisterSingleton<GroupsViewModel>();
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton);
+            containerRegistry.RegisterSingleton<IViewFactory, ViewFactory>();
+            containerRegistry.Register<FrameworkElement, SignInLogsView>("SignInLogsView");
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
             containerRegistry.RegisterForNavigation<MainView>(RegionViews.MainView);
             containerRegistry.RegisterForNavigation<WelcomeView>(RegionViews.WelcomeView);
             containerRegistry.RegisterForNavigation<UsersView>(RegionViews.UsersView);
+            containerRegistry.RegisterForNavigation<GroupsView>(RegionViews.GroupsView);
 
             //db
             containerRegistry.RegisterSingleton<Context>();

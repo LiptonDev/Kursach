@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBlock.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/PasswordBox.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/ItemsControl.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>

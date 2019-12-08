@@ -12,5 +12,6 @@
         public const string MainView = nameof(Views.MainView);
         public const string WelcomeView = nameof(Views.WelcomeView);
         public const string UsersView = nameof(Views.UsersView);
+        public const string GroupsView = nameof(Views.GroupsView);
     }
 }
