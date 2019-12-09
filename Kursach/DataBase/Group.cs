@@ -50,7 +50,7 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public object Clone()
         {
-            return new Group { Id = Id, Curator = Curator, CuratorId = CuratorId, Name = Name, Students = Students };
+            return MemberwiseClone();
         }
 
         public override bool Equals(object obj)

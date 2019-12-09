@@ -248,5 +248,55 @@ namespace Kursach.DataBase
                 return true;
             });
         }
+
+        /// <summary>
+        /// Удалить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        public async Task<bool> RemoveStaffAsync(Staff staff)
+        {
+            return await query(async () =>
+            {
+                context.Entry(staff).State = EntityState.Deleted;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Сохранить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        public async Task<bool> SaveStaffAsync(Staff staff)
+        {
+            return await query(async () =>
+            {
+                context.Entry(staff).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Добавить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        public async Task<bool> AddStaffAsync(Staff staff)
+        {
+            return await query(async () =>
+            {
+                context.Staff.Add(staff);
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
     }
 }

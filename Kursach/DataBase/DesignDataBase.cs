@@ -9,6 +9,41 @@ namespace Kursach.DataBase
     {
         const int Delay = 100;
 
+        public async Task<bool> SaveStaffAsync(Staff staff)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
+
+        public async Task<bool> AddStaffAsync(Staff staff)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
+
+        public async Task<bool> RemoveStaffAsync(Staff staff)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
+
+        public async Task<bool> SaveGroupAsync(Group group)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
+
+        public async Task<bool> AddGroupAsync(Group group)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
+
         public async Task<IEnumerable<Staff>> GetStaffsAsync()
         {
             await Task.Delay(Delay);

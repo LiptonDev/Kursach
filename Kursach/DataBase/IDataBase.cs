@@ -93,5 +93,26 @@ namespace Kursach.DataBase
         /// <returns></returns>
         Task<bool> AddGroupAsync(Group group);
 
+        /// <summary>
+        /// Удалить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        Task<bool> RemoveStaffAsync(Staff staff);
+
+        /// <summary>
+        /// Сохранить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        Task<bool> SaveStaffAsync(Staff staff);
+
+        /// <summary>
+        /// Добавить сотрудника.
+        /// </summary>
+        /// <param name="staff">Сотрудник.</param>
+        /// <returns></returns>
+        Task<bool> AddStaffAsync(Staff staff);
+
     }
 }
