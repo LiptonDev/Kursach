@@ -32,7 +32,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
-                        <StackPanel>
+                        <StackPanel Margin="5">
                             <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"
                                        Margin="5 5 0 0"/>
 
