@@ -9,6 +9,14 @@ namespace Kursach.Models
     /// </summary>
     class LoginUser : ValidateViewModel
     {
+        public LoginUser()
+        {
+#if design
+            Login = "1234";
+            Password = "1234";
+#endif
+        }
+
         public User ToUser(UserMode mode) => new User { Login = Login, Password = Password, Mode = mode };
 
         /// <summary>
