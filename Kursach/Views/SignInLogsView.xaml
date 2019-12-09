@@ -19,7 +19,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding Date, StringFormat='Дата входа: {0}'}"/>
+                        <TextBlock Text="{Binding Date, StringFormat='Дата входа: {0}'}"
+                                   Style="{StaticResource MarginBlock}"/>
                         <Separator/>
                     </StackPanel>
                 </DataTemplate>

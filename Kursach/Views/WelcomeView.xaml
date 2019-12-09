@@ -1,11 +1,24 @@
 ﻿<UserControl 
     x:Class="Kursach.Views.WelcomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:welcomeslides="clr-namespace:Kursach.Views.WelcomeSlides"
+    prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <TextBlock Text="Добро пожаловать!"
-               Style="{StaticResource TitleBlock}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+    <materialDesign:Transitioner SelectedIndex="{Binding SlideNumber}" 
+                                 AutoApplyTransitionOrigins="True">
+        <materialDesign:Transitioner.InputBindings>
+            <KeyBinding Key="Left" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
+            <KeyBinding Key="Right" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
+        </materialDesign:Transitioner.InputBindings>
+
+        <welcomeslides:Slide1/>
+        <welcomeslides:Slide2/>
+        <welcomeslides:Slide3/>
+        <welcomeslides:Slide4/>
+        <welcomeslides:Slide5/>
+    </materialDesign:Transitioner>
 
 </UserControl>

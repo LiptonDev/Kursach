@@ -18,53 +18,43 @@
         <Style TargetType="Button" BasedOn="{StaticResource FlatButton}"/>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Text="Список всех пользователей"
-                   Style="{StaticResource TitleBlock}"/>
-
-        <ItemsControl ItemsSource="{Binding Users}"
+    <ItemsControl ItemsSource="{Binding Users}"
                       Grid.Row="1">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <material:Card Margin="5">
-                        <StackPanel Margin="5">
-                            <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"
-                                       Margin="5 5 0 0"/>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <material:Card Margin="5">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"
+                                   Style="{StaticResource MarginBlock}"/>
 
-                            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                     material:HintAssist.Hint="Пароль"/>
+                        <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                 material:HintAssist.Hint="Пароль"/>
 
-                            <ComboBox ItemsSource="{Binding Source={StaticResource UserMods}}"
-                                      SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
-                                      material:HintAssist.Hint="Права пользователя"
-                                      material:HintAssist.IsFloating="True"
-                                      Margin="5">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource UserMods}}"
+                                  SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                                  material:HintAssist.Hint="Права пользователя"
+                                  material:HintAssist.IsFloating="True"
+                                  Margin="5">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                            <Button Content="Сохранить"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.SaveUserCommand}"
-                                    CommandParameter="{Binding}"/>
-                            <Button Content="Удалить"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteUserCommand}"
-                                    CommandParameter="{Binding}"/>
-                            <Button Content="Получить логи входов"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.ShowLogsCommand}"
-                                    CommandParameter="{Binding}"/>
-                        </StackPanel>
-                    </material:Card>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+                        <Button Content="Сохранить"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.SaveUserCommand}"
+                                CommandParameter="{Binding}"/>
+                        <Button Content="Удалить"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteUserCommand}"
+                                CommandParameter="{Binding}"/>
+                        <Button Content="Получить логи входов"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.ShowLogsCommand}"
+                                CommandParameter="{Binding}"/>
+                    </StackPanel>
+                </material:Card>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 
 </UserControl>
