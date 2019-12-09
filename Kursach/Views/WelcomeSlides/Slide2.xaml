@@ -1,0 +1,27 @@
+﻿<UserControl 
+    x:Class="Kursach.Views.WelcomeSlides.Slide2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Style="{StaticResource CenterStack}">
+
+        <TextBlock Text="Вы можете просматривать все группы колледжа"
+                   TextWrapping="Wrap"
+                   Style="{StaticResource TitleBlock}"/>
+
+        <TextBlock Text="Вы можете добавлять и удалять группы колледжа"
+                   Style="{StaticResource SliderBlock}"/>
+
+        <UniformGrid Rows="1">
+            <Button Style="{StaticResource PreviousSliderButton}"/>
+
+            <Button Content="Открыть группы"
+                    Command="{Binding GroupsCommand}"
+                    Style="{StaticResource FlatButton}"/>
+            
+            <Button Style="{StaticResource NextSliderButton}"/>
+        </UniformGrid>
+
+    </StackPanel>
+
+</UserControl>
