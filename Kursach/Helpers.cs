@@ -1,4 +1,6 @@
-﻿using Prism.Regions;
+﻿using DryIoc;
+using MaterialDesignXaml.DialogsHelper;
+using Prism.Regions;
 
 namespace Kursach
 {
@@ -12,6 +14,11 @@ namespace Kursach
         public static void RequstNavigateInMainRegion(this IRegionManager regionManager, string view, NavigationParameters parameters = null)
         {
             regionManager.RequestNavigate(RegionNames.MainRegion, view, parameters);
+        }
+
+        public static IDialogIdentifier ResolveRootDialogIdentifier(this IContainer container)
+        {
+            return container.Resolve<IDialogIdentifier>("rootdialog");
         }
     }
 }

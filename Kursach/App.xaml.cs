@@ -61,9 +61,11 @@ namespace Kursach
             containerRegistry.RegisterSingleton<GroupsViewModel>();
 
             //dialogs
-            containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton);
+            containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton, "rootdialog");
             containerRegistry.RegisterSingleton<IViewFactory, ViewFactory>();
-            containerRegistry.Register<FrameworkElement, SignInLogsView>("SignInLogsView");
+            containerRegistry.Register<FrameworkElement, SignInLogsView>(nameof(SignInLogsView));
+            containerRegistry.Register<FrameworkElement, GroupEditorView>(nameof(GroupEditorView));
+            containerRegistry.Register<FrameworkElement, SelectStaffView>(nameof(SelectStaffView));
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
