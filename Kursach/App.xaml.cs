@@ -32,11 +32,11 @@ namespace Kursach
         {
             base.ConfigureViewModelLocator();
 
-            ViewModelLocationProvider.Register<MainWindow>(() => Container.Resolve<MainWindowViewModel>());
-            ViewModelLocationProvider.Register<LoginView>(() => Container.Resolve<LoginViewModel>());
-            ViewModelLocationProvider.Register<MainView>(() => Container.Resolve<MainViewModel>());
-            ViewModelLocationProvider.Register<SignUpView>(() => Container.Resolve<SignUpViewModel>());
-            ViewModelLocationProvider.Register<GroupsView>(() => Container.Resolve<GroupsViewModel>());
+            ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
+            ViewModelLocationProvider.Register<LoginView, LoginViewModel>();
+            ViewModelLocationProvider.Register<MainView, MainViewModel>();
+            ViewModelLocationProvider.Register<SignUpView, SignUpViewModel>();
+            ViewModelLocationProvider.Register<GroupsView, GroupsViewModel>();
             ViewModelLocationProvider.Register<UsersView, UsersViewModel>();
         }
 
@@ -59,6 +59,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<MainViewModel>();
             containerRegistry.RegisterSingleton<SignUpViewModel>();
             containerRegistry.RegisterSingleton<GroupsViewModel>();
+            containerRegistry.RegisterSingleton<UsersViewModel>();
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton, "rootdialog");
