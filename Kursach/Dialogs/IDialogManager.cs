@@ -31,5 +31,11 @@ namespace Kursach.Dialogs
         /// </summary>
         /// <returns></returns>
         Task<Staff> SelectStaff(int currentId, IDialogIdentifier dialogIdentifier);
+
+        /// <summary>
+        /// Окно редактирования сотрудника.
+        /// </summary>
+        /// <returns></returns>
+        Task<Staff> StaffEditor(Staff staff, bool isEditMode);
     }
 }

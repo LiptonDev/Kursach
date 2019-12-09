@@ -1,6 +1,5 @@
 ﻿using DryIoc;
 using Kursach.DataBase;
-using Kursach.Models;
 using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
@@ -38,18 +37,34 @@ namespace Kursach.Dialogs
             this.viewFactory = viewFactory;
         }
 
+        async Task<T> show<T, VM>(object[] args = null, IDialogIdentifier dialogIdentifier = null)
+        {
+            var vm = container.Resolve<VM>(args: args);
+            var view = viewFactory.GetView(vm);
+
+            dialogIdentifier = dialogIdentifier ?? this.dialogIdentifier;
+
+            var res = await dialogIdentifier.ShowAsync<T>(view);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Окно редактирования сотрудника.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Staff> StaffEditor(Staff staff, bool isEditMode)
+        {
+            return await show<Staff, StaffEditorViewModel>(new object[] { staff, isEditMode });
+        }
+
         /// <summary>
         /// Окно выбора куратора.
         /// </summary>
         /// <returns></returns>
         public async Task<Staff> SelectStaff(int currentId, IDialogIdentifier dialogIdentifier)
         {
-            var vm = container.Resolve<SelectStaffViewModel>(args: new object[] { currentId, dialogIdentifier });
-            var view = viewFactory.GetView(vm);
-
-            var res = await dialogIdentifier.ShowAsync<Staff>(view);
-
-            return res;
+            return await show<Staff, SelectStaffViewModel>(new object[] { currentId, dialogIdentifier }, dialogIdentifier);
         }
 
         /// <summary>
@@ -58,23 +73,15 @@ namespace Kursach.Dialogs
         /// <returns></returns>
         public async Task<Group> GroupEditor(Group group, bool isEditMode)
         {
-            var vm = container.Resolve<GroupEditorViewModel>(args: new object[] { group, isEditMode });
-            var view = viewFactory.GetView(vm);
-
-            var res = await dialogIdentifier.ShowAsync<Group>(view);
-
-            return res;
+            return await show<Group, GroupEditorViewModel>(new object[] { group, isEditMode });
         }
 
         /// <summary>
         /// Окно логов входа.
         /// </summary>
-        public void ShowLogs(User user)
+        public async void ShowLogs(User user)
         {
-            var vm = container.Resolve<SignInLogsViewModel>(args: new[] { user });
-            var view = viewFactory.GetView(vm);
-
-            dialogIdentifier.ShowAsync(view);
+            await show<string, SignInLogsViewModel>(new object[] { user });
         }
 
         /// <summary>
