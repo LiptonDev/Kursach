@@ -108,7 +108,7 @@ namespace Kursach.ViewModels
             var res = await dataBase.SaveGroupAsync(group);
             var msg = res ? "Группа сохранена" : "Группа не сохранена";
 
-            Logger.Log.Info($"{msg}: {{oldName: {group.Name}, newName: {editor.Name}, oldCurator: {group.CuratorId}, newCurator: {editor.CuratorId}}}");
+            Logger.Log.Info($"{msg}: {{name: {group.Name}, Curator: {group.CuratorId}}}");
 
             await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
