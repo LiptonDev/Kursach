@@ -24,12 +24,12 @@ namespace Kursach.Dialogs
         /// Окно редактирования группы.
         /// </summary>
         /// <returns></returns>
-        Task<Group> GroupEditor(Group group);
+        Task<Group> GroupEditor(Group group, bool isEditMode);
 
         /// <summary>
         /// Окно выбора куратора.
         /// </summary>
         /// <returns></returns>
-        Task<Staff> SelectStaff(Staff currentStaff, IDialogIdentifier dialogIdentifier);
+        Task<Staff> SelectStaff(int currentId, IDialogIdentifier dialogIdentifier);
     }
 }
