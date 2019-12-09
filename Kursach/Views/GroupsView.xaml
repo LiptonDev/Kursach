@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <converters:UserModeToVisibility x:Key="UserModeToVisibility"
                                          NeedMode="ReadWrite"/>
-        
+
         <Style TargetType="Button" BasedOn="{StaticResource FlatButton}"/>
     </UserControl.Resources>
 
@@ -20,8 +20,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Группы колледжа"
-                   Style="{StaticResource TitleBlock}"/>
+        <Button Content="Добавить группу"
+                Command="{Binding AddGroupCommand}"
+                Style="{StaticResource FlatButton}"
+                Visibility="{Binding User.Mode, Converter={StaticResource UserModeToVisibility}}"/>
 
         <ItemsControl ItemsSource="{Binding Groups}"
                       Grid.Row="1">
@@ -34,7 +36,7 @@
                                     <Setter Property="Margin" Value="5"/>
                                 </Style>
                             </StackPanel.Resources>
-                            
+
                             <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
 
                             <TextBlock Text="{Binding Curator, StringFormat='Куратор: {0}'}"/>

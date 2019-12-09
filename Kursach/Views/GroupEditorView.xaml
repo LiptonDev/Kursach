@@ -2,15 +2,18 @@
     x:Class="Kursach.Views.GroupEditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
 
-    <materialDesign:DialogHost Identifier="{Binding Identifier}">
-        <StackPanel>
+    <material:DialogHost Identifier="{Binding Identifier}">
+        <StackPanel Margin="5">
+            <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
+
             <TextBox Text="{Binding Group.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                     materialDesign:HintAssist.Hint="Название группы"/>
+                     material:HintAssist.Hint="Название группы"/>
 
             <TextBox Text="{Binding Group.CuratorId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                     materialDesign:HintAssist.Hint="ИД куратора"
+                     material:HintAssist.Hint="ИД куратора"
+                     IsReadOnly="True"
                      ToolTip="Нажмите дважды, чтобы открыть окно выбора куратора">
                 <TextBox.InputBindings>
                     <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenStaffSelectorCommand}"/>
@@ -21,11 +24,10 @@
                 <Button Content="Закрыть"
                         Style="{StaticResource CancelDialogButton}"/>
 
-                <Button Content="Сохранить"
-                        Style="{StaticResource FlatButton}"
-                        Command="{Binding CloseDialogCommand}"/>
+                <Button Command="{Binding CloseDialogCommand}"
+                        Style="{StaticResource IsEditModeButton}"/>
             </UniformGrid>
         </StackPanel>
-    </materialDesign:DialogHost>
+    </material:DialogHost>
 
 </UserControl>
