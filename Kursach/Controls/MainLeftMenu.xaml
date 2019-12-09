@@ -21,6 +21,12 @@
                        Margin="5"/>
         </materialDesign:ColorZone>
 
+        <Button Content="Домашняя"
+                Command="{Binding HomeCommand}"/>
+
+        <Button Content="Сотрудники"
+                Command="{Binding StaffCommand}"/>
+
         <Button Content="Группы"
                 Command="{Binding GroupsCommand}"/>
 
