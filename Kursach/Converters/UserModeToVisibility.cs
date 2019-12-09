@@ -9,11 +9,16 @@ namespace Kursach.Converters
     [ValueConversion(typeof(UserMode), typeof(Visibility))]
     class UserModeToVisibility : IValueConverter
     {
+        public UserMode NeedMode { get; set; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             UserMode mode = (UserMode)value;
 
-            return mode == UserMode.Admin ? Visibility.Visible : Visibility.Collapsed;
+            if (mode == UserMode.Admin)
+                return Visibility.Visible;
+
+            return mode == NeedMode ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
