@@ -12,6 +12,11 @@ namespace Kursach.ViewModels
     class MainViewModel : NavigationViewModel
     {
         /// <summary>
+        /// Номер слайда на странице приветствия.
+        /// </summary>
+        public int SlideNumber { get; set; }
+
+        /// <summary>
         /// Текущий пользователь.
         /// </summary>
         public User User { get; private set; }
@@ -43,7 +48,19 @@ namespace Kursach.ViewModels
             OpenUsersCommand = new DelegateCommand(OpenUsers);
             ExitCommand = new DelegateCommand(Exit);
             GroupsCommand = new DelegateCommand(Groups);
+            StaffCommand = new DelegateCommand(GoToStaff);
+            HomeCommand = new DelegateCommand(Home);
         }
+
+        /// <summary>
+        /// Команда перехода на стартовую страницу.
+        /// </summary>
+        public ICommand HomeCommand { get; }
+
+        /// <summary>
+        /// Команда перехода на страницу сотрудников.
+        /// </summary>
+        public ICommand StaffCommand { get; }
 
         /// <summary>
         /// Команда перехода на страницу групп.
@@ -75,6 +92,7 @@ namespace Kursach.ViewModels
                 return;
 
             LeftMenuOpened = false;
+            SlideNumber = 0;
             Logger.Log.Info("Выход из приложения");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
         }
@@ -96,6 +114,26 @@ namespace Kursach.ViewModels
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("user", User);
             regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView, parameters);
+            LeftMenuOpened = false;
+        }
+
+        /// <summary>
+        /// Переход на страницу сотрудников.
+        /// </summary>
+        private void GoToStaff()
+        {
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("user", User);
+            regionManager.RequstNavigateInMainRegion(RegionViews.StaffView, parameters);
+            LeftMenuOpened = false;
+        }
+
+        /// <summary>
+        /// Переход на стартовую страницу.
+        /// </summary>
+        private void Home()
+        {
+            regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
             LeftMenuOpened = false;
         }
 
