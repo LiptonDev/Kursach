@@ -23,6 +23,16 @@
         <Setter Property="Content" Value="Отмена"/>
     </Style>
 
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="NextSliderButton">
+        <Setter Property="Command" Value="{x:Static material:Transitioner.MoveNextCommand}"/>
+        <Setter Property="Content" Value="Дальше"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="PreviousSliderButton">
+        <Setter Property="Command" Value="{x:Static material:Transitioner.MovePreviousCommand}"/>
+        <Setter Property="Content" Value="Назад"/>
+    </Style>
+
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="IsEditModeButton">
         <Setter Property="Content" Value="Добавить"/>
 
