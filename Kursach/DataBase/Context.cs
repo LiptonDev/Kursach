@@ -14,6 +14,17 @@ namespace Kursach.DataBase
         {
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //Students => Group
+            modelBuilder.Entity<Student>().HasRequired(x => x.Group).WithMany(x => x.Students).HasForeignKey(x => x.GroupId).WillCascadeOnDelete(true);
+
+            //Group => Curator
+            modelBuilder.Entity<Group>().HasRequired(x => x.Curator).WithMany(x => x.Groups).HasForeignKey(x => x.CuratorId).WillCascadeOnDelete(true);
+        }
+
         /// <summary>
         /// Пользователи.
         /// </summary>
