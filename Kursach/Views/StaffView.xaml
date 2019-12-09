@@ -1,0 +1,58 @@
+﻿<UserControl 
+    x:Class="Kursach.Views.StaffView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:converters="clr-namespace:Kursach.Converters"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <UserControl.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource FlatButton}"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Button Content="Добавить сотрудника"
+                Command="{Binding AddStaffCommand}"
+                Style="{StaticResource FlatButton}"
+                Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+
+        <ItemsControl ItemsSource="{Binding Staff}"
+                      Grid.Row="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <material:Card Margin="5">
+                        <StackPanel Margin="5">
+                            <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"
+                                       Style="{StaticResource MarginBlock}"/>
+
+                            <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"
+                                       Style="{StaticResource MarginBlock}"/>
+
+                            <TextBlock Text="{Binding MiddleName, StringFormat='Отчество: {0}'}"
+                                       Style="{StaticResource MarginBlock}"/>
+
+                            <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"
+                                       Style="{StaticResource MarginBlock}"/>
+
+                            <Button Content="Редактировать"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.EditStaffCommand}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                            <Button Content="Удалить"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteStaffCommand}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                        </StackPanel>
+                    </material:Card>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+
+</UserControl>
