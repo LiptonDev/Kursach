@@ -23,6 +23,16 @@
         <Setter Property="Content" Value="Отмена"/>
     </Style>
 
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="IsEditModeButton">
+        <Setter Property="Content" Value="Добавить"/>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                <Setter Property="Content" Value="Сохранить"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="materialHelper:DialogButton" BasedOn="{StaticResource FlatButton}"/>
 
 </ResourceDictionary>
