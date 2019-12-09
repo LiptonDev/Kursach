@@ -6,8 +6,9 @@
     xmlns:converters="clr-namespace:Kursach.Converters">
 
     <UserControl.Resources>
-        <converters:UserModeToVisibility x:Key="UserModeToVisibility"/>
-
+        <converters:UserModeToVisibility x:Key="UserModeToVisibility"
+                                         NeedMode="Admin"/>
+        
         <Style TargetType="Button" BasedOn="{StaticResource FlatButton}">
             <Setter Property="Margin" Value="0"/>
         </Style>
