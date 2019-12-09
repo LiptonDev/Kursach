@@ -7,4 +7,14 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
     </Style>
 
+    <Style TargetType="TextBlock" BasedOn="{StaticResource TitleBlock}" x:Key="IsEditModeTextBlock">
+        <Setter Property="Text" Value="Добавление"/>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                <Setter Property="Text" Value="Редактирование"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>
