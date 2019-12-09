@@ -149,8 +149,10 @@
     <Compile Include="Dialogs\DialogNameAttribute.cs" />
     <Compile Include="Dialogs\IDialogManager.cs" />
     <Compile Include="DataBase\DesignDataBase.cs" />
+    <Compile Include="Models\IEditMode.cs" />
     <Compile Include="ViewModels\GroupEditorViewModel.cs" />
     <Compile Include="ViewModels\GroupsViewModel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\SelectStaffViewModel.cs" />
     <Compile Include="ViewModels\SignInLogsViewModel.cs" />
     <Compile Include="ViewModels\SignUpViewModel.cs" />
