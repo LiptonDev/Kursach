@@ -42,9 +42,9 @@ namespace Kursach.Dialogs
         /// Окно выбора куратора.
         /// </summary>
         /// <returns></returns>
-        public async Task<Staff> SelectStaff(Staff currentStaff, IDialogIdentifier dialogIdentifier)
+        public async Task<Staff> SelectStaff(int currentId, IDialogIdentifier dialogIdentifier)
         {
-            var vm = container.Resolve<SelectStaffViewModel>(args: new object[] { currentStaff, dialogIdentifier });
+            var vm = container.Resolve<SelectStaffViewModel>(args: new object[] { currentId, dialogIdentifier });
             var view = viewFactory.GetView(vm);
 
             var res = await dialogIdentifier.ShowAsync<Staff>(view);
@@ -56,9 +56,9 @@ namespace Kursach.Dialogs
         /// Окно редактирования группы.
         /// </summary>
         /// <returns></returns>
-        public async Task<Group> GroupEditor(Group group)
+        public async Task<Group> GroupEditor(Group group, bool isEditMode)
         {
-            var vm = container.Resolve<GroupEditorViewModel>(args: new[] { group });
+            var vm = container.Resolve<GroupEditorViewModel>(args: new object[] { group, isEditMode });
             var view = viewFactory.GetView(vm);
 
             var res = await dialogIdentifier.ShowAsync<Group>(view);
