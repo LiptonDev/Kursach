@@ -86,5 +86,12 @@ namespace Kursach.DataBase
         /// <returns></returns>
         Task<bool> SaveGroupAsync(Group group);
 
+        /// <summary>
+        /// Добавить группу.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        Task<bool> AddGroupAsync(Group group);
+
     }
 }

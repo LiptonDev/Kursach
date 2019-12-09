@@ -5,6 +5,7 @@ using System.Linq;
 using Kursach.Models;
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Kursach.DataBase
 {
@@ -38,9 +39,22 @@ namespace Kursach.DataBase
             }
             catch (Exception ex)
             {
-                Logger.Log.Error($"Ошибка запроса к базе: {{ex: {ex.Message}, member: {name}}}");
+                StringBuilder sb = new StringBuilder();
+                InnerEx(ex, sb);
+                Logger.Log.Error($"Ошибка запроса к базе: {{ex: {sb.ToString()}, member: {name}}}");
                 return default;
             }
+        }
+
+        private void InnerEx(Exception ex, StringBuilder sb)
+        {
+            if (ex == null)
+                return;
+
+            sb.Append(ex.Message);
+
+            if (ex.InnerException != null)
+                InnerEx(ex.InnerException, sb);
         }
 
         /// <summary>
@@ -198,6 +212,37 @@ namespace Kursach.DataBase
             {
                 context.Entry(group).State = EntityState.Modified;
 
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Проверка наличия группы с таким именем.
+        /// </summary>
+        /// <returns></returns>
+        async Task<Group> checkGroupName(Group group)
+        {
+            return await query(async () =>
+            {
+                return await context.Groups.FirstOrDefaultAsync(x => x.Name == group.Name);
+            });
+        }
+
+        /// <summary>
+        /// Добавить группу.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        public async Task<bool> AddGroupAsync(Group group)
+        {
+            if (await checkGroupName(group) != null)
+                return false;
+
+            return await query(async () =>
+            {
+                context.Groups.Add(group);
                 await context.SaveChangesAsync();
 
                 return true;

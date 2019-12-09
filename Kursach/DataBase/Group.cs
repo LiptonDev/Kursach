@@ -23,9 +23,8 @@ namespace Kursach.DataBase
         /// Название группы.
         /// </summary>
         [Display(Name = "Название группы")]
-        [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "{0} не должна быть больше {1} и не меньше {2} символов")]
-        [RegularExpression("^[а-яА-Я]{2,2}-[0-9]{2,2}$", ErrorMessage = "{0} должно быть записано в виде 'ИТ-41'")]
+        [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
+        [RegularExpression("^[а-яА-Я]{2,2}-[0-9]{2,2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
         public string Name { get; set; }
 
         /// <summary>
