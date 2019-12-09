@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if design
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kursach.Models;
 
@@ -7,6 +8,27 @@ namespace Kursach.DataBase
     class DesignDataBase : IDataBase
     {
         const int Delay = 100;
+
+        public async Task<IEnumerable<Staff>> GetStaffsAsync()
+        {
+            await Task.Delay(Delay);
+
+            List<Staff> staff = new List<Staff>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                staff.Add(new Staff { FirstName = "First Name", LastName = "Last Name", MiddleName = "Middle Name", Position = "Position / BGK", Id = 228 });
+            }
+
+            return staff;
+        }
+
+        public async Task<bool> RemoveGroupAsync(Group group)
+        {
+            await Task.Delay(Delay);
+
+            return true;
+        }
 
         public async Task<IEnumerable<Group>> GetGroupsAsync()
         {
@@ -90,3 +112,4 @@ namespace Kursach.DataBase
         private User GetUser(string login, string password, UserMode mode = UserMode.Admin) => new User { Id = 1337, Login = login, Password = password, Mode = mode };
     }
 }
+#endif

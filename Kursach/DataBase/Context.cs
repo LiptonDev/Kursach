@@ -12,6 +12,7 @@ namespace Kursach.DataBase
         /// </summary>
         public Context() : base("DefaultConnection")
         {
+            Database.Log = e => System.Console.WriteLine(e);
         }
 
         /// <summary>

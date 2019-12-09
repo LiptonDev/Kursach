@@ -39,6 +39,11 @@ namespace Kursach.DataBase
         /// </summary>
         public virtual ICollection<Group> Groups { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            return (obj is Staff staff) && staff.Id == Id;
+        }
+
         public override string ToString()
         {
             return $"{LastName} {FirstName} {MiddleName}";

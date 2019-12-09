@@ -82,7 +82,7 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<SignInLog>> GetSignInLogsAsync(User user)
         {
-            return await query(async () => await context.SignInLogs.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync());
+            return await query(async () => await context.SignInLogs.Where(x => x.UserId == user.Id).ToListAsync());
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await query(async () => await context.Users.AsNoTracking().ToListAsync());
+            return await query(async () => await context.Users.ToListAsync());
         }
 
         /// <summary>
@@ -141,7 +141,6 @@ namespace Kursach.DataBase
         {
             return await query(async () =>
             {
-                context.Users.Attach(user);
                 context.Entry(user).State = EntityState.Modified;
 
                 await context.SaveChangesAsync();
@@ -158,7 +157,50 @@ namespace Kursach.DataBase
         {
             return await query(async () =>
             {
-                return await context.Groups.AsNoTracking().Include(x => x.Curator).ToListAsync();
+                return await context.Groups.Include(x => x.Curator).ToListAsync();
+            });
+        }
+
+        /// <summary>
+        /// Удаление группы.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        public async Task<bool> RemoveGroupAsync(Group group)
+        {
+            return await query(async () =>
+            {
+                context.Entry(group).State = EntityState.Deleted;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Получение всех работников.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Staff>> GetStaffsAsync()
+        {
+            return await query(async () => await context.Staff.ToListAsync());
+        }
+
+        /// <summary>
+        /// Сохранить группу.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        public async Task<bool> SaveGroupAsync(Group group)
+        {
+            return await query(async () =>
+            {
+                context.Entry(group).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+
+                return true;
             });
         }
     }

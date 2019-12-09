@@ -65,5 +65,26 @@ namespace Kursach.DataBase
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Group>> GetGroupsAsync();
+
+        /// <summary>
+        /// Удаление группы.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        Task<bool> RemoveGroupAsync(Group group);
+
+        /// <summary>
+        /// Получение всех работников.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Staff>> GetStaffsAsync();
+
+        /// <summary>
+        /// Сохранить группу.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        Task<bool> SaveGroupAsync(Group group);
+
     }
 }
