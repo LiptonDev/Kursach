@@ -24,6 +24,8 @@
 
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
             <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+            <converters:UserModeToVisibility x:Key="AdminUserModeToVisibility" NeedMode="Admin"/>
+            <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
         </ResourceDictionary>
     </Application.Resources>
 

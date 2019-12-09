@@ -156,6 +156,8 @@
     <Compile Include="ViewModels\SelectStaffViewModel.cs" />
     <Compile Include="ViewModels\SignInLogsViewModel.cs" />
     <Compile Include="ViewModels\SignUpViewModel.cs" />
+    <Compile Include="ViewModels\StaffEditorViewModel.cs" />
+    <Compile Include="ViewModels\StaffViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="Views\GroupEditorView.xaml.cs">
       <DependentUpon>GroupEditorView.xaml</DependentUpon>
@@ -172,8 +174,29 @@
     <Compile Include="Views\SignUpView.xaml.cs">
       <DependentUpon>SignUpView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StaffEditorView.xaml.cs">
+      <DependentUpon>StaffEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StaffView.xaml.cs">
+      <DependentUpon>StaffView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomeSlides\Slide1.xaml.cs">
+      <DependentUpon>Slide1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomeSlides\Slide2.xaml.cs">
+      <DependentUpon>Slide2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomeSlides\Slide3.xaml.cs">
+      <DependentUpon>Slide3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomeSlides\Slide4.xaml.cs">
+      <DependentUpon>Slide4.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WelcomeSlides\Slide5.xaml.cs">
+      <DependentUpon>Slide5.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
@@ -276,7 +299,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\StaffEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StaffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UsersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomeSlides\Slide1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomeSlides\Slide2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomeSlides\Slide3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomeSlides\Slide4.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WelcomeSlides\Slide5.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
