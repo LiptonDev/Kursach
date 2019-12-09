@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DryIoc;
 using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
@@ -29,11 +30,11 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public MainWindowViewModel(IProgramSettings settings, IRegionManager regionManager, IDialogIdentifier dialogIdentifier)
+        public MainWindowViewModel(IProgramSettings settings, IRegionManager regionManager, IContainer container)
         {
             Settings = settings;
             this.regionManager = regionManager;
-            DialogIdentifier = dialogIdentifier;
+            DialogIdentifier = container.ResolveRootDialogIdentifier();
 
             LoadCommand = new DelegateCommand(OnLoad);
             CloseCommand = new DelegateCommand(OnClose);

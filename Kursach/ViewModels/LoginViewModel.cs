@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DryIoc;
 using Kursach.DataBase;
 using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
@@ -37,10 +38,10 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public LoginViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+        public LoginViewModel(IRegionManager regionManager, IContainer container, IDataBase dataBase)
         {
             this.regionManager = regionManager;
-            this.dialogIdentifier = dialogIdentifier;
+            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dataBase = dataBase;
 
             TryLoginCommand = new AsyncCommand(TryLogin);

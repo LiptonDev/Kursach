@@ -1,13 +1,14 @@
 ﻿using Kursach.DataBase;
 using Kursach.Dialogs;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Signin logs view model.
     /// </summary>
-    [DialogName("SignInLogsView")]
+    [DialogName(nameof(Views.SignInLogsView))]
     class SignInLogsViewModel
     {
         /// <summary>
@@ -38,7 +39,7 @@ namespace Kursach.ViewModels
         private async void LoadLogs(User user)
         {
             var res = await dataBase.GetSignInLogsAsync(user);
-            Logs.AddRange(res);
+            Logs.AddRange(res.OrderByDescending(x => x.Date));
         }
     }
 }

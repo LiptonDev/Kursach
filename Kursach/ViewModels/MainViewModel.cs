@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
@@ -31,18 +32,12 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
         /// Ctor.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IDialogIdentifier dialogIdentifier, IDialogManager dialogManager)
+        public MainViewModel(IRegionManager regionManager, IContainer container, IDialogManager dialogManager)
         {
             this.regionManager = regionManager;
-            this.dialogIdentifier = dialogIdentifier;
-            this.dialogManager = dialogManager;
+            dialogIdentifier = container.ResolveRootDialogIdentifier();
 
             SignUpCommand = new DelegateCommand(dialogManager.SignUp);
             OpenUsersCommand = new DelegateCommand(OpenUsers);
@@ -98,7 +93,9 @@ namespace Kursach.ViewModels
         /// </summary>
         private void Groups()
         {
-            regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView);
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("user", User);
+            regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView, parameters);
             LeftMenuOpened = false;
         }
 
@@ -107,7 +104,7 @@ namespace Kursach.ViewModels
             if (!navigationContext.Parameters.ContainsKey("fromLogin"))
                 return;
 
-            User = navigationContext.Parameters["user"] as User; ;
+            User = navigationContext.Parameters["user"] as User;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

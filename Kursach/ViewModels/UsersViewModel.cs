@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
@@ -38,11 +39,11 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public UsersViewModel(IDataBase dataBase, IDialogManager dialogManager, IDialogIdentifier dialogIdentifier)
+        public UsersViewModel(IDataBase dataBase, IDialogManager dialogManager, IContainer container)
         {
             this.dataBase = dataBase;
             this.dialogManager = dialogManager;
-            this.dialogIdentifier = dialogIdentifier;
+            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
 
             Users = new ObservableCollection<User>();
 
@@ -93,12 +94,14 @@ namespace Kursach.ViewModels
                 return;
 
             var res = await dataBase.RemoveUserAsync(user);
+            var msg = res ? "Пользователь удален" : "Пользователь не удален";
 
-            await dialogIdentifier.ShowMessageBoxAsync(res ? "Пользователь удален" : "Пользователь не удален", MaterialMessageBoxButtons.Ok);
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
 
-            Logger.Log.Info($"{(res ? "Пользователь удален" : "Пользователь не удален")}: {{login: {user.Login}, mode: {user.Mode}}}");
+            Logger.Log.Info($"{msg}: {{login: {user.Login}, mode: {user.Mode}}}");
 
-            Users.Remove(user);
+            if (res)
+                Users.Remove(user);
         }
 
         /// <summary>
