@@ -72,6 +72,10 @@ namespace Kursach.ViewModels
                 Logger.Log.Info($"Не удачная регистрация нового пользователя, пользователь уже есть: {{login: {User.Login}, mode: {Mode}}}");
                 await this.ShowMessageBoxAsync("Такой пользователь уже есть", MaterialMessageBoxButtons.Ok);
             }
+
+            User.Login = "";
+            User.Password = "";
+            Mode = UserMode.Read;
         }
     }
 }

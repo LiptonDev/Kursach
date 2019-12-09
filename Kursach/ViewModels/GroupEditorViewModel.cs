@@ -4,6 +4,7 @@ using Kursach.DataBase;
 using Kursach.Dialogs;
 using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
+using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -12,7 +13,7 @@ namespace Kursach.ViewModels
     /// Group editor view model.
     /// </summary>
     [DialogName(nameof(Views.GroupEditorView))]
-    class GroupEditorViewModel : IClosableDialog, IDialogIdentifier
+    class GroupEditorViewModel : IClosableDialog, IDialogIdentifier, IEditMode
     {
         /// <summary>
         /// Identifier.
@@ -35,14 +36,22 @@ namespace Kursach.ViewModels
         public Group Group { get; }
 
         /// <summary>
+        /// True - Режим редактирования группы, иначе - добавление.
+        /// </summary>
+        public bool IsEditMode { get; }
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public GroupEditorViewModel(Group group, IContainer container, IDialogManager dialogManager)
+        public GroupEditorViewModel(Group group, bool isEditMode, IContainer container, IDialogManager dialogManager)
         {
+            IsEditMode = isEditMode;
             OwnerIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
 
-            Group = (Group)group.Clone();
+            if (isEditMode)
+                Group = (Group)group.Clone();
+            else Group = new Group();
 
             CloseDialogCommand = new DelegateCommand(CloseDialog);
             OpenStaffSelectorCommand = new DelegateCommand(OpenStaffSelector);
@@ -63,7 +72,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private async void OpenStaffSelector()
         {
-            var res = await dialogManager.SelectStaff(Group.Curator, this);
+            var res = await dialogManager.SelectStaff(Group.CuratorId, this);
 
             if (res != null)
                 Group.CuratorId = res.Id;
@@ -72,8 +81,14 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Закрытие диалога.
         /// </summary>
-        private void CloseDialog()
+        private async void CloseDialog()
         {
+            if (!Group.IsValid)
+            {
+                await this.ShowMessageBoxAsync(Group.Error, MaterialMessageBoxButtons.Ok);
+                return;
+            }
+
             OwnerIdentifier.Close(Group);
         }
     }

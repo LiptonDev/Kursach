@@ -4,6 +4,7 @@ using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Linq;
 
 namespace Kursach.ViewModels
 {
@@ -36,9 +37,8 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public SelectStaffViewModel(Staff currentStaff, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+        public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
         {
-            SelectedStaff = currentStaff;
             this.dataBase = dataBase;
             OwnerIdentifier = dialogIdentifier;
 
@@ -46,7 +46,7 @@ namespace Kursach.ViewModels
 
             CloseDialogCommand = new DelegateCommand(CloseDialog);
 
-            LoadStaff();
+            LoadStaff(currentId);
         }
 
         /// <summary>
@@ -69,10 +69,12 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Загрузка всех работников.
         /// </summary>
-        private async void LoadStaff()
+        private async void LoadStaff(int currentId)
         {
             var res = await dataBase.GetStaffsAsync();
             Staff.AddRange(res);
+
+            SelectedStaff = Staff.FirstOrDefault(x => x.Id == currentId);
         }
     }
 }

@@ -5,7 +5,6 @@ using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -14,7 +13,7 @@ namespace Kursach.ViewModels
     /// <summary>
     /// Users view model.
     /// </summary>
-    class UsersViewModel : ViewModelBase, INavigationAware
+    class UsersViewModel : NavigationViewModel
     {
         /// <summary>
         /// Пользователи.
@@ -122,18 +121,9 @@ namespace Kursach.ViewModels
             Users.AddRange(res);
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             Load();
-        }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
         }
     }
 }

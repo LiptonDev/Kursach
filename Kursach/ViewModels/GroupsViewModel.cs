@@ -7,13 +7,14 @@ using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Groups view model.
     /// </summary>
-    class GroupsViewModel : INavigationAware
+    class GroupsViewModel : NavigationViewModel
     {
         /// <summary>
         /// Пользователь.
@@ -53,17 +54,13 @@ namespace Kursach.ViewModels
 
             DeleteGroupCommand = new AsyncCommand<Group>(DeleteGroup);
             GroupEditorCommand = new DelegateCommand<Group>(GroupEditor);
+            AddGroupCommand = new DelegateCommand(AddGroup);
         }
 
         /// <summary>
-        /// Загрузка групп.
+        /// Команда добавления новой группы.
         /// </summary>
-        private async void Load()
-        {
-            Groups.Clear();
-            var res = await dataBase.GetGroupsAsync();
-            Groups.AddRange(res);
-        }
+        public ICommand AddGroupCommand { get; }
 
         /// <summary>
         /// Команда открытия окна редактирования группы.
@@ -76,23 +73,44 @@ namespace Kursach.ViewModels
         public ICommand<Group> DeleteGroupCommand { get; }
 
         /// <summary>
+        /// Добавление группы.
+        /// </summary>
+        private async void AddGroup()
+        {
+            var editor = await dialogManager.GroupEditor(null, false);
+
+            if (editor == null)
+                return;
+
+            var res = await dataBase.AddGroupAsync(editor);
+            var msg = res ? "Группа добавлена" : "Группа не добавлена";
+
+            Logger.Log.Info($"{msg}: {{name: {editor.Name}, curatorId: {editor.CuratorId}}}");
+
+            if (res)
+                Groups.Add(editor);
+
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+        }
+
+        /// <summary>
         /// Открытие окна редактирования группы.
         /// </summary>
         private async void GroupEditor(Group group)
         {
-            var editor = await dialogManager.GroupEditor(group);
+            var editor = await dialogManager.GroupEditor(group, true);
 
-            if (editor != null)
-            {
-                group.CuratorId = editor.CuratorId;
-                group.Name = editor.Name;
-                var res = await dataBase.SaveGroupAsync(group);
-                var msg = res ? "Группа сохранена" : "Группа не сохранена";
+            if (editor == null)
+                return;
 
-                Logger.Log.Info($"{msg}: {{oldName: {group.Name}, newName: {editor.Name}, oldCurator: {group.CuratorId}, newCurator: {editor.CuratorId}}}");
+            group.CuratorId = editor.CuratorId;
+            group.Name = editor.Name;
+            var res = await dataBase.SaveGroupAsync(group);
+            var msg = res ? "Группа сохранена" : "Группа не сохранена";
 
-                await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-            }
+            Logger.Log.Info($"{msg}: {{oldName: {group.Name}, newName: {editor.Name}, oldCurator: {group.CuratorId}, newCurator: {editor.CuratorId}}}");
+
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 
         /// <summary>
@@ -108,24 +126,25 @@ namespace Kursach.ViewModels
             var res = await dataBase.RemoveGroupAsync(group);
             var msg = res ? "Группа удалена" : "Группа не удалена";
 
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-
-            Logger.Log.Info($"{msg}: {{group: {group.Name}}}");
+            Logger.Log.Info($"{msg}: {{name: {group.Name}, curatorId: {group.CuratorId}}}");
 
             if (res)
                 Groups.Remove(group);
+
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        /// <summary>
+        /// Загрузка групп.
+        /// </summary>
+        private async void Load()
         {
-            return true;
+            Groups.Clear();
+            var res = await dataBase.GetGroupsAsync();
+            Groups.AddRange(res);
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             User = navigationContext.Parameters["user"] as User;
 

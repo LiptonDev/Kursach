@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
-    class MainViewModel : ViewModelBase, INavigationAware
+    class MainViewModel : NavigationViewModel
     {
         /// <summary>
         /// Текущий пользователь.
@@ -99,21 +99,12 @@ namespace Kursach.ViewModels
             LeftMenuOpened = false;
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (!navigationContext.Parameters.ContainsKey("fromLogin"))
                 return;
 
             User = navigationContext.Parameters["user"] as User;
-        }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
         }
     }
 }
