@@ -10,9 +10,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace Kursach

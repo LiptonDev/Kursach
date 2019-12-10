@@ -1,5 +1,6 @@
 ﻿#if design
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Kursach.Models;
 
@@ -8,6 +9,27 @@ namespace Kursach.DataBase
     class DesignDataBase : IDataBase
     {
         const int Delay = 100;
+
+
+        public async Task LoadStudentsAsync()
+        {
+            await Task.Delay(Delay);
+        }
+
+        public async Task<bool> SaveStudentAsync(Student student)
+        {
+            return true;
+        }
+
+        public async Task<bool> RemoveStudentAsync(Student student)
+        {
+            return true;
+        }
+
+        public async Task<bool> AddStudentAsync(Student student)
+        {
+            return true;
+        }
 
         public async Task<bool> SaveStaffAsync(Staff staff)
         {
@@ -52,7 +74,7 @@ namespace Kursach.DataBase
 
             for (int i = 0; i < 50; i++)
             {
-                staff.Add(new Staff { FirstName = "First Name", LastName = "Last Name", MiddleName = "Middle Name", Position = "Position / BGK", Id = 228 });
+                staff.Add(new Staff { FirstName = "First Name", LastName = "Last Name", MiddleName = "Middle Name", Position = "Position / BGK", Id = i });
             }
 
             return staff;
@@ -75,13 +97,27 @@ namespace Kursach.DataBase
             {
                 groups.Add(new Group
                 {
-                    Name = $"Группа-{i}",
+                    Name = $"ГР-{i}",
+                    Id = i,
+                    CuratorId = i,
                     Curator = new Staff
                     {
                         FirstName = "Имя",
                         LastName = "Фамилия",
                         MiddleName = "Отчество",
-                        Position = "Шестерка"
+                        Position = "Шестерка",
+                        Id = i
+                    },
+                    Students = new ObservableCollection<Student>
+                    {
+                        new Student
+                        {
+                            FirstName = "Имя",
+                            LastName = "Фамилия",
+                            MiddleName = "Отчество",
+                            GroupId = i,
+                            Id = i
+                        }
                     }
                 });
             }
@@ -110,7 +146,7 @@ namespace Kursach.DataBase
         public async Task<User> GetUserAsync(string login, string password, bool usePassword)
         {
             await Task.Delay(Delay);
-            return GetUser(login, password);
+            return GetUser(login, password, 0);
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
@@ -120,7 +156,7 @@ namespace Kursach.DataBase
             List<User> users = new List<User>();
             for (int i = 0; i < 50; i++)
             {
-                users.Add(GetUser(i.ToString(), "password", UserMode.ReadWrite));
+                users.Add(GetUser(i.ToString(), "password", i, UserMode.ReadWrite));
             }
 
             return users;
@@ -144,7 +180,7 @@ namespace Kursach.DataBase
             return true;
         }
 
-        private User GetUser(string login, string password, UserMode mode = UserMode.Admin) => new User { Id = 1337, Login = login, Password = password, Mode = mode };
+        private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) => new User { Id = id, Login = login, Password = password, Mode = mode };
     }
 }
 #endif
