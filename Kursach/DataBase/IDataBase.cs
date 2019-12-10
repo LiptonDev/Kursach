@@ -114,5 +114,31 @@ namespace Kursach.DataBase
         /// <returns></returns>
         Task<bool> AddStaffAsync(Staff staff);
 
+        /// <summary>
+        /// Загрузка всех студентов.
+        /// </summary>
+        /// <returns></returns>
+        Task LoadStudentsAsync();
+
+        /// <summary>
+        /// Сохранить студента.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        Task<bool> SaveStudentAsync(Student student);
+
+        /// <summary>
+        /// Удалить студента.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        Task<bool> RemoveStudentAsync(Student student);
+
+        /// <summary>
+        /// Добавить студента.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        Task<bool> AddStudentAsync(Student student);
     }
 }

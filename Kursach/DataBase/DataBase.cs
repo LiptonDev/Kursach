@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Linq;
-using Kursach.Models;
+﻿using Kursach.Models;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Kursach.DataBase
 {
@@ -137,7 +137,7 @@ namespace Kursach.DataBase
         {
             return await query(async () =>
             {
-                context.Users.Attach(user);
+                context.Users.Remove(user);
                 context.Entry(user).State = EntityState.Deleted;
 
                 await context.SaveChangesAsync();
@@ -184,6 +184,7 @@ namespace Kursach.DataBase
         {
             return await query(async () =>
             {
+                context.Groups.Remove(group);
                 context.Entry(group).State = EntityState.Deleted;
 
                 await context.SaveChangesAsync();
@@ -258,6 +259,7 @@ namespace Kursach.DataBase
         {
             return await query(async () =>
             {
+                context.Staff.Remove(staff);
                 context.Entry(staff).State = EntityState.Deleted;
 
                 await context.SaveChangesAsync();
@@ -295,6 +297,65 @@ namespace Kursach.DataBase
                 context.Staff.Add(staff);
                 await context.SaveChangesAsync();
 
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Загрузка всех студентов.
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadStudentsAsync()
+        {
+            await context.Students.ToListAsync();
+        }
+
+        /// <summary>
+        /// Сохранить студента.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        public async Task<bool> SaveStudentAsync(Student student)
+        {
+            return await query(async () =>
+            {
+                context.Entry(student).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Удалить студент.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        public async Task<bool> RemoveStudentAsync(Student student)
+        {
+            return await query(async () =>
+            {
+                context.Students.Remove(student);
+                context.Entry(student).State = EntityState.Deleted;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// Добавить студента.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        public async Task<bool> AddStudentAsync(Student student)
+        {
+            return await query(async () =>
+            {
+                context.Students.Add(student);
+                await context.SaveChangesAsync();
                 return true;
             });
         }

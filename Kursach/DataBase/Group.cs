@@ -1,7 +1,7 @@
 ﻿using Kursach.ViewModels;
 using PropertyChanged;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,7 +32,7 @@ namespace Kursach.DataBase
         /// </summary>
         [Display(Name = "ID куратора")]
         [Range(0, double.MaxValue, ErrorMessage = "{0} должен находиться в диапазоне положительных чисел")]
-        public int CuratorId { get; set; }
+        public int CuratorId { get; set; } = -1;
 
         /// <summary>
         /// Куратор.
@@ -42,7 +42,7 @@ namespace Kursach.DataBase
         /// <summary>
         /// Студенты группы.
         /// </summary>
-        public virtual ICollection<Student> Students { get; set; }
+        public virtual ObservableCollection<Student> Students { get; set; }
 
         /// <summary>
         /// Копия группы.
