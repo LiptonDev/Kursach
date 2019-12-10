@@ -1,6 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
         <Setter Property="material:HintAssist.IsFloating" Value="True"/>

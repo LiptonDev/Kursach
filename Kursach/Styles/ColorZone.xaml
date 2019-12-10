@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="material:ColorZone" x:Key="CornerZone" BasedOn="{StaticResource CenterControl}">
         <Setter Property="Mode" Value="Dark"/>
