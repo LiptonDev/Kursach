@@ -1,0 +1,3 @@
+# Курсовая
+
+![Example](anim.gif)
