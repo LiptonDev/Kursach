@@ -15,9 +15,8 @@
         <UniformGrid Rows="1">
             <Button Style="{StaticResource PreviousSliderButton}"/>
 
-            <Button Content="Открыть группы"
-                    Command="{Binding GroupsCommand}"
-                    Style="{StaticResource FlatButton}"/>
+            <Button Content="Показать группы"
+                    Command="{Binding GroupsCommand}"/>
             
             <Button Style="{StaticResource NextSliderButton}"/>
         </UniformGrid>

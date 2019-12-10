@@ -14,6 +14,10 @@
 
         <UniformGrid Rows="1">
             <Button Style="{StaticResource PreviousSliderButton}"/>
+
+            <Button Content="Показать студентов"
+                    Command="{Binding StudentsCommand}"/>
+
             <Button Style="{StaticResource NextSliderButton}"/>
         </UniformGrid>
     </StackPanel>

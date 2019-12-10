@@ -15,9 +15,8 @@
         <UniformGrid Rows="1">
             <Button Style="{StaticResource PreviousSliderButton}"/>
 
-            <Button Content="Открыть сотрудников"
-                    Command="{Binding StaffCommand}"
-                    Style="{StaticResource FlatButton}"/>
+            <Button Content="Показать сотрудников"
+                    Command="{Binding StaffCommand}"/>
 
             <Button Style="{StaticResource NextSliderButton}"/>
         </UniformGrid>

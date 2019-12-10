@@ -42,11 +42,10 @@
 
             <UniformGrid Rows="1">
                 <Button Content="Закрыть"
-                    Style="{StaticResource CancelDialogButton}"/>
+                        Style="{StaticResource CancelDialogButton}"/>
 
                 <Button Content="Регистрация"
-                    Command="{Binding SignUpCommand}"
-                    Style="{StaticResource FlatButton}"/>
+                        Command="{Binding CloseDialogCommand}"/>
             </UniformGrid>
         </StackPanel>
     </material:DialogHost>
