@@ -8,13 +8,13 @@ namespace Kursach.Converters
     [ValueConversion(typeof(double), typeof(double))]
     class ActualSizeConverter : IValueConverter
     {
-        public double Add { get; set; }
+        public object Add { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double s = (double)value;
-
-            return s + Add;
+            if (Add == null)
+                return ((double)value) / 2;
+            return (double)value + System.Convert.ToDouble(Add);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
