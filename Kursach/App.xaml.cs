@@ -10,7 +10,9 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 namespace Kursach
@@ -25,6 +27,7 @@ namespace Kursach
 #if !design
             Container.Resolve<Context>().Users.AsNoTracking().Take(0);
 #endif
+
             return Container.Resolve<MainWindow>();
         }
 
@@ -55,6 +58,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<SignUpView>();
             containerRegistry.RegisterSingleton<GroupsView>();
             containerRegistry.RegisterSingleton<StaffView>();
+            containerRegistry.RegisterSingleton<StudentsView>();
 
             //vm's
             containerRegistry.RegisterSingleton<MainWindowViewModel>();
@@ -64,6 +68,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<GroupsViewModel>();
             containerRegistry.RegisterSingleton<UsersViewModel>();
             containerRegistry.RegisterSingleton<StaffViewModel>();
+            containerRegistry.RegisterSingleton<StudentsViewModel>();
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton, "rootdialog");
@@ -72,6 +77,8 @@ namespace Kursach
             containerRegistry.Register<FrameworkElement, GroupEditorView>(nameof(GroupEditorView));
             containerRegistry.Register<FrameworkElement, SelectStaffView>(nameof(SelectStaffView));
             containerRegistry.Register<FrameworkElement, StaffEditorView>(nameof(StaffEditorView));
+            containerRegistry.Register<FrameworkElement, StudentEditorView>(nameof(StudentEditorView));
+            containerRegistry.Register<FrameworkElement, SelectGroupView>(nameof(SelectGroupView));
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
@@ -80,6 +87,7 @@ namespace Kursach
             containerRegistry.RegisterForNavigation<UsersView>(RegionViews.UsersView);
             containerRegistry.RegisterForNavigation<GroupsView>(RegionViews.GroupsView);
             containerRegistry.RegisterForNavigation<StaffView>(RegionViews.StaffView);
+            containerRegistry.RegisterForNavigation<StudentsView>(RegionViews.StudentsView);
 
             //db
             containerRegistry.RegisterSingleton<Context>();

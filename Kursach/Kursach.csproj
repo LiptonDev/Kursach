@@ -137,10 +137,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SelectorButtons.xaml.cs">
+      <DependentUpon>SelectorButtons.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ActualSizeConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\UserModeToVisibility.cs" />
     <Compile Include="DataBase\Group.cs" />
+    <Compile Include="DataBase\People.cs" />
     <Compile Include="DataBase\Staff.cs" />
     <Compile Include="DataBase\Student.cs" />
     <Compile Include="Dialogs\IViewFactory.cs" />
@@ -150,20 +154,27 @@
     <Compile Include="Dialogs\IDialogManager.cs" />
     <Compile Include="DataBase\DesignDataBase.cs" />
     <Compile Include="Models\IEditMode.cs" />
+    <Compile Include="Models\SignUpResult.cs" />
     <Compile Include="ViewModels\GroupEditorViewModel.cs" />
     <Compile Include="ViewModels\GroupsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="ViewModels\SelectGroupViewModel.cs" />
     <Compile Include="ViewModels\SelectStaffViewModel.cs" />
     <Compile Include="ViewModels\SignInLogsViewModel.cs" />
     <Compile Include="ViewModels\SignUpViewModel.cs" />
     <Compile Include="ViewModels\StaffEditorViewModel.cs" />
     <Compile Include="ViewModels\StaffViewModel.cs" />
+    <Compile Include="ViewModels\StudentEditorViewModel.cs" />
+    <Compile Include="ViewModels\StudentsViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="Views\GroupEditorView.xaml.cs">
       <DependentUpon>GroupEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GroupsView.xaml.cs">
       <DependentUpon>GroupsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectGroupView.xaml.cs">
+      <DependentUpon>SelectGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectStaffView.xaml.cs">
       <DependentUpon>SelectStaffView.xaml</DependentUpon>
@@ -179,6 +190,12 @@
     </Compile>
     <Compile Include="Views\StaffView.xaml.cs">
       <DependentUpon>StaffView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StudentEditorView.xaml.cs">
+      <DependentUpon>StudentEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StudentsView.xaml.cs">
+      <DependentUpon>StudentsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
@@ -202,6 +219,10 @@
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\MainLeftMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SelectorButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,6 +308,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SelectGroupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SelectStaffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -304,6 +329,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StaffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StudentEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StudentsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -354,6 +387,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="FodyWeavers.xsd">
       <SubType>Designer</SubType>
     </None>
