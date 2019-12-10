@@ -37,6 +37,13 @@ namespace Kursach.Dialogs
             }
 
             var view = container.Resolve<FrameworkElement>(atr.ViewName);
+
+            if (view.GetType().Name == "FrameworkElement")
+            {
+                Logger.Log.Error($"GetView<T> view is null, ViewModel: {viewModel}");
+                return null;
+            }
+
             view.DataContext = viewModel;
 
             return view;

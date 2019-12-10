@@ -18,7 +18,7 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Окно регистрации нового пользователя.
         /// </summary>
-        void SignUp();
+        Task<SignUpResult> SignUp();
 
         /// <summary>
         /// Окно редактирования группы.
@@ -37,5 +37,17 @@ namespace Kursach.Dialogs
         /// </summary>
         /// <returns></returns>
         Task<Staff> StaffEditor(Staff staff, bool isEditMode);
+
+        /// <summary>
+        /// Окно редактирования студента.
+        /// </summary>
+        /// <returns></returns>
+        Task<Student> StudentEditor(Student student, bool isEditMode);
+
+        /// <summary>
+        /// Окно выбора группы.
+        /// </summary>
+        /// <returns></returns>
+        Task<Group> SelectGroup(int currentId, IDialogIdentifier dialogIdentifier);
     }
 }
