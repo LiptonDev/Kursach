@@ -3,8 +3,8 @@ using Kursach.DataBase;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
@@ -15,7 +15,7 @@ namespace Kursach.ViewModels
     class SelectStaffViewModel : ViewModelBase, IClosableDialog
     {
         /// <summary>
-        /// Список всех 
+        /// Список всех сотрудников.
         /// </summary>
         public ObservableCollection<Staff> Staff { get; }
 
@@ -67,7 +67,7 @@ namespace Kursach.ViewModels
 
 
         /// <summary>
-        /// Загрузка всех работников.
+        /// Загрузка всех сотрудников.
         /// </summary>
         private async void LoadStaff(int currentId)
         {

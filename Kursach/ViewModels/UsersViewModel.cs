@@ -7,6 +7,7 @@ using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
@@ -49,7 +50,13 @@ namespace Kursach.ViewModels
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
             DeleteUserCommand = new AsyncCommand<User>(DeleteUser);
             SaveUserCommand = new AsyncCommand<User>(SaveUser);
+            SignUpCommand = new DelegateCommand(SignUp);
         }
+
+        /// <summary>
+        /// Команда открытия окна регистрации.
+        /// </summary>
+        public ICommand SignUpCommand { get; }
 
         /// <summary>
         /// Команда сохранения изменения пользователя.
@@ -67,6 +74,28 @@ namespace Kursach.ViewModels
         public ICommand<User> ShowLogsCommand { get; }
 
         /// <summary>
+        /// Открыть окно регистрации.
+        /// </summary>
+        private async void SignUp()
+        {
+            var editor = await dialogManager.SignUp();
+            if (editor == null)
+                return;
+
+            var res = await dataBase.SignUpAsync(editor.User, editor.Mode);
+            var msg = res ? "Пользователь добавлен" : "Пользователь не добавлен";
+
+            User user = null;
+            if (res)
+            {
+                user = await dataBase.GetUserAsync(editor.User.Login, null, false);
+                Users.Add(user);
+            }
+
+            Log(msg, user);
+        }
+
+        /// <summary>
         /// Сохранить новые данные пользователя.
         /// </summary>
         /// <param name="user">Пользователь.</param>
@@ -77,8 +106,9 @@ namespace Kursach.ViewModels
                 return;
 
             var res = await dataBase.SaveUserAsync(user);
+            var msg = res ? "Пользователь сохранен" : "Пользователь не сохранен";
 
-            await dialogIdentifier.ShowMessageBoxAsync(res ? "Пользователь сохранен" : "Пользователь не сохранен", MaterialMessageBoxButtons.Ok);
+            Log(msg, user);
         }
 
         /// <summary>
@@ -95,12 +125,16 @@ namespace Kursach.ViewModels
             var res = await dataBase.RemoveUserAsync(user);
             var msg = res ? "Пользователь удален" : "Пользователь не удален";
 
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-
-            Logger.Log.Info($"{msg}: {{login: {user.Login}, mode: {user.Mode}}}");
-
             if (res)
                 Users.Remove(user);
+
+            Log(msg, user);
+        }
+
+        async void Log(string msg, User user)
+        {
+            Logger.Log.Info($"{msg}: {{login: {user.Login}, mode: {user.Mode}}}");
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -85,12 +84,10 @@ namespace Kursach.ViewModels
             var res = await dataBase.AddStaffAsync(editor);
             var msg = res ? "Сотрудник добавлен" : "Сотрудник не добавлен";
 
-            Logger.Log.Info($"{msg}: {{{editor}}}");
-
             if (res)
                 Staff.Add(editor);
 
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            Log(msg, editor);
         }
 
         /// <summary>
@@ -105,12 +102,10 @@ namespace Kursach.ViewModels
             var res = await dataBase.RemoveStaffAsync(staff);
             var msg = res ? "Сотрудник удален" : "Сотрудник не удален";
 
-            Logger.Log.Info($"{msg}: {{{staff}}}");
-
             if (res)
                 Staff.Remove(staff);
 
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            Log(msg, staff);
         }
 
         /// <summary>
@@ -130,8 +125,12 @@ namespace Kursach.ViewModels
             var res = await dataBase.SaveStaffAsync(staff);
             var msg = res ? "Сотрудник сохранен" : "Сотрудник не сохранен";
 
-            Logger.Log.Info($"{msg}: {{{staff}}}");
+            Log(msg, staff);
+        }
 
+        async void Log(string msg, object staff)
+        {
+            Logger.Log.Info($"{msg}: {{staff: {staff}}}");
             await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 

@@ -1,7 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
 using Kursach.DataBase;
-using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -39,16 +38,16 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IContainer container, IDialogManager dialogManager)
+        public MainViewModel(IRegionManager regionManager, IContainer container)
         {
             this.regionManager = regionManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
 
-            SignUpCommand = new DelegateCommand(dialogManager.SignUp);
             OpenUsersCommand = new DelegateCommand(OpenUsers);
             ExitCommand = new DelegateCommand(Exit);
             GroupsCommand = new DelegateCommand(Groups);
             StaffCommand = new DelegateCommand(GoToStaff);
+            StudentsCommand = new DelegateCommand(Students);
             HomeCommand = new DelegateCommand(Home);
         }
 
@@ -56,6 +55,11 @@ namespace Kursach.ViewModels
         /// Команда перехода на стартовую страницу.
         /// </summary>
         public ICommand HomeCommand { get; }
+
+        /// <summary>
+        /// Команда перехода на страницу студентов.
+        /// </summary>
+        public ICommand StudentsCommand { get; }
 
         /// <summary>
         /// Команда перехода на страницу сотрудников.
@@ -66,11 +70,6 @@ namespace Kursach.ViewModels
         /// Команда перехода на страницу групп.
         /// </summary>
         public ICommand GroupsCommand { get; }
-
-        /// <summary>
-        /// Команда открытия регистрации.
-        /// </summary>
-        public ICommand SignUpCommand { get; }
 
         /// <summary>
         /// Команда открытия базы данных пользователей.
@@ -125,6 +124,17 @@ namespace Kursach.ViewModels
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("user", User);
             regionManager.RequstNavigateInMainRegion(RegionViews.StaffView, parameters);
+            LeftMenuOpened = false;
+        }
+
+        /// <summary>
+        /// Переход на страницу студентов.
+        /// </summary>
+        private void Students()
+        {
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("user", User);
+            regionManager.RequstNavigateInMainRegion(RegionViews.StudentsView, parameters);
             LeftMenuOpened = false;
         }
 

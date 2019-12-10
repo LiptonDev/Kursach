@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DryIoc;
 using Kursach.DataBase;
 using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
@@ -10,12 +11,17 @@ namespace Kursach.ViewModels
     /// <summary>
     /// Signup view model.
     /// </summary>
-    class SignUpViewModel : ViewModelBase, IDialogIdentifier
+    class SignUpViewModel : ViewModelBase, IDialogIdentifier, IClosableDialog
     {
         /// <summary>
         /// Identifier.
         /// </summary>
         public string Identifier => "SignUpViewModel";
+
+        /// <summary>
+        /// Owner.
+        /// </summary>
+        public IDialogIdentifier OwnerIdentifier { get; }
 
         /// <summary>
         /// Пользователь для регистрации.
@@ -28,31 +34,26 @@ namespace Kursach.ViewModels
         public UserMode Mode { get; set; } = UserMode.Read;
 
         /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
         /// Ctor.
         /// </summary>
-        public SignUpViewModel(IDataBase dataBase)
+        public SignUpViewModel(IContainer container)
         {
-            this.dataBase = dataBase;
+            OwnerIdentifier = container.ResolveRootDialogIdentifier();
 
             User = new LoginUser();
 
-            SignUpCommand = new DelegateCommand(SignUp);
+            CloseDialogCommand = new DelegateCommand(CloseDialog);
         }
 
         /// <summary>
-        /// Команда регистрации.
+        /// Команда закрытия диалога.
         /// </summary>
-        public ICommand SignUpCommand { get; }
+        public ICommand CloseDialogCommand { get; }
 
         /// <summary>
         /// Регистрация.
         /// </summary>
-        private async void SignUp()
+        private async void CloseDialog()
         {
             if (!User.IsValid)
             {
@@ -60,22 +61,7 @@ namespace Kursach.ViewModels
                 return;
             }
 
-            var res = await dataBase.SignUpAsync(User, Mode);
-
-            if (res)
-            {
-                Logger.Log.Info($"Регистрация нового пользователя: {{login: {User.Login}, mode: {Mode}}}");
-                await this.ShowMessageBoxAsync("Пользователь зарегистрирован", MaterialMessageBoxButtons.Ok);
-            }
-            else
-            {
-                Logger.Log.Info($"Не удачная регистрация нового пользователя, пользователь уже есть: {{login: {User.Login}, mode: {Mode}}}");
-                await this.ShowMessageBoxAsync("Такой пользователь уже есть", MaterialMessageBoxButtons.Ok);
-            }
-
-            User.Login = "";
-            User.Password = "";
-            Mode = UserMode.Read;
+            OwnerIdentifier.Close(new SignUpResult(User, Mode));
         }
     }
 }

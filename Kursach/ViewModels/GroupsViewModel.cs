@@ -85,12 +85,10 @@ namespace Kursach.ViewModels
             var res = await dataBase.AddGroupAsync(editor);
             var msg = res ? "Группа добавлена" : "Группа не добавлена";
 
-            Logger.Log.Info($"{msg}: {{name: {editor.Name}, curatorId: {editor.CuratorId}}}");
-
             if (res)
                 Groups.Add(editor);
 
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            Log(msg, editor.Name, editor.CuratorId);
         }
 
         /// <summary>
@@ -108,9 +106,7 @@ namespace Kursach.ViewModels
             var res = await dataBase.SaveGroupAsync(group);
             var msg = res ? "Группа сохранена" : "Группа не сохранена";
 
-            Logger.Log.Info($"{msg}: {{name: {group.Name}, Curator: {group.CuratorId}}}");
-
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            Log(msg, group.Name, group.CuratorId);
         }
 
         /// <summary>
@@ -126,11 +122,15 @@ namespace Kursach.ViewModels
             var res = await dataBase.RemoveGroupAsync(group);
             var msg = res ? "Группа удалена" : "Группа не удалена";
 
-            Logger.Log.Info($"{msg}: {{name: {group.Name}, curatorId: {group.CuratorId}}}");
-
             if (res)
                 Groups.Remove(group);
 
+            Log(msg, group.Name, group.CuratorId);
+        }
+
+        async void Log(string msg, string name, int id)
+        {
+            Logger.Log.Info($"{msg}: {{name: {name}, curatorId: {id}}}");
             await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 
