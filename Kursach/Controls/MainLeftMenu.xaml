@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <converters:UserModeToVisibility x:Key="UserModeToVisibility"
                                          NeedMode="Admin"/>
-        
+
         <Style TargetType="Button" BasedOn="{StaticResource FlatButton}">
             <Setter Property="Margin" Value="0"/>
         </Style>
@@ -24,15 +24,14 @@
         <Button Content="Домашняя"
                 Command="{Binding HomeCommand}"/>
 
+        <Button Content="Студенты"
+                Command="{Binding StudentsCommand}"/>
+
         <Button Content="Сотрудники"
                 Command="{Binding StaffCommand}"/>
 
         <Button Content="Группы"
                 Command="{Binding GroupsCommand}"/>
-
-        <Button Content="Регистрация пользователей"
-                Command="{Binding SignUpCommand}"
-                Visibility="{Binding User.Mode, Converter={StaticResource UserModeToVisibility}}"/>
 
         <Button Content="База пользователей"
                 Command="{Binding OpenUsersCommand}"
