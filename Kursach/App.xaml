@@ -20,12 +20,13 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/PasswordBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/ItemsControl.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/ComboBox.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/DatePicker.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
             <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
             <converters:UserModeToVisibility x:Key="AdminUserModeToVisibility" NeedMode="Admin"/>
-            <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
         </ResourceDictionary>
     </Application.Resources>
 

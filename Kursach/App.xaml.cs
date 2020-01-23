@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.Excel;
 using Kursach.Models;
 using Kursach.ViewModels;
 using Kursach.Views;
@@ -9,9 +10,13 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows;
+using System.Windows.Markup;
 
 namespace Kursach
 {
@@ -27,6 +32,20 @@ namespace Kursach
 #endif
 
             return Container.Resolve<MainWindow>();
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var culture = new CultureInfo("ru-RU");
+
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
+            base.OnStartup(e);
         }
 
         protected override void ConfigureViewModelLocator()
@@ -97,6 +116,10 @@ namespace Kursach
 
             //dialogs
             containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();
+
+            //excel
+            containerRegistry.RegisterSingleton<IExporter<Group>, GroupExporter>();
+            containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
         }
     }
 
