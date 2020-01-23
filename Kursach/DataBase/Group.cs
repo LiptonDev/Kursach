@@ -35,6 +35,32 @@ namespace Kursach.DataBase
         public int CuratorId { get; set; } = -1;
 
         /// <summary>
+        /// Специальность.
+        /// </summary>
+        [Display(Name = "Специальность")]
+        [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
+        public string Specialty { get; set; }
+
+        /// <summary>
+        /// Дата начала обучения.
+        /// </summary>
+        [Display(Name = "Дата начала обучения")]
+        [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
+        public DateTime? Start { get; set; }
+
+        /// <summary>
+        /// Дата конца обучения.
+        /// </summary>
+        [Display(Name = "Дата конца обучения")]
+        [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
+        public DateTime? End { get; set; }
+
+        /// <summary>
+        /// Группа является бюджетной.
+        /// </summary>
+        public bool IsBudget { get; set; } = true;
+
+        /// <summary>
         /// Куратор.
         /// </summary>
         public virtual Staff Curator { get; set; }
@@ -56,6 +82,11 @@ namespace Kursach.DataBase
         public override bool Equals(object obj)
         {
             return (obj is Group group) && group.Id == Id;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

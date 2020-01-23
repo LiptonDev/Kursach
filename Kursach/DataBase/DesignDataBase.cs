@@ -1,4 +1,5 @@
 ﻿#if design
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -100,6 +101,10 @@ namespace Kursach.DataBase
                     Name = $"ГР-{i}",
                     Id = i,
                     CuratorId = i,
+                    End = DateTime.Now,
+                    Start = DateTime.Now, 
+                    Specialty = "Оооооочень длинное название специальности для теста",
+                    IsBudget = true,
                     Curator = new Staff
                     {
                         FirstName = "Имя",
@@ -115,6 +120,10 @@ namespace Kursach.DataBase
                             FirstName = "Имя",
                             LastName = "Фамилия",
                             MiddleName = "Отчество",
+                            Birthdate = DateTime.Now,
+                            DecreeOfEnrollment = "№53-К от 23.08.2017",
+                            Notice = "пер. из гр. ТЭО-21 (11) Пр№52-К от 02.07.2018",
+                            PoPkNumber = 1337,
                             GroupId = i,
                             Id = i
                         }
