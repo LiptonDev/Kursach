@@ -4,6 +4,7 @@ using Kursach.Models;
 using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
+using Microsoft.Win32;
 using System.Threading.Tasks;
 
 namespace Kursach.Dialogs
@@ -36,6 +37,24 @@ namespace Kursach.Dialogs
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.container = container;
             this.viewFactory = viewFactory;
+        }
+
+        /// <summary>
+        /// Выбор файла для экспорта данных.
+        /// </summary>
+        /// <param name="defName">Изначальное название файла.</param>
+        /// <returns></returns>
+        public string SelectExportFileName(string defName)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.Title = "Введите имя файла для сохранения";
+            sfd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            sfd.FileName = defName;
+
+            if (sfd.ShowDialog() == true)
+                return sfd.FileName;
+            else return null;
         }
 
         async Task<T> show<T, VM>(object[] args = null, IDialogIdentifier dialogIdentifier = null)

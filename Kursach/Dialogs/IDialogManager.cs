@@ -11,6 +11,13 @@ namespace Kursach.Dialogs
     interface IDialogManager
     {
         /// <summary>
+        /// Выбор файла для экспорта данных.
+        /// </summary>
+        /// <param name="defName">Изначальное название файла.</param>
+        /// <returns></returns>
+        string SelectExportFileName(string defName);
+
+        /// <summary>
         /// Окно логов входа.
         /// </summary>
         void ShowLogs(User user);
