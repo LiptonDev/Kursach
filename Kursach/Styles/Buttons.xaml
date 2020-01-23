@@ -2,7 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:materialHelper="clr-namespace:MaterialDesignXaml.DialogsHelper.Controls;assembly=MaterialDesignXaml.DialogsHelper">
+    xmlns:materialHelper="clr-namespace:MaterialDesignXaml.DialogsHelper.Controls;assembly=MaterialDesignXaml.DialogsHelper"
+    xmlns:converters="clr-namespace:Kursach.Converters">
+
+    <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
 
     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}" x:Key="FlatButton">
         <Setter Property="Margin" Value="5"/>
@@ -10,6 +13,10 @@
 
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}"/>
 
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="UserModeButton">
+        <Setter Property="Visibility" Value="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+    </Style>
+    
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="OkDialogButton">
         <Setter Property="Command" Value="{Binding CloseDialogCommand}"/>
         <Setter Property="Content" Value="Выбрать"/>
