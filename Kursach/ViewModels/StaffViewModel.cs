@@ -2,9 +2,11 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -41,20 +43,32 @@ namespace Kursach.ViewModels
         readonly IDialogManager dialogManager;
 
         /// <summary>
+        /// Экспорт данных о сотрудниках.
+        /// </summary>
+        readonly IExporter<IEnumerable<Staff>> exporter;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public StaffViewModel(IDataBase dataBase, IContainer container, IDialogManager dialogManager)
+        public StaffViewModel(IDataBase dataBase, IContainer container, IExporter<IEnumerable<Staff>> exporter, IDialogManager dialogManager)
         {
             this.dataBase = dataBase;
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
+            this.exporter = exporter;
 
             Staff = new ObservableCollection<Staff>();
 
             EditStaffCommand = new DelegateCommand<Staff>(EditStaff);
             DeleteStaffCommand = new DelegateCommand<Staff>(DeleteStaff);
             AddStaffCommand = new DelegateCommand(AddStaff);
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
         }
+
+        /// <summary>
+        /// Команда экспорта данных в Excel.
+        /// </summary>
+        public ICommand ExportToExcelCommand { get; }
 
         /// <summary>
         /// Команда добавления сотрудника.
@@ -70,6 +84,14 @@ namespace Kursach.ViewModels
         /// Команда удаления сотрудника.
         /// </summary>
         public ICommand<Staff> DeleteStaffCommand { get; }
+
+        /// <summary>
+        /// Экспорт данных в Excel.
+        /// </summary>
+        private void ExportToExcel()
+        {
+            exporter.Export(Staff);
+        }
 
         /// <summary>
         /// Добавить сотрудника.

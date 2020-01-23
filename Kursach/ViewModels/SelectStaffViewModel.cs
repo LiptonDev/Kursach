@@ -46,7 +46,7 @@ namespace Kursach.ViewModels
 
             CloseDialogCommand = new DelegateCommand(CloseDialog);
 
-            LoadStaff(currentId);
+            Load(currentId);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Загрузка всех сотрудников.
         /// </summary>
-        private async void LoadStaff(int currentId)
+        private async void Load(int currentId)
         {
             var res = await dataBase.GetStaffsAsync();
             Staff.AddRange(res);

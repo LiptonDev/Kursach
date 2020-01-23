@@ -103,6 +103,10 @@ namespace Kursach.ViewModels
 
             group.CuratorId = editor.CuratorId;
             group.Name = editor.Name;
+            group.Start = editor.Start;
+            group.End = editor.End;
+            group.Specialty = editor.Specialty;
+            group.IsBudget = editor.IsBudget;
             var res = await dataBase.SaveGroupAsync(group);
             var msg = res ? "Группа сохранена" : "Группа не сохранена";
 

@@ -30,13 +30,13 @@ namespace Kursach.ViewModels
 
             Logs = new ObservableCollection<SignInLog>();
 
-            LoadLogs(user);
+            Load(user);
         }
 
         /// <summary>
         /// Загрузка логов.
         /// </summary>
-        private async void LoadLogs(User user)
+        private async void Load(User user)
         {
             var res = await dataBase.GetSignInLogsAsync(user);
             Logs.AddRange(res.OrderByDescending(x => x.Date));

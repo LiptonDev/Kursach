@@ -2,9 +2,11 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -27,6 +29,11 @@ namespace Kursach.ViewModels
         public ObservableCollection<Group> Groups { get; }
 
         /// <summary>
+        /// Выбранная группа.
+        /// </summary>
+        public Group SelectedGroup { get; set; }
+
+        /// <summary>
         /// База данных.
         /// </summary>
         readonly IDataBase dataBase;
@@ -42,19 +49,26 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
+        /// Экспорт данных о группе.
+        /// </summary>
+        readonly IExporter<Group> groupExporter;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IContainer container)
+        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group> exporter, IContainer container)
         {
             this.dataBase = dataBase;
             this.dialogManager = dialogManager;
-            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
+            dialogIdentifier = container.ResolveRootDialogIdentifier();
+            groupExporter = exporter;
 
             Groups = new ObservableCollection<Group>();
 
             EditStudentCommand = new DelegateCommand<Student>(EditStudent);
             DeleteStudentCommand = new AsyncCommand<Student>(DeleteStudent);
             AddStudentCommand = new DelegateCommand(AddStudent);
+            ExportGroupCommand = new DelegateCommand(ExportGroup);
         }
 
         /// <summary>
@@ -71,6 +85,11 @@ namespace Kursach.ViewModels
         /// Команда удаления студента.
         /// </summary>
         public ICommand<Student> DeleteStudentCommand { get; }
+
+        /// <summary>
+        /// Команда экспортирования информации о группе.
+        /// </summary>
+        public ICommand ExportGroupCommand { get; }
 
         /// <summary>
         /// Добавление студента.
@@ -118,10 +137,26 @@ namespace Kursach.ViewModels
             student.LastName = editor.LastName;
             student.MiddleName = editor.MiddleName;
             student.GroupId = editor.GroupId;
+            student.Birthdate = editor.Birthdate;
+            student.Expelled = editor.Expelled;
+            student.DecreeOfEnrollment = editor.DecreeOfEnrollment;
+            student.Notice = editor.Notice;
+            student.PoPkNumber = editor.PoPkNumber;
             var res = await dataBase.SaveStudentAsync(student);
             var msg = res ? "Студент сохранен" : "Студент не сохранен";
 
             Log(msg, student);
+        }
+
+        /// <summary>
+        /// Экспорт информации о группе.
+        /// </summary>
+        private void ExportGroup()
+        {
+            if (SelectedGroup == null)
+                return;
+
+            groupExporter.Export(SelectedGroup);
         }
 
         async void Log(string msg, Student student)

@@ -15,12 +15,12 @@ namespace Kursach.ViewModels
     class SelectGroupViewModel : ViewModelBase, IClosableDialog
     {
         /// <summary>
-        /// Список всех 
+        /// Список всех групп.
         /// </summary>
         public ObservableCollection<Group> Groups { get; }
 
         /// <summary>
-        /// Выбранный куратор.
+        /// Выбранная группа.
         /// </summary>
         public Group SelectedGroup { get; set; }
 
@@ -46,7 +46,7 @@ namespace Kursach.ViewModels
 
             CloseDialogCommand = new DelegateCommand(CloseDialog);
 
-            LoadStaff(currentId);
+            Load(currentId);
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Kursach.ViewModels
 
 
         /// <summary>
-        /// Загрузка всех работников.
+        /// Загрузка всех групп.
         /// </summary>
-        private async void LoadStaff(int currentId)
+        private async void Load(int currentId)
         {
             var res = await dataBase.GetGroupsAsync();
             Groups.AddRange(res);
