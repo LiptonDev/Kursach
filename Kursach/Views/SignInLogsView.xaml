@@ -27,8 +27,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Button Content="Закрыть"
-                Grid.Row="2"
+        <Button Grid.Row="2"
                 Style="{StaticResource CancelDialogButton}"/>
     </Grid>
 

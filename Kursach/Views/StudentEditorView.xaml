@@ -2,7 +2,8 @@
     x:Class="Kursach.Views.StudentEditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes">
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:controls="clr-namespace:Kursach.Controls">
 
     <material:DialogHost Identifier="{Binding Identifier}">
         <StackPanel Margin="5">
@@ -17,6 +18,17 @@
             <TextBox Text="{Binding Student.MiddleName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Отчество"/>
 
+            <DatePicker SelectedDate="{Binding Student.Birthdate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        material:HintAssist.Hint="Дата рождения"/>
+
+            <TextBox Text="{Binding Student.PoPkNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="№ по п/к"/>
+
+            <TextBox Text="{Binding Student.DecreeOfEnrollment, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Приказ о зачислении"/>
+
+            <TextBox Text="{Binding Student.Notice, UpdateSourceTrigger=PropertyChanged}"
+                     material:HintAssist.Hint="Примечание"/>
 
             <TextBox Text="{Binding Student.GroupId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="ИД группы"
@@ -27,13 +39,11 @@
                 </TextBox.InputBindings>
             </TextBox>
 
-            <UniformGrid Rows="1">
-                <Button Content="Закрыть"
-                        Style="{StaticResource CancelDialogButton}"/>
+            <CheckBox IsChecked="{Binding Student.Expelled}"
+                      Margin="5"
+                      Content="Студент отчислен"/>
 
-                <Button Command="{Binding CloseDialogCommand}"
-                        Style="{StaticResource IsEditModeButton}"/>
-            </UniformGrid>
+            <controls:EditorButtons/>
         </StackPanel>
     </material:DialogHost>
 

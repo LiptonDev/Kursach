@@ -12,9 +12,14 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button Content="Добавить сотрудника"
-                Command="{Binding AddStaffCommand}"
-                Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+        <UniformGrid Rows="1">
+            <Button Content="Добавить сотрудника"
+                    Command="{Binding AddStaffCommand}"
+                    Style="{StaticResource UserModeButton}"/>
+
+            <Button Content="Экспорт данных"
+                    Command="{Binding ExportToExcelCommand}"/>
+        </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding Staff}"
                       Grid.Row="1">
@@ -22,26 +27,27 @@
                 <DataTemplate>
                     <material:Card Margin="5">
                         <StackPanel Margin="5">
-                            <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
+                            </StackPanel.Resources>
+                            
+                            <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"/>
 
-                            <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"/>
 
-                            <TextBlock Text="{Binding MiddleName, StringFormat='Отчество: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <TextBlock Text="{Binding MiddleName, StringFormat='Отчество: {0}'}"/>
 
-                            <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"/>
 
                             <Button Content="Редактировать"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.EditStaffCommand}"
                                     CommandParameter="{Binding}"
-                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                                    Style="{StaticResource UserModeButton}"/>
+                            
                             <Button Content="Удалить"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteStaffCommand}"
                                     CommandParameter="{Binding}"
-                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                                    Style="{StaticResource UserModeButton}"/>
                         </StackPanel>
                     </material:Card>
                 </DataTemplate>

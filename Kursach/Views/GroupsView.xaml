@@ -4,7 +4,12 @@
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Kursach.Converters"
     prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <UserControl.Resources>
+        <converters:IsBudgetConverter x:Key="IsBudgetConverter"/>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,28 +19,33 @@
 
         <Button Content="Добавить группу"
                 Command="{Binding AddGroupCommand}"
-                Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
-
+                Style="{StaticResource UserModeButton}"/>
+        
         <ItemsControl ItemsSource="{Binding Groups}"
                       Grid.Row="1">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
                         <StackPanel Margin="5">
-                            <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
+                            </StackPanel.Resources>
 
-                            <TextBlock Text="{Binding Curator, StringFormat='Куратор: {0}'}"
-                                       Style="{StaticResource MarginBlock}"/>
+                            <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
+
+                            <TextBlock Text="{Binding Curator, StringFormat='Куратор: {0}'}"/>
+
+                            <TextBlock Text="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
 
                             <Button Content="Редактировать"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.GroupEditorCommand}"
                                     CommandParameter="{Binding}"
-                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                                    Style="{StaticResource UserModeButton}"/>
+                            
                             <Button Content="Удалить"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteGroupCommand}"
                                     CommandParameter="{Binding}"
-                                    Visibility="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                                    Style="{StaticResource UserModeButton}"/>
                         </StackPanel>
                     </material:Card>
                 </DataTemplate>
