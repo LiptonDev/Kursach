@@ -165,6 +165,11 @@
     <Compile Include="Dialogs\DialogNameAttribute.cs" />
     <Compile Include="Dialogs\IDialogManager.cs" />
     <Compile Include="DataBase\DesignDataBase.cs" />
+    <Compile Include="Excel\BaseExporter.cs" />
+    <Compile Include="Excel\BaseImporter.cs" />
+    <Compile Include="Excel\GroupImporter.cs" />
+    <Compile Include="Excel\GroupsExporter.cs" />
+    <Compile Include="Excel\IImporter.cs" />
     <Compile Include="Models\IEditMode.cs" />
     <Compile Include="Models\SignUpResult.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
