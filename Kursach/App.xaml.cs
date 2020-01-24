@@ -120,6 +120,8 @@ namespace Kursach
             //excel
             containerRegistry.RegisterSingleton<IExporter<Group>, GroupExporter>();
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
+            containerRegistry.RegisterSingleton<IExporter<IEnumerable<Group>>, GroupsExporter>();
+            containerRegistry.RegisterSingleton<IImporter<IEnumerable<Student>, Group>, GroupImporter>();
         }
     }
 
