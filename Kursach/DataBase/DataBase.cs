@@ -359,5 +359,20 @@ namespace Kursach.DataBase
                 return true;
             });
         }
+
+        /// <summary>
+        /// Добавить студентов.
+        /// </summary>
+        /// <param name="students">Студенты.</param>
+        /// <returns></returns>
+        public async Task<bool> AddStudentsAsync(IEnumerable<Student> students)
+        {
+            return await query(async () =>
+            {
+                context.Students.AddRange(students);
+                await context.SaveChangesAsync();
+                return true;
+            });
+        }
     }
 }
