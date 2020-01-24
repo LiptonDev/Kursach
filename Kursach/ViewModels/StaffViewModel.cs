@@ -43,7 +43,7 @@ namespace Kursach.ViewModels
         readonly IDialogManager dialogManager;
 
         /// <summary>
-        /// Экспорт данных о сотрудниках.
+        /// Экспорт данных.
         /// </summary>
         readonly IExporter<IEnumerable<Staff>> exporter;
 

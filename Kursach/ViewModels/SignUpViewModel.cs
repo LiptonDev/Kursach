@@ -16,7 +16,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Identifier.
         /// </summary>
-        public string Identifier => "SignUpViewModel";
+        public string Identifier => nameof(SignUpViewModel);
 
         /// <summary>
         /// Owner.

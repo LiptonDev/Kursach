@@ -6,7 +6,7 @@ using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
-using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -49,26 +49,33 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
-        /// Экспорт данных о группе.
+        /// Экспорт данных.
         /// </summary>
-        readonly IExporter<Group> groupExporter;
+        readonly IExporter<Group> exporter;
+
+        /// <summary>
+        /// Импорт данных.
+        /// </summary>
+        readonly IImporter<IEnumerable<Student>, Group> importer;
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group> exporter, IContainer container)
+        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group> exporter, IImporter<IEnumerable<Student>, Group> importer, IContainer container)
         {
             this.dataBase = dataBase;
             this.dialogManager = dialogManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
-            groupExporter = exporter;
+            this.exporter = exporter;
+            this.importer = importer;
 
             Groups = new ObservableCollection<Group>();
 
             EditStudentCommand = new DelegateCommand<Student>(EditStudent);
             DeleteStudentCommand = new AsyncCommand<Student>(DeleteStudent);
             AddStudentCommand = new DelegateCommand(AddStudent);
-            ExportGroupCommand = new DelegateCommand(ExportGroup);
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
+            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
         }
 
         /// <summary>
@@ -87,9 +94,14 @@ namespace Kursach.ViewModels
         public ICommand<Student> DeleteStudentCommand { get; }
 
         /// <summary>
-        /// Команда экспортирования информации о группе.
+        /// Команда экспорта данных в Excel.
         /// </summary>
-        public ICommand ExportGroupCommand { get; }
+        public ICommand ExportToExcelCommand { get; }
+
+        /// <summary>
+        /// Команда импорта данных из Excel.
+        /// </summary>
+        public ICommand ImportFromExcelCommand { get; }
 
         /// <summary>
         /// Добавление студента.
@@ -151,12 +163,28 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Экспорт информации о группе.
         /// </summary>
-        private void ExportGroup()
+        private void ExportToExcel()
         {
             if (SelectedGroup == null)
                 return;
 
-            groupExporter.Export(SelectedGroup);
+            exporter.Export(SelectedGroup);
+        }
+
+        /// <summary>
+        /// Импорт данных о группе.
+        /// </summary>
+        private async void ImportFromExcel()
+        {
+            if (SelectedGroup == null)
+                return;
+
+            var students = importer.Import(SelectedGroup);
+
+            if (students == null)
+                return;
+
+            await dataBase.AddStudentsAsync(students);
         }
 
         async void Log(string msg, Student student)

@@ -2,9 +2,11 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -42,20 +44,32 @@ namespace Kursach.ViewModels
         readonly IDialogManager dialogManager;
 
         /// <summary>
+        /// Экспорт данных.
+        /// </summary>
+        readonly IExporter<IEnumerable<Group>> exporter;
+
+        /// <summary>
         /// Ctor.
         /// </summary>
-        public GroupsViewModel(IDataBase dataBase, IContainer container, IDialogManager dialogManager)
+        public GroupsViewModel(IDataBase dataBase, IContainer container, IDialogManager dialogManager, IExporter<IEnumerable<Group>> exporter)
         {
             this.dataBase = dataBase;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
+            this.exporter = exporter;
 
             Groups = new ObservableCollection<Group>();
 
             DeleteGroupCommand = new AsyncCommand<Group>(DeleteGroup);
             GroupEditorCommand = new DelegateCommand<Group>(GroupEditor);
             AddGroupCommand = new DelegateCommand(AddGroup);
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
         }
+
+        /// <summary>
+        /// Команда экспорта данных в Excel.
+        /// </summary>
+        public ICommand ExportToExcelCommand { get; }
 
         /// <summary>
         /// Команда добавления новой группы.
@@ -130,6 +144,14 @@ namespace Kursach.ViewModels
                 Groups.Remove(group);
 
             Log(msg, group.Name, group.CuratorId);
+        }
+
+        /// <summary>
+        /// Экспорт данных.
+        /// </summary>
+        private void ExportToExcel()
+        {
+            exporter.Export(Groups);
         }
 
         async void Log(string msg, string name, int id)

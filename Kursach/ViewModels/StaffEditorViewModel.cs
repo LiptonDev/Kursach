@@ -18,7 +18,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Identifier.
         /// </summary>
-        public string Identifier => "StaffEditorViewModel";
+        public string Identifier => nameof(StaffEditorViewModel);
 
         /// <summary>
         /// Owner.
