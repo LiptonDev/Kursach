@@ -11,19 +11,14 @@ namespace Kursach.Excel
     /// <summary>
     /// Экспорт данных о группе.
     /// </summary>
-    class GroupExporter : IExporter<Group>
+    class GroupExporter : BaseExporter, IExporter<Group>
     {
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public GroupExporter(IDialogManager dialogManager)
+        public GroupExporter(IDialogManager dialogManager) : base(dialogManager)
         {
-            this.dialogManager = dialogManager;
+
         }
 
         /// <summary>
@@ -32,9 +27,7 @@ namespace Kursach.Excel
         /// <param name="group">Группа.</param>
         public void Export(Group group)
         {
-            string fileName = dialogManager.SelectExportFileName(group.Name);
-
-            if (fileName == null)
+            if (!SelectFile(group.Name))
                 return;
 
             using (var excel = new ExcelPackage())
@@ -42,8 +35,7 @@ namespace Kursach.Excel
                 ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("ИТ-41");
 
                 //Глобальный стиль.
-                worksheet.Cells.Style.Font.Name = "Arial";
-                worksheet.Cells.SetFontSize(12);
+                worksheet.Cells.SetFontName("Arial").SetFontSize(12);
 
                 //Название группы.
                 worksheet.Cells["B1"]
@@ -124,17 +116,13 @@ namespace Kursach.Excel
                 worksheet.Cells[8, 6, 8 + count - 1, 6].SetFontSize(8).SetWrapText();
 
                 //Таблица.
-                var table = worksheet.Cells[7, 1, 7 + count, 6];
-                table.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                worksheet.Cells[7, 1, 7 + count, 6].SetTable();
 
                 worksheet.Cells.AutoFitColumns(1);
 
                 try
                 {
-                    excel.SaveAs(new FileInfo(fileName));
+                    excel.SaveAs(new FileInfo(FileName));
                     Logger.Log.Info($"Экспорт информации о группе {{{group.Name}}}");
                 }
                 catch (Exception ex)

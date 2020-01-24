@@ -2,6 +2,7 @@
 using Kursach.Dialogs;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,19 +11,13 @@ namespace Kursach.Excel
     /// <summary>
     /// Экспорт данных о сотрудниках.
     /// </summary>
-    class StaffExporter : IExporter<IEnumerable<Staff>>
+    class StaffExporter : BaseExporter, IExporter<IEnumerable<Staff>>
     {
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StaffExporter(IDialogManager dialogManager)
+        public StaffExporter(IDialogManager dialogManager) : base(dialogManager)
         {
-            this.dialogManager = dialogManager;
         }
 
         /// <summary>
@@ -31,9 +26,7 @@ namespace Kursach.Excel
         /// <param name="staffs">Сотрудники.</param>
         public void Export(IEnumerable<Staff> staffs)
         {
-            string fileName = dialogManager.SelectExportFileName("сотрудники");
-
-            if (fileName == null)
+            if (!SelectFile("сотрудники"))
                 return;
 
             using (var excel = new ExcelPackage())
@@ -41,8 +34,7 @@ namespace Kursach.Excel
                 ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("Сотрудники");
 
                 //Глобальный стиль.
-                worksheet.Cells.Style.Font.Name = "Arial";
-                worksheet.Cells.SetFontSize(12);
+                worksheet.Cells.SetFontName("Arial").SetFontSize(12);
 
                 //ФИО
                 worksheet.Cells["A1"]
@@ -68,15 +60,19 @@ namespace Kursach.Excel
                 }
 
                 //Таблица.
-                var table = worksheet.Cells[1, 1, 1 + i, 2];
-                table.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-                table.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                worksheet.Cells[1, 1, 1 + i, 2].SetTable();
 
                 worksheet.Cells.AutoFitColumns(1);
 
-                excel.SaveAs(new FileInfo(fileName));
+                try
+                {
+                    excel.SaveAs(new FileInfo(FileName));
+                    Logger.Log.Info($"Экспорт информации о сотрудниках");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error($"Ошибка экспорта информации о сотрудниках: {{{ex.Message}}}");
+                }
             }
         }
     }
