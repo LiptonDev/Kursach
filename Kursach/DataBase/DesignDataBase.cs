@@ -10,7 +10,7 @@ namespace Kursach.DataBase
     class DesignDataBase : IDataBase
     {
         const int Delay = 100;
-
+        Random rn = new Random();
 
         public async Task LoadStudentsAsync()
         {
@@ -96,13 +96,13 @@ namespace Kursach.DataBase
 
             for (int i = 0; i < 25; i++)
             {
-                groups.Add(new Group
+                var group = new Group
                 {
                     Name = $"ГР-{i}",
                     Id = i,
                     CuratorId = i,
                     End = DateTime.Now,
-                    Start = DateTime.Now, 
+                    Start = DateTime.Now,
                     Specialty = "Оооооочень длинное название специальности для теста",
                     IsBudget = true,
                     Curator = new Staff
@@ -113,22 +113,28 @@ namespace Kursach.DataBase
                         Position = "Шестерка",
                         Id = i
                     },
-                    Students = new ObservableCollection<Student>
+                    Students = new ObservableCollection<Student>()
+                };
+
+                for (int a = 0; a < 15; a++)
+                {
+                    bool exp = rn.Next(0, 2) == 1;
+                    group.Students.Add(new Student
                     {
-                        new Student
-                        {
-                            FirstName = "Имя",
-                            LastName = "Фамилия",
-                            MiddleName = "Отчество",
-                            Birthdate = DateTime.Now,
-                            DecreeOfEnrollment = "№53-К от 23.08.2017",
-                            Notice = "пер. из гр. ТЭО-21 (11) Пр№52-К от 02.07.2018",
-                            PoPkNumber = 1337,
-                            GroupId = i,
-                            Id = i
-                        }
-                    }
-                });
+                        FirstName = "Имя",
+                        LastName = "Фамилия",
+                        MiddleName = "Отчество",
+                        Birthdate = DateTime.Now,
+                        DecreeOfEnrollment = "№53-К от 23.08.2017",
+                        Notice = exp ? "отч. ПР№107-К от 13.09.2019 по иниц. обуч." : "",
+                        Expelled = exp,
+                        PoPkNumber = 1337,
+                        GroupId = i,
+                        Id = a
+                    });
+                }
+
+                groups.Add(group);
             }
 
             return groups;
@@ -190,6 +196,12 @@ namespace Kursach.DataBase
         }
 
         private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) => new User { Id = id, Login = login, Password = password, Mode = mode };
+
+        public async Task<bool> AddStudentsAsync(IEnumerable<Student> students)
+        {
+            await Task.Delay(Delay);
+            return true;
+        }
     }
 }
 #endif
