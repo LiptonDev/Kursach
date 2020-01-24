@@ -18,6 +18,12 @@ namespace Kursach.Dialogs
         string SelectExportFileName(string defName);
 
         /// <summary>
+        /// Выбор файла для импорта данных.
+        /// </summary>
+        /// <returns></returns>
+        string SelectImportFile();
+
+        /// <summary>
         /// Окно логов входа.
         /// </summary>
         void ShowLogs(User user);

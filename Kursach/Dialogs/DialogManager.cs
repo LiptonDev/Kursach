@@ -40,6 +40,21 @@ namespace Kursach.Dialogs
         }
 
         /// <summary>
+        /// Выбор файла для импорт данных.
+        /// </summary>
+        /// <returns></returns>
+        public string SelectImportFile()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Выберите файл группы для импорта";
+            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+
+            if (ofd.ShowDialog() == true)
+                return ofd.FileName;
+            else return null;
+        }
+
+        /// <summary>
         /// Выбор файла для экспорта данных.
         /// </summary>
         /// <param name="defName">Изначальное название файла.</param>
