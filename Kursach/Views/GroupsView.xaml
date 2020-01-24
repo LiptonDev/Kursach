@@ -17,10 +17,15 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button Content="Добавить группу"
-                Command="{Binding AddGroupCommand}"
-                Style="{StaticResource UserModeButton}"/>
-        
+        <UniformGrid Rows="1">
+            <Button Content="Добавить группу"
+                    Command="{Binding AddGroupCommand}"
+                    Style="{StaticResource UserModeButton}"/>
+
+            <Button Content="Экспорт данных"
+                    Command="{Binding ExportToExcelCommand}"/>
+        </UniformGrid>
+
         <ItemsControl ItemsSource="{Binding Groups}"
                       Grid.Row="1">
             <ItemsControl.ItemTemplate>

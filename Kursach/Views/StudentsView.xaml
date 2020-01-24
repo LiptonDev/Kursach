@@ -22,14 +22,19 @@
         <ComboBox ItemsSource="{Binding Groups}"
                   SelectedItem="{Binding SelectedGroup}"
                   material:HintAssist.Hint="Группа"/>
-
-        <UniformGrid Grid.Row="1">
+        
+        <UniformGrid Grid.Row="1"
+                     Rows="1">
             <Button Content="Добавить студента"
                     Command="{Binding AddStudentCommand}"
                     Style="{StaticResource UserModeButton}"/>
 
-            <Button Content="Экспорт данных о группе"
-                    Command="{Binding ExportGroupCommand}"/>
+            <Button Content="Экспорт данных"
+                    Command="{Binding ExportToExcelCommand}"/>
+
+            <Button Content="Импорт данных"
+                    Command="{Binding ImportFromExcelCommand}"
+                    Style="{StaticResource UserModeButton}"/>
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding SelectedGroup.Students}"
