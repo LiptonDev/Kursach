@@ -140,5 +140,12 @@ namespace Kursach.DataBase
         /// <param name="student">Студент.</param>
         /// <returns></returns>
         Task<bool> AddStudentAsync(Student student);
+
+        /// <summary>
+        /// Добавить студентов.
+        /// </summary>
+        /// <param name="students">Студенты.</param>
+        /// <returns></returns>
+        Task<bool> AddStudentsAsync(IEnumerable<Student> students);
     }
 }
