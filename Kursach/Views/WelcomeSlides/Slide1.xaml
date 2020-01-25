@@ -8,10 +8,6 @@
         <TextBlock Text="Добро пожаловать"
                    Style="{StaticResource TitleBlock}"/>
 
-        <TextBlock Text="Вы - Администратор"
-                   Style="{StaticResource TitleBlock}"
-                   Visibility="{Binding User.Mode, Converter={StaticResource AdminUserModeToVisibility}}"/>
-
         <TextBlock Text="Давайте я покажу Вам, что тут есть"
                    Style="{StaticResource TitleBlock}"/>
 

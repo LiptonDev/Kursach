@@ -38,7 +38,7 @@ namespace Kursach.DataBase
         /// <param name="user">Пользователь.</param>
         /// <param name="mode">Права.</param>
         /// <returns></returns>
-        Task<bool> SignUpAsync(LoginUser user, UserMode mode);
+        Task<bool> SignUpAsync(User user);
 
         /// <summary>
         /// Получение списка всех пользователей.
@@ -115,12 +115,6 @@ namespace Kursach.DataBase
         Task<bool> AddStaffAsync(Staff staff);
 
         /// <summary>
-        /// Загрузка всех студентов.
-        /// </summary>
-        /// <returns></returns>
-        Task LoadStudentsAsync();
-
-        /// <summary>
         /// Сохранить студента.
         /// </summary>
         /// <param name="student">Студент.</param>
@@ -147,5 +141,12 @@ namespace Kursach.DataBase
         /// <param name="students">Студенты.</param>
         /// <returns></returns>
         Task<bool> AddStudentsAsync(IEnumerable<Student> students);
+
+        /// <summary>
+        /// Получение студентов определенной группы.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        Task<IEnumerable<Student>> GetStudentsAsync(Group group);
     }
 }

@@ -1,10 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
-using Kursach.Dialogs;
 using Kursach.Models;
-using MaterialDesignXaml.DialogsHelper;
-using MaterialDesignXaml.DialogsHelper.Enums;
+using Kursach.Dialogs;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -13,54 +10,23 @@ namespace Kursach.ViewModels
     /// Group editor view model.
     /// </summary>
     [DialogName(nameof(Views.GroupEditorView))]
-    class GroupEditorViewModel : IClosableDialog, IDialogIdentifier, IEditMode
+    class GroupEditorViewModel : BaseEditModeViewModel<Group>
     {
-        /// <summary>
-        /// Identifier.
-        /// </summary>
-        public string Identifier => nameof(GroupEditorViewModel);
-
-        /// <summary>
-        /// Owner.
-        /// </summary>
-        public IDialogIdentifier OwnerIdentifier { get; }
-
         /// <summary>
         /// Менеджер диалогов.
         /// </summary>
         readonly IDialogManager dialogManager;
 
         /// <summary>
-        /// Группа.
-        /// </summary>
-        public Group Group { get; }
-
-        /// <summary>
-        /// True - Режим редактирования группы, иначе - добавление.
-        /// </summary>
-        public bool IsEditMode { get; }
-
-        /// <summary>
         /// Ctor.
         /// </summary>
         public GroupEditorViewModel(Group group, bool isEditMode, IContainer container, IDialogManager dialogManager)
+            : base(group, isEditMode, container)
         {
-            IsEditMode = isEditMode;
-            OwnerIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
 
-            if (isEditMode)
-                Group = (Group)group.Clone();
-            else Group = new Group();
-
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
             OpenStaffSelectorCommand = new DelegateCommand(OpenStaffSelector);
         }
-
-        /// <summary>
-        /// Команда закрытия диалога.
-        /// </summary>
-        public ICommand CloseDialogCommand { get; }
 
         /// <summary>
         /// Команда открытия выбора куратора.
@@ -72,24 +38,10 @@ namespace Kursach.ViewModels
         /// </summary>
         private async void OpenStaffSelector()
         {
-            var res = await dialogManager.SelectStaff(Group.CuratorId, this);
+            var res = await dialogManager.SelectStaff(EditableObject.CuratorId, this);
 
             if (res != null)
-                Group.CuratorId = res.Id;
-        }
-
-        /// <summary>
-        /// Закрытие диалога.
-        /// </summary>
-        private async void CloseDialog()
-        {
-            if (!Group.IsValid)
-            {
-                await this.ShowMessageBoxAsync(Group.Error, MaterialMessageBoxButtons.Ok);
-                return;
-            }
-
-            OwnerIdentifier.Close(Group);
+                EditableObject.CuratorId = res.Id;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using DryIoc;
-using Kursach.DataBase;
 using Kursach.Models;
 using Kursach.ViewModels;
-using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
 using Microsoft.Win32;
 using System.Threading.Tasks;
@@ -85,15 +83,6 @@ namespace Kursach.Dialogs
         }
 
         /// <summary>
-        /// Окно выбора группы.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Group> SelectGroup(int currentId, IDialogIdentifier dialogIdentifier)
-        {
-            return await show<Group, SelectGroupViewModel>(new object[] { currentId, dialogIdentifier }, dialogIdentifier);
-        }
-
-        /// <summary>
         /// Окно редактирования студента.
         /// </summary>
         /// <returns></returns>
@@ -140,9 +129,9 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Окно регистрации нового пользователя.
         /// </summary>
-        public async Task<SignUpResult> SignUp()
+        public async Task<User> SignUp(User user, bool isEditMode)
         {
-            return await dialogIdentifier.ShowAsync<SignUpResult>(container.Resolve<SignUpView>());
+            return await show<User, SignUpViewModel>(new object[] { user, isEditMode });
         }
     }
 }

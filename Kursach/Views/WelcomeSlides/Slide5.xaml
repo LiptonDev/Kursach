@@ -5,8 +5,21 @@
 
     <StackPanel Style="{StaticResource CenterStack}">
 
-        <TextBlock Text="Конец"
+        <TextBlock Text="Создатель:"
                    Style="{StaticResource TitleBlock}"/>
+
+        <TextBlock Text="Смирнов Александр"
+                   Style="{StaticResource TitleBlock}"/>
+
+        <TextBlock Text="Группа: ИТ-41 (2020г.)"
+                   Style="{StaticResource TitleBlock}"/>
+
+        <TextBlock Style="{StaticResource TitleBlock}">
+            <Run Text="VK.Com:"/>
+            <Hyperlink Command="{Binding OpenVkCommand}">
+                <Run Text="id99551920"/>
+            </Hyperlink>
+        </TextBlock>
 
         <Button Style="{StaticResource PreviousSliderButton}"/>
 

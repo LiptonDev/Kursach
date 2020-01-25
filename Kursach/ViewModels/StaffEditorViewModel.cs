@@ -1,11 +1,6 @@
-﻿using DevExpress.Mvvm;
-using DryIoc;
-using Kursach.DataBase;
-using Kursach.Dialogs;
+﻿using DryIoc;
 using Kursach.Models;
-using MaterialDesignXaml.DialogsHelper;
-using MaterialDesignXaml.DialogsHelper.Enums;
-using System.Windows.Input;
+using Kursach.Dialogs;
 
 namespace Kursach.ViewModels
 {
@@ -13,66 +8,14 @@ namespace Kursach.ViewModels
     /// Staff editor view model.
     /// </summary>
     [DialogName(nameof(Views.StaffEditorView))]
-    class StaffEditorViewModel : IClosableDialog, IDialogIdentifier, IEditMode
+    class StaffEditorViewModel : BaseEditModeViewModel<Staff>
     {
-        /// <summary>
-        /// Identifier.
-        /// </summary>
-        public string Identifier => nameof(StaffEditorViewModel);
-
-        /// <summary>
-        /// Owner.
-        /// </summary>
-        public IDialogIdentifier OwnerIdentifier { get; }
-
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
-        /// True - Режим редактирования группы, иначе - добавление.
-        /// </summary>
-        public bool IsEditMode { get; }
-
-        /// <summary>
-        /// Сотрудник.
-        /// </summary>
-        public Staff Staff { get; }
-
         /// <summary>
         /// Ctor.
         /// </summary>
-        public StaffEditorViewModel(Staff staff, bool isEditMode, IContainer container, IDialogManager dialogManager)
+        public StaffEditorViewModel(Staff staff, bool isEditMode, IContainer container)
+            : base(staff, isEditMode, container)
         {
-            IsEditMode = isEditMode;
-            OwnerIdentifier = container.ResolveRootDialogIdentifier();
-            this.dialogManager = dialogManager;
-
-            if (isEditMode)
-                Staff = (Staff)staff.Clone();
-            else Staff = new Staff();
-
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
-        }
-
-        /// <summary>
-        /// Команда закрытия диалога.
-        /// </summary>
-        public ICommand CloseDialogCommand { get; }
-
-        /// <summary>
-        /// Закрытие диалога.
-        /// </summary>
-        private async void CloseDialog()
-        {
-            if (!Staff.IsValid)
-            {
-                await this.ShowMessageBoxAsync(Staff.Error, MaterialMessageBoxButtons.Ok);
-                return;
-            }
-
-            OwnerIdentifier.Close(Staff);
         }
     }
 }

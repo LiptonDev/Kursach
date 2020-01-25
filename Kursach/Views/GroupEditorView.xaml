@@ -9,19 +9,19 @@
         <StackPanel Margin="5">
             <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
 
-            <TextBox Text="{Binding Group.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Название группы"/>
 
-            <TextBox Text="{Binding Group.Specialty, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.Specialty, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Специальность"/>
 
-            <DatePicker SelectedDate="{Binding Group.Start, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <DatePicker SelectedDate="{Binding EditableObject.Start, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         material:HintAssist.Hint="Дата начала обучения"/>
 
-            <DatePicker SelectedDate="{Binding Group.End, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <DatePicker SelectedDate="{Binding EditableObject.End, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         material:HintAssist.Hint="Дата окончания обучения"/>
 
-            <TextBox Text="{Binding Group.CuratorId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.CuratorId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="ИД куратора"
                      IsReadOnly="True"
                      ToolTip="Нажмите дважды, чтобы открыть окно выбора куратора">
@@ -30,7 +30,7 @@
                 </TextBox.InputBindings>
             </TextBox>
 
-            <CheckBox IsChecked="{Binding Group.IsBudget}"
+            <CheckBox IsChecked="{Binding EditableObject.IsBudget}"
                       Margin="5"
                       Content="Бюджетная группа"/>
 

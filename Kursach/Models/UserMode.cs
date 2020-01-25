@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Права пользователя.

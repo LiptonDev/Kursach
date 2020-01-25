@@ -1,8 +1,8 @@
-﻿using PropertyChanged;
+﻿using Dapper.Contrib.Extensions;
+using PropertyChanged;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Лог входа в программу.
@@ -14,6 +14,7 @@ namespace Kursach.DataBase
         /// Id.
         /// </summary>
         [DoNotNotify]
+        [Key]
         public int Id { get; set; }
 
         /// <summary>
@@ -27,11 +28,5 @@ namespace Kursach.DataBase
         /// </summary>
         [DoNotNotify]
         public DateTime Date { get; set; } = DateTime.Now;
-
-        /// <summary>
-        /// Пользователь.
-        /// </summary>
-        [DoNotNotify]
-        public virtual User User { get; set; }
     }
 }

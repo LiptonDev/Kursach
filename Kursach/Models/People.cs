@@ -1,7 +1,7 @@
 ﻿using Kursach.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Человек.
@@ -11,6 +11,7 @@ namespace Kursach.DataBase
         /// <summary>
         /// Id.
         /// </summary>
+        [Dapper.Contrib.Extensions.Key]
         public int Id { get; set; }
 
         /// <summary>

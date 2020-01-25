@@ -16,7 +16,23 @@
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="UserModeButton">
         <Setter Property="Visibility" Value="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
     </Style>
-    
+
+    <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="AddButton">
+        <Setter Property="Command" Value="{Binding AddCommand}"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="EditButton">
+        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.EditCommand}"/>
+        <Setter Property="CommandParameter" Value="{Binding}"/>
+        <Setter Property="Content" Value="Редактировать"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="DeleteButton">
+        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteCommand}"/>
+        <Setter Property="CommandParameter" Value="{Binding}"/>
+        <Setter Property="Content" Value="Удалить"/>
+    </Style>
+
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="OkDialogButton">
         <Setter Property="Command" Value="{Binding CloseDialogCommand}"/>
         <Setter Property="Content" Value="Выбрать"/>

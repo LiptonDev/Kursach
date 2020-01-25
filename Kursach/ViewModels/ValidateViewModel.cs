@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm;
+﻿using Dapper.Contrib.Extensions;
+using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,11 +23,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ошибки в проверке полей.
         /// </summary>
+        [Write(false)]
         public string Error => string.Join(Environment.NewLine, GetValidationErrors());
 
         /// <summary>
         /// Наличие ошибок.
         /// </summary>
+        [Write(false)]
         public bool IsValid => !GetValidationErrors().Any();
 
         /// <summary>
@@ -34,6 +37,7 @@ namespace Kursach.ViewModels
         /// </summary>
         /// <param name="propName">Имя св-ва.</param>
         /// <returns></returns>
+        [Write(false)]
         public string this[string propName] => GetValidationError(propName);
 
         /// <summary>

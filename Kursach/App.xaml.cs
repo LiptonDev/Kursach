@@ -11,9 +11,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
@@ -27,10 +25,6 @@ namespace Kursach
     {
         protected override Window CreateShell()
         {
-#if !design
-            Container.Resolve<Context>().Users.AsNoTracking().Take(0);
-#endif
-
             return Container.Resolve<MainWindow>();
         }
 
@@ -55,10 +49,10 @@ namespace Kursach
             ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
             ViewModelLocationProvider.Register<LoginView, LoginViewModel>();
             ViewModelLocationProvider.Register<MainView, MainViewModel>();
-            ViewModelLocationProvider.Register<SignUpView, SignUpViewModel>();
             ViewModelLocationProvider.Register<GroupsView, GroupsViewModel>();
             ViewModelLocationProvider.Register<UsersView, UsersViewModel>();
             ViewModelLocationProvider.Register<StaffView, StaffViewModel>();
+            ViewModelLocationProvider.Register<StudentsView, StudentsViewModel>();
             ViewModelLocationProvider.Register<WelcomeView, MainViewModel>();
         }
 
@@ -72,7 +66,6 @@ namespace Kursach
             containerRegistry.RegisterSingleton<MainView>();
             containerRegistry.RegisterSingleton<WelcomeView>();
             containerRegistry.RegisterSingleton<UsersView>();
-            containerRegistry.RegisterSingleton<SignUpView>();
             containerRegistry.RegisterSingleton<GroupsView>();
             containerRegistry.RegisterSingleton<StaffView>();
             containerRegistry.RegisterSingleton<StudentsView>();
@@ -81,7 +74,6 @@ namespace Kursach
             containerRegistry.RegisterSingleton<MainWindowViewModel>();
             containerRegistry.RegisterSingleton<LoginViewModel>();
             containerRegistry.RegisterSingleton<MainViewModel>();
-            containerRegistry.RegisterSingleton<SignUpViewModel>();
             containerRegistry.RegisterSingleton<GroupsViewModel>();
             containerRegistry.RegisterSingleton<UsersViewModel>();
             containerRegistry.RegisterSingleton<StaffViewModel>();
@@ -95,7 +87,7 @@ namespace Kursach
             containerRegistry.Register<FrameworkElement, SelectStaffView>(nameof(SelectStaffView));
             containerRegistry.Register<FrameworkElement, StaffEditorView>(nameof(StaffEditorView));
             containerRegistry.Register<FrameworkElement, StudentEditorView>(nameof(StudentEditorView));
-            containerRegistry.Register<FrameworkElement, SelectGroupView>(nameof(SelectGroupView));
+            containerRegistry.Register<FrameworkElement, SignUpView>(nameof(SignUpView));
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
@@ -106,8 +98,6 @@ namespace Kursach
             containerRegistry.RegisterForNavigation<StaffView>(RegionViews.StaffView);
             containerRegistry.RegisterForNavigation<StudentsView>(RegionViews.StudentsView);
 
-            //db
-            containerRegistry.RegisterSingleton<Context>();
 #if !design
             containerRegistry.RegisterSingleton<IDataBase, DataBase.DataBase>();
 #else
@@ -118,7 +108,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();
 
             //excel
-            containerRegistry.RegisterSingleton<IExporter<Group>, GroupExporter>();
+            containerRegistry.RegisterSingleton<IExporter<Group, IEnumerable<Student>>, GroupExporter>();
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Group>>, GroupsExporter>();
             containerRegistry.RegisterSingleton<IImporter<IEnumerable<Student>, Group>, GroupImporter>();

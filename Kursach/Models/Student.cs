@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Dapper.Contrib.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Студент.
@@ -41,17 +41,12 @@ namespace Kursach.DataBase
         /// <summary>
         /// Примечание
         /// </summary>
-        public string Notice { get; set; } = "";
+        public string Notice { get; set; }
 
         /// <summary>
         /// Отчислен.
         /// </summary>
         public bool Expelled { get; set; }
-
-        /// <summary>
-        /// Группа.
-        /// </summary>
-        public virtual Group Group { get; set; }
 
         public object Clone()
         {

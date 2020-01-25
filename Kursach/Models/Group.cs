@@ -1,11 +1,10 @@
-﻿using Kursach.ViewModels;
+﻿using Dapper.Contrib.Extensions;
+using Kursach.ViewModels;
 using PropertyChanged;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Группа.
@@ -13,10 +12,15 @@ namespace Kursach.DataBase
     [Table("groups")]
     class Group : ValidateViewModel, ICloneable
     {
+        public Group()
+        {
+        }
+
         /// <summary>
         /// Id.
         /// </summary>
         [DoNotNotify]
+        [Dapper.Contrib.Extensions.Key]
         public int Id { get; set; }
 
         /// <summary>
@@ -59,16 +63,6 @@ namespace Kursach.DataBase
         /// Группа является бюджетной.
         /// </summary>
         public bool IsBudget { get; set; } = true;
-
-        /// <summary>
-        /// Куратор.
-        /// </summary>
-        public virtual Staff Curator { get; set; }
-
-        /// <summary>
-        /// Студенты группы.
-        /// </summary>
-        public virtual ObservableCollection<Student> Students { get; set; }
 
         /// <summary>
         /// Копия группы.

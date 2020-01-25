@@ -6,9 +6,6 @@
     xmlns:converters="clr-namespace:Kursach.Converters">
 
     <UserControl.Resources>
-        <converters:UserModeToVisibility x:Key="UserModeToVisibility"
-                                         NeedMode="Admin"/>
-
         <Style TargetType="Button" BasedOn="{StaticResource FlatButton}">
             <Setter Property="Margin" Value="0"/>
         </Style>
@@ -35,7 +32,7 @@
 
         <Button Content="База пользователей"
                 Command="{Binding OpenUsersCommand}"
-                Visibility="{Binding User.Mode, Converter={StaticResource UserModeToVisibility}}"/>
+                Visibility="{Binding User.Mode, Converter={StaticResource AdminUserModeToVisibility}}"/>
 
         <Button Content="Выйти"
                 Command="{Binding ExitCommand}"/>

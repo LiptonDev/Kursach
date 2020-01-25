@@ -18,7 +18,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Пользователь для авторизации.
         /// </summary>
-        public LoginUser User { get; }
+        public User User { get; }
 
         /// <summary>
         /// Менеджер регионов.
@@ -46,7 +46,7 @@ namespace Kursach.ViewModels
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
-            User = new LoginUser();
+            User = new User();
         }
 
         /// <summary>

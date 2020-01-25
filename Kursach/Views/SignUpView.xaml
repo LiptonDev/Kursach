@@ -2,12 +2,11 @@
     x:Class="Kursach.Views.SignUpView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:db="clr-namespace:Kursach.DataBase"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:db="clr-namespace:Kursach.Models"
     xmlns:uihelper="clr-namespace:Kursach.UIHelper"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <UserControl.Resources>
         <ObjectDataProvider x:Key="UserMods" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -19,17 +18,16 @@
 
     <material:DialogHost Identifier="{Binding Identifier}">
         <StackPanel Margin="5">
-            <TextBlock Text="Регистрация пользователя"
-                       Style="{StaticResource TitleBlock}"/>
+            <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
 
-            <TextBox Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Логин"/>
 
             <PasswordBox Style="{StaticResource MaterialPasswordBox}"
-                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding EditableObject.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
             <ComboBox ItemsSource="{Binding Source={StaticResource UserMods}}"
-                      SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding EditableObject.Mode, UpdateSourceTrigger=PropertyChanged}"
                       material:HintAssist.Hint="Права пользователя">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -38,12 +36,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <UniformGrid Rows="1">
-                <Button Style="{StaticResource CancelDialogButton}"/>
-
-                <Button Content="Регистрация"
-                        Command="{Binding CloseDialogCommand}"/>
-            </UniformGrid>
+            <controls:EditorButtons/>
         </StackPanel>
     </material:DialogHost>
 

@@ -9,16 +9,16 @@
         <StackPanel Margin="5">
             <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
 
-            <TextBox Text="{Binding Staff.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Фамилия"/>
 
-            <TextBox Text="{Binding Staff.FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Имя"/>
 
-            <TextBox Text="{Binding Staff.MiddleName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.MiddleName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Отчество"/>
 
-            <TextBox Text="{Binding Staff.Position, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+            <TextBox Text="{Binding EditableObject.Position, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Должность"/>
 
             <controls:EditorButtons/>

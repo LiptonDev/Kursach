@@ -1,8 +1,9 @@
-﻿using Kursach.Models;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
+using Kursach.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,35 +16,10 @@ namespace Kursach.DataBase
     class DataBase : IDataBase
     {
         /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly Context context;
-
-        /// <summary>
         /// Ctor.
         /// </summary>
-        public DataBase(Context context)
+        public DataBase()
         {
-            this.context = context;
-        }
-
-        /// <summary>
-        /// Запрос в базу с логированием.
-        /// </summary>
-        /// <returns></returns>
-        private async Task<T> query<T>(Func<Task<T>> action, [CallerMemberName]string name = null)
-        {
-            try
-            {
-                return await action?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                StringBuilder sb = new StringBuilder();
-                InnerEx(ex, sb);
-                Logger.Log.Error($"Ошибка запроса к базе: {{ex: {sb.ToString()}, member: {name}}}");
-                return default;
-            }
         }
 
         private void InnerEx(Exception ex, StringBuilder sb)
@@ -58,6 +34,31 @@ namespace Kursach.DataBase
         }
 
         /// <summary>
+        /// Асинхронный запрос к базе.
+        /// </summary>
+        /// <returns></returns>
+        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, [CallerMemberName]string name = null)
+        {
+            using (var connection = new MySqlConnection("server=localhost;UserId=root;database=kursach;Convert Zero Datetime=True"))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    var res = await func(connection);
+
+                    return res;
+                }
+                catch (Exception ex)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    InnerEx(ex, sb);
+                    Logger.Log.Error($"Ошибка запроса к базе: {{ex: {sb.ToString()}, member: {name}}}");
+                    return default;
+                }
+            }
+        }
+
+        /// <summary>
         /// Получить пользователя.
         /// </summary>
         /// <param name="login">Логин.</param>
@@ -65,11 +66,11 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<User> GetUserAsync(string login, string password, bool usePassword)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
                 if (usePassword)
-                    return await context.Users.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
-                return await context.Users.FirstOrDefaultAsync(x => x.Login == login);
+                    return await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE login = @login AND password = @password", new { login, password });
+                return await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE login = @login", new { login });
             });
         }
 
@@ -80,10 +81,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> AddSignInLogAsync(User user)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.SignInLogs.Add(new SignInLog { User = user });
-                await context.SaveChangesAsync();
+                await con.InsertAsync(new SignInLog { UserId = user.Id });
 
                 return true;
             });
@@ -96,7 +96,7 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<SignInLog>> GetSignInLogsAsync(User user)
         {
-            return await query(async () => await context.SignInLogs.Where(x => x.UserId == user.Id).ToListAsync());
+            return await QueryAsync(async con => await con.QueryAsync<SignInLog>("SELECT * FROM signinlogs WHERE userId = @Id", user));
         }
 
         /// <summary>
@@ -105,15 +105,14 @@ namespace Kursach.DataBase
         /// <param name="user">Пользователь.</param>
         /// <param name="mode">Права.</param>
         /// <returns></returns>
-        public async Task<bool> SignUpAsync(LoginUser user, UserMode mode)
+        public async Task<bool> SignUpAsync(User user)
         {
             if (await GetUserAsync(user.Login, null, false) != null)
                 return false;
 
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Users.Add(user.ToUser(mode));
-                await context.SaveChangesAsync();
+                await con.InsertAsync(user);
 
                 return true;
             });
@@ -125,7 +124,7 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await query(async () => await context.Users.ToListAsync());
+            return await QueryAsync(async con => await con.GetAllAsync<User>());
         }
 
         /// <summary>
@@ -135,14 +134,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> RemoveUserAsync(User user)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Users.Remove(user);
-                context.Entry(user).State = EntityState.Deleted;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.DeleteAsync(user);
             });
         }
 
@@ -153,13 +147,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> SaveUserAsync(User user)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Entry(user).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.UpdateAsync(user);
             });
         }
 
@@ -169,9 +159,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<Group>> GetGroupsAsync()
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                return await context.Groups.Include(x => x.Curator).ToListAsync();
+                return await con.GetAllAsync<Group>();
             });
         }
 
@@ -182,14 +172,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> RemoveGroupAsync(Group group)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Groups.Remove(group);
-                context.Entry(group).State = EntityState.Deleted;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.DeleteAsync(group);
             });
         }
 
@@ -199,7 +184,10 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<Staff>> GetStaffsAsync()
         {
-            return await query(async () => await context.Staff.ToListAsync());
+            return await QueryAsync(async con =>
+            {
+                return await con.GetAllAsync<Staff>();
+            });
         }
 
         /// <summary>
@@ -209,13 +197,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> SaveGroupAsync(Group group)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Entry(group).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.UpdateAsync(group);
             });
         }
 
@@ -225,9 +209,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         async Task<Group> checkGroupName(Group group)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                return await context.Groups.FirstOrDefaultAsync(x => x.Name == group.Name);
+                return await con.QueryFirstOrDefaultAsync<Group>("SELECT * FROM groups WHERE name = @Name", group);
             });
         }
 
@@ -241,11 +225,9 @@ namespace Kursach.DataBase
             if (await checkGroupName(group) != null)
                 return false;
 
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Groups.Add(group);
-                await context.SaveChangesAsync();
-
+                await con.InsertAsync(group);
                 return true;
             });
         }
@@ -257,14 +239,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> RemoveStaffAsync(Staff staff)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Staff.Remove(staff);
-                context.Entry(staff).State = EntityState.Deleted;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.DeleteAsync(staff);
             });
         }
 
@@ -275,13 +252,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> SaveStaffAsync(Staff staff)
         {
-            return await query(async () =>
+            return await QueryAsync(async (con) =>
             {
-                context.Entry(staff).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.UpdateAsync(staff);
             });
         }
 
@@ -292,22 +265,12 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> AddStaffAsync(Staff staff)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Staff.Add(staff);
-                await context.SaveChangesAsync();
+                await con.InsertAsync(staff);
 
                 return true;
             });
-        }
-
-        /// <summary>
-        /// Загрузка всех студентов.
-        /// </summary>
-        /// <returns></returns>
-        public async Task LoadStudentsAsync()
-        {
-            await context.Students.ToListAsync();
         }
 
         /// <summary>
@@ -317,13 +280,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> SaveStudentAsync(Student student)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Entry(student).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.UpdateAsync(student);
             });
         }
 
@@ -334,14 +293,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> RemoveStudentAsync(Student student)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Students.Remove(student);
-                context.Entry(student).State = EntityState.Deleted;
-
-                await context.SaveChangesAsync();
-
-                return true;
+                return await con.DeleteAsync(student);
             });
         }
 
@@ -352,10 +306,9 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> AddStudentAsync(Student student)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Students.Add(student);
-                await context.SaveChangesAsync();
+                await con.InsertAsync(student);
                 return true;
             });
         }
@@ -367,11 +320,23 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<bool> AddStudentsAsync(IEnumerable<Student> students)
         {
-            return await query(async () =>
+            return await QueryAsync(async con =>
             {
-                context.Students.AddRange(students);
-                await context.SaveChangesAsync();
+                await con.InsertAsync(students);
                 return true;
+            });
+        }
+
+        /// <summary>
+        /// Получение студентов определенной группы.
+        /// </summary>
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Student>> GetStudentsAsync(Group group)
+        {
+            return await QueryAsync(async con =>
+            {
+                return await con.QueryAsync<Student>("SELECT * FROM students WHERE groupId = @Id", group);
             });
         }
     }

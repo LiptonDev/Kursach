@@ -4,6 +4,7 @@
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Kursach.Controls"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Grid>
@@ -14,11 +15,9 @@
 
         <UniformGrid Rows="1">
             <Button Content="Добавить сотрудника"
-                    Command="{Binding AddStaffCommand}"
-                    Style="{StaticResource UserModeButton}"/>
+                    Style="{StaticResource AddButton}"/>
 
-            <Button Content="Экспорт данных"
-                    Command="{Binding ExportToExcelCommand}"/>
+            <controls:ExportToExcelButton/>
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding Staff}"
@@ -39,15 +38,7 @@
 
                             <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"/>
 
-                            <Button Content="Редактировать"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.EditStaffCommand}"
-                                    CommandParameter="{Binding}"
-                                    Style="{StaticResource UserModeButton}"/>
-                            
-                            <Button Content="Удалить"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteStaffCommand}"
-                                    CommandParameter="{Binding}"
-                                    Style="{StaticResource UserModeButton}"/>
+                            <controls:EditDeleteButtons/>
                         </StackPanel>
                     </material:Card>
                 </DataTemplate>

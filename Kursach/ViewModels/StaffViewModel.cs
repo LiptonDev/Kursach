@@ -1,46 +1,26 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using Prism.Regions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Staf view model.
     /// </summary>
-    class StaffViewModel : NavigationViewModel
+    class StaffViewModel : BaseViewModel<Staff>, IExcelExporterViewModel
     {
         /// <summary>
         /// Сотрудники.
         /// </summary>
         public ObservableCollection<Staff> Staff { get; }
-
-        /// <summary>
-        /// Пользователь.
-        /// </summary>
-        public User User { get; private set; }
-
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Идентификатор диалогов.
-        /// </summary>
-        readonly IDialogIdentifier dialogIdentifier;
-
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
 
         /// <summary>
         /// Экспорт данных.
@@ -50,18 +30,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public StaffViewModel(IDataBase dataBase, IContainer container, IExporter<IEnumerable<Staff>> exporter, IDialogManager dialogManager)
+        public StaffViewModel(IDataBase dataBase, IExporter<IEnumerable<Staff>> exporter, IDialogManager dialogManager, IContainer container)
+            : base(dataBase, dialogManager, container)
         {
-            this.dataBase = dataBase;
-            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
-            this.dialogManager = dialogManager;
             this.exporter = exporter;
 
             Staff = new ObservableCollection<Staff>();
 
-            EditStaffCommand = new DelegateCommand<Staff>(EditStaff);
-            DeleteStaffCommand = new DelegateCommand<Staff>(DeleteStaff);
-            AddStaffCommand = new DelegateCommand(AddStaff);
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
         }
 
@@ -71,24 +46,9 @@ namespace Kursach.ViewModels
         public ICommand ExportToExcelCommand { get; }
 
         /// <summary>
-        /// Команда добавления сотрудника.
-        /// </summary>
-        public ICommand AddStaffCommand { get; }
-
-        /// <summary>
-        /// Команда редактирования сотрудника.
-        /// </summary>
-        public ICommand<Staff> EditStaffCommand { get; }
-
-        /// <summary>
-        /// Команда удаления сотрудника.
-        /// </summary>
-        public ICommand<Staff> DeleteStaffCommand { get; }
-
-        /// <summary>
         /// Экспорт данных в Excel.
         /// </summary>
-        private void ExportToExcel()
+        public void ExportToExcel()
         {
             exporter.Export(Staff);
         }
@@ -96,7 +56,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Добавить сотрудника.
         /// </summary>
-        private async void AddStaff()
+        public override async void Add()
         {
             var editor = await dialogManager.StaffEditor(null, false);
 
@@ -113,9 +73,33 @@ namespace Kursach.ViewModels
         }
 
         /// <summary>
+        /// Редактирование сотрудника.
+        /// </summary>
+        public override async void Edit(Staff staff)
+        {
+            var editor = await dialogManager.StaffEditor(staff, true);
+
+            if (editor == null)
+                return;
+
+            var res = await dataBase.SaveStaffAsync(editor);
+            var msg = res ? "Сотрудник сохранен" : "Сотрудник не сохранен";
+
+            if (res)
+            {
+                staff.FirstName = editor.FirstName;
+                staff.LastName = editor.LastName;
+                staff.MiddleName = editor.MiddleName;
+                staff.Position = editor.Position;
+            }
+
+            Log(msg, staff);
+        }
+
+        /// <summary>
         /// Удаление сотрудника.
         /// </summary>
-        private async void DeleteStaff(Staff staff)
+        public override async void Delete(Staff staff)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить '{staff}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
@@ -131,46 +115,19 @@ namespace Kursach.ViewModels
         }
 
         /// <summary>
-        /// Редактирование сотрудника.
-        /// </summary>
-        private async void EditStaff(Staff staff)
-        {
-            var editor = await dialogManager.StaffEditor(staff, true);
-
-            if (editor == null)
-                return;
-
-            staff.FirstName = editor.FirstName;
-            staff.LastName = editor.LastName;
-            staff.MiddleName = editor.MiddleName;
-            staff.Position = editor.Position;
-            var res = await dataBase.SaveStaffAsync(staff);
-            var msg = res ? "Сотрудник сохранен" : "Сотрудник не сохранен";
-
-            Log(msg, staff);
-        }
-
-        async void Log(string msg, object staff)
-        {
-            Logger.Log.Info($"{msg}: {{staff: {staff}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-        }
-
-        /// <summary>
         /// Загрузка данных.
         /// </summary>
-        private async void Load()
+        protected override async void Load()
         {
             Staff.Clear();
             var res = await dataBase.GetStaffsAsync();
             Staff.AddRange(res);
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        async void Log(string msg, object staff)
         {
-            User = navigationContext.Parameters["user"] as User;
-
-            Load();
+            Logger.Log.Info($"{msg}: {{staff: {staff}}}");
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
     }
 }

@@ -1,17 +1,19 @@
-﻿using Kursach.DataBase;
+﻿using Kursach.Models;
 using Kursach.Dialogs;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace Kursach.Excel
 {
     /// <summary>
     /// Экспорт данных о группе.
     /// </summary>
-    class GroupExporter : BaseExporter, IExporter<Group>
+    class GroupExporter : BaseExporter, IExporter<Group, IEnumerable<Student>>
     {
         /// <summary>
         /// Конструктор.
@@ -25,14 +27,18 @@ namespace Kursach.Excel
         /// Экспорт данных о группе.
         /// </summary>
         /// <param name="group">Группа.</param>
-        public void Export(Group group)
+        public void Export(Group group, IEnumerable<Student> students)
         {
             if (!SelectFile(group.Name))
                 return;
 
+            int count = students.Count();
+            if (count == 0)
+                return;
+
             using (var excel = new ExcelPackage())
             {
-                ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("ИТ-41");
+                ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add(group.Name);
 
                 //Глобальный стиль.
                 worksheet.Cells.SetFontName("Arial").SetFontSize(12);
@@ -74,25 +80,24 @@ namespace Kursach.Excel
                 worksheet.Cells["E7"].SetValue("Приказ о зачислении");
                 worksheet.Cells["F7"].SetValue("Примечание");
 
-                int count = group.Students.Count;
-
-                //Список студентов.
-                for (int i = 0; i < count; i++)
+                int i = 0;
+                foreach (var item in students)
                 {
-                    var student = group.Students[i];
                     worksheet.Cells[8 + i, 1].SetValue(i + 1);
-                    worksheet.Cells[8 + i, 2].SetValue(student);
-                    worksheet.Cells[8 + i, 3].SetValue(student.PoPkNumber);
-                    worksheet.Cells[8 + i, 4].SetValue(student.Birthdate?.ToString("dd.MM.yyyy"));
-                    worksheet.Cells[8 + i, 5].SetValue(student.DecreeOfEnrollment);
-                    worksheet.Cells[8 + i, 6].SetValue(student.Notice);
+                    worksheet.Cells[8 + i, 2].SetValue(item);
+                    worksheet.Cells[8 + i, 3].SetValue(item.PoPkNumber);
+                    worksheet.Cells[8 + i, 4].SetValue(item.Birthdate?.ToString("dd.MM.yyyy"));
+                    worksheet.Cells[8 + i, 5].SetValue(item.DecreeOfEnrollment);
+                    worksheet.Cells[8 + i, 6].SetValue(item.Notice);
 
-                    if (student.Expelled)
+                    if (item.Expelled)
                     {
                         worksheet.Cells[8 + i, 1, 8 + i, 6].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
                         worksheet.Cells[8 + i, 1, 8 + i, 6].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
                         worksheet.Cells[8 + i, 1, 8 + i, 5].Style.Font.Strike = true;
                     }
+
+                    i++;
                 }
 
                 //Выравнивание по середине.

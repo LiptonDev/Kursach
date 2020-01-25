@@ -22,6 +22,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/ItemsControl.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/ComboBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/DatePicker.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/StackPanel.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>

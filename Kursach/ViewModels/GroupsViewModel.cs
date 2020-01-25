@@ -1,47 +1,26 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using Prism.Regions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Groups view model.
     /// </summary>
-    class GroupsViewModel : NavigationViewModel
+    class GroupsViewModel : BaseViewModel<Group>, IExcelExporterViewModel
     {
-        /// <summary>
-        /// Пользователь.
-        /// </summary>
-        public User User { get; set; }
-
         /// <summary>
         /// Группы.
         /// </summary>
         public ObservableCollection<Group> Groups { get; }
-
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Идентификатор диалогов.
-        /// </summary>
-        readonly IDialogIdentifier dialogIdentifier;
-
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
 
         /// <summary>
         /// Экспорт данных.
@@ -52,17 +31,12 @@ namespace Kursach.ViewModels
         /// Ctor.
         /// </summary>
         public GroupsViewModel(IDataBase dataBase, IContainer container, IDialogManager dialogManager, IExporter<IEnumerable<Group>> exporter)
+            : base(dataBase, dialogManager, container)
         {
-            this.dataBase = dataBase;
-            dialogIdentifier = container.ResolveRootDialogIdentifier();
-            this.dialogManager = dialogManager;
             this.exporter = exporter;
 
             Groups = new ObservableCollection<Group>();
 
-            DeleteGroupCommand = new AsyncCommand<Group>(DeleteGroup);
-            GroupEditorCommand = new DelegateCommand<Group>(GroupEditor);
-            AddGroupCommand = new DelegateCommand(AddGroup);
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
         }
 
@@ -72,24 +46,9 @@ namespace Kursach.ViewModels
         public ICommand ExportToExcelCommand { get; }
 
         /// <summary>
-        /// Команда добавления новой группы.
-        /// </summary>
-        public ICommand AddGroupCommand { get; }
-
-        /// <summary>
-        /// Команда открытия окна редактирования группы.
-        /// </summary>
-        public ICommand<Group> GroupEditorCommand { get; }
-
-        /// <summary>
-        /// Команда удаления группы.
-        /// </summary>
-        public ICommand<Group> DeleteGroupCommand { get; }
-
-        /// <summary>
         /// Добавление группы.
         /// </summary>
-        private async void AddGroup()
+        public override async void Add()
         {
             var editor = await dialogManager.GroupEditor(null, false);
 
@@ -108,21 +67,25 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Открытие окна редактирования группы.
         /// </summary>
-        private async void GroupEditor(Group group)
+        public override async void Edit(Group group)
         {
             var editor = await dialogManager.GroupEditor(group, true);
 
             if (editor == null)
                 return;
 
-            group.CuratorId = editor.CuratorId;
-            group.Name = editor.Name;
-            group.Start = editor.Start;
-            group.End = editor.End;
-            group.Specialty = editor.Specialty;
-            group.IsBudget = editor.IsBudget;
-            var res = await dataBase.SaveGroupAsync(group);
+            var res = await dataBase.SaveGroupAsync(editor);
             var msg = res ? "Группа сохранена" : "Группа не сохранена";
+
+            if (res)
+            {
+                group.CuratorId = editor.CuratorId;
+                group.Name = editor.Name;
+                group.Start = editor.Start;
+                group.End = editor.End;
+                group.Specialty = editor.Specialty;
+                group.IsBudget = editor.IsBudget;
+            }
 
             Log(msg, group.Name, group.CuratorId);
         }
@@ -131,7 +94,7 @@ namespace Kursach.ViewModels
         /// Удаление группы.
         /// </summary>
         /// <returns></returns>
-        private async Task DeleteGroup(Group group)
+        public override async void Delete(Group group)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить группу '{group.Name}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
@@ -149,32 +112,25 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        private void ExportToExcel()
+        public void ExportToExcel()
         {
             exporter.Export(Groups);
-        }
-
-        async void Log(string msg, string name, int id)
-        {
-            Logger.Log.Info($"{msg}: {{name: {name}, curatorId: {id}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
 
         /// <summary>
         /// Загрузка групп.
         /// </summary>
-        private async void Load()
+        protected override async void Load()
         {
             Groups.Clear();
             var res = await dataBase.GetGroupsAsync();
             Groups.AddRange(res);
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        async void Log(string msg, string name, int id)
         {
-            User = navigationContext.Parameters["user"] as User;
-
-            Load();
+            Logger.Log.Info($"{msg}: {{name: {name}, curatorId: {id}}}");
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
     }
 }

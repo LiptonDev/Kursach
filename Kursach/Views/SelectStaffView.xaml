@@ -15,8 +15,8 @@
         <TextBlock Text="Выбор куратора"
                    Style="{StaticResource TitleBlock}"/>
 
-        <ListBox ItemsSource="{Binding Staff}"
-                 SelectedItem="{Binding SelectedStaff}"
+        <ListBox ItemsSource="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}"
                  Grid.Row="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>

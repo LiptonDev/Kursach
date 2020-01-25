@@ -1,28 +1,22 @@
 ﻿using DevExpress.Mvvm;
 using Kursach.DataBase;
-using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
-    /// <summary>
-    /// Select group view model.
-    /// </summary>
-    [DialogName(nameof(Views.SelectGroupView))]
-    class SelectGroupViewModel : ViewModelBase, IClosableDialog
+    abstract class BaseSelectorViewModel<T> : ViewModelBase, IClosableDialog, ISelectorViewModel<T>
     {
         /// <summary>
-        /// Список всех групп.
+        /// Все данные.
         /// </summary>
-        public ObservableCollection<Group> Groups { get; }
+        public ObservableCollection<T> Items { get; }
 
         /// <summary>
-        /// Выбранная группа.
+        /// Выбранные данные.
         /// </summary>
-        public Group SelectedGroup { get; set; }
+        public T SelectedItem { get; set; }
 
         /// <summary>
         /// Owner.
@@ -32,17 +26,17 @@ namespace Kursach.ViewModels
         /// <summary>
         /// База данных.
         /// </summary>
-        readonly IDataBase dataBase;
+        protected readonly IDataBase dataBase;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public SelectGroupViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+        public BaseSelectorViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
         {
-            this.dataBase = dataBase;
             OwnerIdentifier = dialogIdentifier;
+            this.dataBase = dataBase;
 
-            Groups = new ObservableCollection<Group>();
+            Items = new ObservableCollection<T>();
 
             CloseDialogCommand = new DelegateCommand(CloseDialog);
 
@@ -59,22 +53,15 @@ namespace Kursach.ViewModels
         /// </summary>
         private void CloseDialog()
         {
-            if (SelectedGroup == null)
+            if (SelectedItem == null)
                 return;
 
-            this.Close(SelectedGroup);
+            this.Close(SelectedItem);
         }
-
 
         /// <summary>
-        /// Загрузка всех групп.
+        /// Загрузка данных.
         /// </summary>
-        private async void Load(int currentId)
-        {
-            var res = await dataBase.GetGroupsAsync();
-            Groups.AddRange(res);
-
-            SelectedGroup = Groups.FirstOrDefault(x => x.Id == currentId);
-        }
+        public abstract void Load(int currentId);
     }
 }

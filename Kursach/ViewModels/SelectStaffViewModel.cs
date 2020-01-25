@@ -1,10 +1,10 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.DataBase;
+using Kursach.Models;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
@@ -12,69 +12,26 @@ namespace Kursach.ViewModels
     /// Select staff view model.
     /// </summary>
     [DialogName(nameof(Views.SelectStaffView))]
-    class SelectStaffViewModel : ViewModelBase, IClosableDialog
+    class SelectStaffViewModel : BaseSelectorViewModel<Staff>
     {
         /// <summary>
-        /// Список всех сотрудников.
-        /// </summary>
-        public ObservableCollection<Staff> Staff { get; }
-
-        /// <summary>
-        /// Выбранный куратор.
-        /// </summary>
-        public Staff SelectedStaff { get; set; }
-
-        /// <summary>
-        /// Owner.
-        /// </summary>
-        public IDialogIdentifier OwnerIdentifier { get; }
-
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+            : base(currentId, dialogIdentifier, dataBase)
         {
-            this.dataBase = dataBase;
-            OwnerIdentifier = dialogIdentifier;
-
-            Staff = new ObservableCollection<Staff>();
-
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
-
-            Load(currentId);
-        }
-
-        /// <summary>
-        /// Команда закрытия диалога.
-        /// </summary>
-        public ICommand CloseDialogCommand { get; }
-
-        /// <summary>
-        /// Закрытие диалога.
-        /// </summary>
-        private void CloseDialog()
-        {
-            if (SelectedStaff == null)
-                return;
-
-            this.Close(SelectedStaff);
         }
 
 
         /// <summary>
         /// Загрузка всех сотрудников.
         /// </summary>
-        private async void Load(int currentId)
+        public override async void Load(int currentId)
         {
             var res = await dataBase.GetStaffsAsync();
-            Staff.AddRange(res);
+            Items.AddRange(res);
 
-            SelectedStaff = Staff.FirstOrDefault(x => x.Id == currentId);
+            SelectedItem = Items.FirstOrDefault(x => x.Id == currentId);
         }
     }
 }

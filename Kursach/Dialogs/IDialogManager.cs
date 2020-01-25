@@ -1,5 +1,4 @@
-﻿using Kursach.DataBase;
-using Kursach.Models;
+﻿using Kursach.Models;
 using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
 
@@ -29,9 +28,9 @@ namespace Kursach.Dialogs
         void ShowLogs(User user);
 
         /// <summary>
-        /// Окно регистрации нового пользователя.
+        /// Окно редактирования пользователя.
         /// </summary>
-        Task<SignUpResult> SignUp();
+        Task<User> SignUp(User user, bool isEditMode);
 
         /// <summary>
         /// Окно редактирования группы.
@@ -56,11 +55,5 @@ namespace Kursach.Dialogs
         /// </summary>
         /// <returns></returns>
         Task<Student> StudentEditor(Student student, bool isEditMode);
-
-        /// <summary>
-        /// Окно выбора группы.
-        /// </summary>
-        /// <returns></returns>
-        Task<Group> SelectGroup(int currentId, IDialogIdentifier dialogIdentifier);
     }
 }

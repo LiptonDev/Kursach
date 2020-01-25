@@ -1,9 +1,10 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -14,11 +15,6 @@ namespace Kursach.ViewModels
         /// Номер слайда на странице приветствия.
         /// </summary>
         public int SlideNumber { get; set; }
-
-        /// <summary>
-        /// Текущий пользователь.
-        /// </summary>
-        public User User { get; private set; }
 
         /// <summary>
         /// Статус меню.
@@ -49,6 +45,7 @@ namespace Kursach.ViewModels
             StaffCommand = new DelegateCommand(GoToStaff);
             StudentsCommand = new DelegateCommand(Students);
             HomeCommand = new DelegateCommand(Home);
+            OpenVkCommand = new DelegateCommand(OpenVk);
         }
 
         /// <summary>
@@ -80,6 +77,19 @@ namespace Kursach.ViewModels
         /// Команда выхода.
         /// </summary>
         public ICommand ExitCommand { get; }
+
+        /// <summary>
+        /// Открыть мой ВК.
+        /// </summary>
+        public ICommand OpenVkCommand { get; }
+
+        /// <summary>
+        /// Открыть мой ВК.
+        /// </summary>
+        private void OpenVk()
+        {
+            Process.Start("https://vk.com/id99551920");
+        }
 
         /// <summary>
         /// Выход.
@@ -152,7 +162,7 @@ namespace Kursach.ViewModels
             if (!navigationContext.Parameters.ContainsKey("fromLogin"))
                 return;
 
-            User = navigationContext.Parameters["user"] as User;
+            base.OnNavigatedTo(navigationContext);
         }
     }
 }

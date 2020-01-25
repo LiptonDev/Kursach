@@ -1,11 +1,10 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
-using Kursach.Dialogs;
 using Kursach.Models;
-using MaterialDesignXaml.DialogsHelper;
-using MaterialDesignXaml.DialogsHelper.Enums;
-using System.Windows.Input;
+using Kursach.Dialogs;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
@@ -13,83 +12,63 @@ namespace Kursach.ViewModels
     /// Student editor view model.
     /// </summary>
     [DialogName(nameof(Views.StudentEditorView))]
-    class StudentEditorViewModel : IClosableDialog, IDialogIdentifier, IEditMode
+    class StudentEditorViewModel : BaseEditModeViewModel<Student>
     {
-        /// <summary>
-        /// Identifier.
-        /// </summary>
-        public string Identifier => nameof(StudentEditorViewModel);
-
-        /// <summary>
-        /// Owner.
-        /// </summary>
-        public IDialogIdentifier OwnerIdentifier { get; }
-
         /// <summary>
         /// Менеджер диалогов.
         /// </summary>
         readonly IDialogManager dialogManager;
 
         /// <summary>
-        /// True - Режим редактирования группы, иначе - добавление.
+        /// База данных.
         /// </summary>
-        public bool IsEditMode { get; }
+        readonly IDataBase dataBase;
 
         /// <summary>
-        /// Студент.
+        /// Группы.
         /// </summary>
-        public Student Student { get; }
+        public ObservableCollection<Group> Groups { get; }
+
+        Group selectedGroup;
+        /// <summary>
+        /// Выбранная группа.
+        /// </summary>
+        public Group SelectedGroup
+        {
+            get
+            {
+                return selectedGroup;
+            }
+            set
+            {
+                selectedGroup = value;
+                EditableObject.GroupId = value?.Id ?? -1;
+            }
+        }
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        public StudentEditorViewModel(Student student, bool isEditMode, IContainer container, IDialogManager dialogManager)
+        public StudentEditorViewModel(Student student, bool isEditMode, IContainer container, IDataBase dataBase, IDialogManager dialogManager)
+            : base(student, isEditMode, container)
         {
-            IsEditMode = isEditMode;
-            OwnerIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
+            this.dataBase = dataBase;
 
-            if (isEditMode)
-                Student = (Student)student.Clone();
-            else Student = new Student();
+            Groups = new ObservableCollection<Group>();
 
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
-            OpenGroupSelectorCommand = new DelegateCommand(OpenGroupSelector);
+            Load();
         }
 
         /// <summary>
-        /// Команда закрытия диалога.
+        /// Загрузка групп.
         /// </summary>
-        public ICommand CloseDialogCommand { get; }
-
-        /// <summary>
-        /// Команда открытия выбора группы.
-        /// </summary>
-        public ICommand OpenGroupSelectorCommand { get; }
-
-        /// <summary>
-        /// Выбор группы.
-        /// </summary>
-        private async void OpenGroupSelector()
+        private async void Load()
         {
-            var res = await dialogManager.SelectGroup(Student.GroupId, this);
+            var res = await dataBase.GetGroupsAsync();
+            Groups.AddRange(res);
 
-            if (res != null)
-                Student.GroupId = res.Id;
-        }
-
-        /// <summary>
-        /// Закрытие диалога.
-        /// </summary>
-        private async void CloseDialog()
-        {
-            if (!Student.IsValid)
-            {
-                await this.ShowMessageBoxAsync(Student.Error, MaterialMessageBoxButtons.Ok);
-                return;
-            }
-
-            OwnerIdentifier.Close(Student);
+            SelectedGroup = Groups.FirstOrDefault(x => x.Id == EditableObject.GroupId);
         }
     }
 }

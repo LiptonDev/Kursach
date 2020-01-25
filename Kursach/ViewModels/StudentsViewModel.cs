@@ -1,57 +1,51 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using Prism.Regions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows.Input;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Students view model.
     /// </summary>
-    class StudentsViewModel : NavigationViewModel
+    class StudentsViewModel : BaseViewModel<Student>, IExcelExporterViewModel
     {
-        /// <summary>
-        /// Пользователь.
-        /// </summary>
-        public User User { get; private set; }
-
         /// <summary>
         /// Группы.
         /// </summary>
         public ObservableCollection<Group> Groups { get; }
 
         /// <summary>
+        /// Студенты выбранной группы.
+        /// </summary>
+        public ObservableCollection<Student> Students { get; }
+
+        Group selectedGroup;
+        /// <summary>
         /// Выбранная группа.
         /// </summary>
-        public Group SelectedGroup { get; set; }
-
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
-        /// Идентификатор диалогов.
-        /// </summary>
-        readonly IDialogIdentifier dialogIdentifier;
+        public Group SelectedGroup
+        {
+            get => selectedGroup;
+            set
+            {
+                selectedGroup = value;
+                LoadStudents(value);
+            }
+        }
 
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        readonly IExporter<Group> exporter;
+        readonly IExporter<Group, IEnumerable<Student>> exporter;
 
         /// <summary>
         /// Импорт данных.
@@ -61,37 +55,18 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Ctor.
         /// </summary>
-        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group> exporter, IImporter<IEnumerable<Student>, Group> importer, IContainer container)
+        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group, IEnumerable<Student>> exporter, IImporter<IEnumerable<Student>, Group> importer, IContainer container)
+            : base(dataBase, dialogManager, container)
         {
-            this.dataBase = dataBase;
-            this.dialogManager = dialogManager;
-            dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.exporter = exporter;
             this.importer = importer;
 
             Groups = new ObservableCollection<Group>();
+            Students = new ObservableCollection<Student>();
 
-            EditStudentCommand = new DelegateCommand<Student>(EditStudent);
-            DeleteStudentCommand = new AsyncCommand<Student>(DeleteStudent);
-            AddStudentCommand = new DelegateCommand(AddStudent);
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
         }
-
-        /// <summary>
-        /// Команда добавления студента.
-        /// </summary>
-        public ICommand AddStudentCommand { get; }
-
-        /// <summary>
-        /// Команда редактирования студента.
-        /// </summary>
-        public ICommand<Student> EditStudentCommand { get; }
-
-        /// <summary>
-        /// Команда удаления студента.
-        /// </summary>
-        public ICommand<Student> DeleteStudentCommand { get; }
 
         /// <summary>
         /// Команда экспорта данных в Excel.
@@ -106,7 +81,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Добавление студента.
         /// </summary>
-        private async void AddStudent()
+        public override async void Add()
         {
             var editor = await dialogManager.StudentEditor(null, false);
 
@@ -116,14 +91,51 @@ namespace Kursach.ViewModels
             var res = await dataBase.AddStudentAsync(editor);
             var msg = res ? "Студент добавлен" : "Студент не добавлен";
 
+            if (editor.GroupId == selectedGroup.Id)
+            {
+                LoadStudents(selectedGroup);
+            }
+
             Log(msg, editor);
+        }
+
+        /// <summary>
+        /// Редактирование студента.
+        /// </summary>
+        public override async void Edit(Student student)
+        {
+            var editor = await dialogManager.StudentEditor(student, true);
+
+            if (editor == null)
+                return;
+
+            var res = await dataBase.SaveStudentAsync(editor);
+            var msg = res ? "Студент сохранен" : "Студент не сохранен";
+
+            if (res)
+            {
+                student.FirstName = editor.FirstName;
+                student.LastName = editor.LastName;
+                student.MiddleName = editor.MiddleName;
+                student.GroupId = editor.GroupId;
+                student.Birthdate = editor.Birthdate;
+                student.Expelled = editor.Expelled;
+                student.DecreeOfEnrollment = editor.DecreeOfEnrollment;
+                student.Notice = editor.Notice;
+                student.PoPkNumber = editor.PoPkNumber;
+
+                if (student.GroupId != selectedGroup.Id)
+                    Students.Remove(student);
+            }
+
+            Log(msg, student);
         }
 
         /// <summary>
         /// Удаление студента.
         /// </summary>
         /// <returns></returns>
-        private async Task DeleteStudent(Student student)
+        public override async void Delete(Student student)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить студента '{student}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
@@ -132,30 +144,8 @@ namespace Kursach.ViewModels
             var res = await dataBase.RemoveStudentAsync(student);
             var msg = res ? "Студент удален" : "Студент не удален";
 
-            Log(msg, student);
-        }
-
-        /// <summary>
-        /// Редактирование студента.
-        /// </summary>
-        private async void EditStudent(Student student)
-        {
-            var editor = await dialogManager.StudentEditor(student, true);
-
-            if (editor == null)
-                return;
-
-            student.FirstName = editor.FirstName;
-            student.LastName = editor.LastName;
-            student.MiddleName = editor.MiddleName;
-            student.GroupId = editor.GroupId;
-            student.Birthdate = editor.Birthdate;
-            student.Expelled = editor.Expelled;
-            student.DecreeOfEnrollment = editor.DecreeOfEnrollment;
-            student.Notice = editor.Notice;
-            student.PoPkNumber = editor.PoPkNumber;
-            var res = await dataBase.SaveStudentAsync(student);
-            var msg = res ? "Студент сохранен" : "Студент не сохранен";
+            if (res)
+                Students.Remove(student);
 
             Log(msg, student);
         }
@@ -163,12 +153,12 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Экспорт информации о группе.
         /// </summary>
-        private void ExportToExcel()
+        public void ExportToExcel()
         {
             if (SelectedGroup == null)
                 return;
 
-            exporter.Export(SelectedGroup);
+            exporter.Export(SelectedGroup, Students);
         }
 
         /// <summary>
@@ -184,31 +174,46 @@ namespace Kursach.ViewModels
             if (students == null)
                 return;
 
-            await dataBase.AddStudentsAsync(students);
+            var res = await dataBase.AddStudentsAsync(students);
+
+            if (res)
+            {
+                Logger.Log.Info($"Импорт данных в группу: {{{SelectedGroup.Name}}}, кол-во студентов добавлено: {{{students.Count()}}}");
+                LoadStudents(SelectedGroup);
+            }
+            else
+            {
+                Logger.Log.Error($"Импорт данных в группу: {{{SelectedGroup.Name}}}");
+            }
+        }
+
+        /// <summary>
+        /// Загрузка данных.
+        /// </summary>
+        protected override async void Load()
+        {
+            Groups.Clear();
+            var res = await dataBase.GetGroupsAsync();
+            Groups.AddRange(res);
+        }
+
+        /// <summary>
+        /// Загрузка студентов группы.
+        /// </summary>
+        private async void LoadStudents(Group group)
+        {
+            Students.Clear();
+            if (group == null)
+                return;
+
+            var res = await dataBase.GetStudentsAsync(group);
+            Students.AddRange(res);
         }
 
         async void Log(string msg, Student student)
         {
             Logger.Log.Info($"{msg}: {{student: {student}, group: {student.GroupId}}}");
             await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-        }
-
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        private async void Load()
-        {
-            Groups.Clear();
-            await dataBase.LoadStudentsAsync();
-            var res = await dataBase.GetGroupsAsync();
-            Groups.AddRange(res);
-        }
-
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            User = navigationContext.Parameters["user"] as User;
-
-            Load();
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Dapper.Contrib.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kursach.DataBase
+namespace Kursach.Models
 {
     /// <summary>
     /// Сотрудник.
@@ -17,11 +16,6 @@ namespace Kursach.DataBase
         [Display(Name = "Должность")]
         [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
         public string Position { get; set; }
-
-        /// <summary>
-        /// Кураторство в группах.
-        /// </summary>
-        public virtual ICollection<Group> Groups { get; set; }
 
         public object Clone()
         {

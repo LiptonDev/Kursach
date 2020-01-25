@@ -1,7 +1,8 @@
-﻿using Kursach.DataBase;
+﻿using Kursach.Models;
 using Kursach.Dialogs;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {

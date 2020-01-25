@@ -7,18 +7,45 @@
     xmlns:welcomeslides="clr-namespace:Kursach.Views.WelcomeSlides"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
+    <UserControl.Resources>
+        <Style TargetType="materialDesign:TransitionerSlide">
+            <Setter Property="BackwardWipe">
+                <Setter.Value>
+                    <materialDesign:FadeWipe/>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ForwardWipe">
+                <Setter.Value>
+                    <materialDesign:FadeWipe/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <materialDesign:Transitioner SelectedIndex="{Binding SlideNumber}" 
                                  AutoApplyTransitionOrigins="True">
-        <materialDesign:Transitioner.InputBindings>
-            <KeyBinding Key="Left" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
-            <KeyBinding Key="Right" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
-        </materialDesign:Transitioner.InputBindings>
 
-        <welcomeslides:Slide1/>
-        <welcomeslides:Slide2/>
-        <welcomeslides:Slide3/>
-        <welcomeslides:Slide4/>
-        <welcomeslides:Slide5/>
+        <materialDesign:TransitionerSlide>
+            <welcomeslides:Slide1/>
+        </materialDesign:TransitionerSlide>
+
+        <materialDesign:TransitionerSlide>
+            <welcomeslides:Slide2/>
+        </materialDesign:TransitionerSlide>
+
+        <materialDesign:TransitionerSlide>
+            <welcomeslides:Slide3/>
+        </materialDesign:TransitionerSlide>
+
+        <materialDesign:TransitionerSlide>
+            <welcomeslides:Slide4/>
+        </materialDesign:TransitionerSlide>
+
+        <materialDesign:TransitionerSlide>
+            <welcomeslides:Slide5/>
+        </materialDesign:TransitionerSlide>
+
     </materialDesign:Transitioner>
 
 </UserControl>

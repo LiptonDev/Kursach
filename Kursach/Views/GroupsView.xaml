@@ -5,6 +5,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Kursach.Converters"
+    xmlns:controls="clr-namespace:Kursach.Controls"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
@@ -19,11 +20,9 @@
 
         <UniformGrid Rows="1">
             <Button Content="Добавить группу"
-                    Command="{Binding AddGroupCommand}"
-                    Style="{StaticResource UserModeButton}"/>
+                    Style="{StaticResource AddButton}"/>
 
-            <Button Content="Экспорт данных"
-                    Command="{Binding ExportToExcelCommand}"/>
+            <controls:ExportToExcelButton/>
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding Groups}"
@@ -31,26 +30,14 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
-                        <StackPanel Margin="5">
-                            <StackPanel.Resources>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
-                            </StackPanel.Resources>
+                        <StackPanel Margin="5" 
+                                    Style="{StaticResource MarginTextBoxesStackPanel}">
 
                             <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
 
-                            <TextBlock Text="{Binding Curator, StringFormat='Куратор: {0}'}"/>
-
                             <TextBlock Text="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
 
-                            <Button Content="Редактировать"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.GroupEditorCommand}"
-                                    CommandParameter="{Binding}"
-                                    Style="{StaticResource UserModeButton}"/>
-                            
-                            <Button Content="Удалить"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteGroupCommand}"
-                                    CommandParameter="{Binding}"
-                                    Style="{StaticResource UserModeButton}"/>
+                            <controls:EditDeleteButtons/>
                         </StackPanel>
                     </material:Card>
                 </DataTemplate>

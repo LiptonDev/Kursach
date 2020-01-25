@@ -1,20 +1,18 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Models;
 using Kursach.Dialogs;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using Prism.Regions;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Users view model.
     /// </summary>
-    class UsersViewModel : NavigationViewModel
+    class UsersViewModel : BaseViewModel<User>
     {
         /// <summary>
         /// Пользователи.
@@ -22,51 +20,15 @@ namespace Kursach.ViewModels
         public ObservableCollection<User> Users { get; }
 
         /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
-        /// Идентификатор диалогов.
-        /// </summary>
-        readonly IDialogIdentifier dialogIdentifier;
-
-        /// <summary>
         /// Ctor.
         /// </summary>
         public UsersViewModel(IDataBase dataBase, IDialogManager dialogManager, IContainer container)
+            : base(dataBase, dialogManager, container)
         {
-            this.dataBase = dataBase;
-            this.dialogManager = dialogManager;
-            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
-
             Users = new ObservableCollection<User>();
 
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
-            DeleteUserCommand = new AsyncCommand<User>(DeleteUser);
-            SaveUserCommand = new AsyncCommand<User>(SaveUser);
-            SignUpCommand = new DelegateCommand(SignUp);
         }
-
-        /// <summary>
-        /// Команда открытия окна регистрации.
-        /// </summary>
-        public ICommand SignUpCommand { get; }
-
-        /// <summary>
-        /// Команда сохранения изменения пользователя.
-        /// </summary>
-        public ICommand<User> SaveUserCommand { get; }
-
-        /// <summary>
-        /// Команда удаления пользователя.
-        /// </summary>
-        public ICommand<User> DeleteUserCommand { get; }
 
         /// <summary>
         /// Команда открытия логов входов.
@@ -76,19 +38,19 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Открыть окно регистрации.
         /// </summary>
-        private async void SignUp()
+        public override async void Add()
         {
-            var editor = await dialogManager.SignUp();
+            var editor = await dialogManager.SignUp(null, false);
             if (editor == null)
                 return;
 
-            var res = await dataBase.SignUpAsync(editor.User, editor.Mode);
+            var res = await dataBase.SignUpAsync(editor);
             var msg = res ? "Пользователь добавлен" : "Пользователь не добавлен";
 
             User user = null;
             if (res)
             {
-                user = await dataBase.GetUserAsync(editor.User.Login, null, false);
+                user = await dataBase.GetUserAsync(editor.Login, null, false);
                 Users.Add(user);
             }
 
@@ -100,13 +62,21 @@ namespace Kursach.ViewModels
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        private async Task SaveUser(User user)
+        public override async void Edit(User user)
         {
-            if (!user.IsValid)
+            var editor = await dialogManager.SignUp(user, true);
+
+            if (editor == null)
                 return;
 
-            var res = await dataBase.SaveUserAsync(user);
+            var res = await dataBase.SaveUserAsync(editor);
             var msg = res ? "Пользователь сохранен" : "Пользователь не сохранен";
+
+            if (res)
+            {
+                user.Login = editor.Login;
+                user.Mode = editor.Mode;
+            }
 
             Log(msg, user);
         }
@@ -116,7 +86,7 @@ namespace Kursach.ViewModels
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        private async Task DeleteUser(User user)
+        public override async void Delete(User user)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить '{user.Login}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
@@ -131,12 +101,6 @@ namespace Kursach.ViewModels
             Log(msg, user);
         }
 
-        async void Log(string msg, User user)
-        {
-            Logger.Log.Info($"{msg}: {{login: {user.Login}, mode: {user.Mode}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
-        }
-
         /// <summary>
         /// Открытие логов входов.
         /// </summary>
@@ -148,16 +112,17 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Загрузка всех пользователей.
         /// </summary>
-        private async void Load()
+        protected override async void Load()
         {
             Users.Clear();
             var res = await dataBase.GetUsersAsync();
             Users.AddRange(res);
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        async void Log(string msg, User user)
         {
-            Load();
+            Logger.Log.Info($"{msg}: {{login: {user?.Login}, mode: {user?.Mode}}}");
+            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
         }
     }
 }

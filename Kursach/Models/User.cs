@@ -1,23 +1,24 @@
-﻿using Kursach.DataBase;
+﻿using Dapper.Contrib.Extensions;
+using Kursach.Models;
 using Kursach.ViewModels;
+using PropertyChanged;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kursach.Models
 {
     /// <summary>
-    /// Пользователь для авторизации.
+    /// Пользователь.
     /// </summary>
-    class LoginUser : ValidateViewModel
+    [Table("users")]
+    class User : ValidateViewModel, ICloneable
     {
-        public LoginUser()
-        {
-#if design
-            Login = "1234";
-            Password = "1234";
-#endif
-        }
-
-        public User ToUser(UserMode mode) => new User { Login = Login, Password = Password, Mode = mode };
+        /// <summary>
+        /// ID.
+        /// </summary>
+        [DoNotNotify]
+        [Dapper.Contrib.Extensions.Key]
+        public int Id { get; set; }
 
         /// <summary>
         /// User login.
@@ -36,5 +37,20 @@ namespace Kursach.Models
         [StringLength(20, MinimumLength = 4, ErrorMessage = "{0} не должен быть больше {1} и не меньше {2} символов")]
         [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "{0} должен состоять из латинских букв и цифр")]
         public string Password { get; set; }
+
+        /// <summary>
+        /// Права пользователя.
+        /// </summary>
+        public UserMode Mode { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is User user) && user.Id == Id;
+        }
     }
 }
