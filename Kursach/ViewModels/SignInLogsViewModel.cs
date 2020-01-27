@@ -23,7 +23,7 @@ namespace Kursach.ViewModels
         readonly IDataBase dataBase;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public SignInLogsViewModel(User user, IDataBase dataBase)
         {
