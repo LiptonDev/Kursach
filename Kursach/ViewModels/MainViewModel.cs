@@ -32,7 +32,7 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public MainViewModel(IRegionManager regionManager, IContainer container)
         {
