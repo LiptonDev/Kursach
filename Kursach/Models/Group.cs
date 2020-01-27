@@ -28,7 +28,7 @@ namespace Kursach.Models
         /// </summary>
         [Display(Name = "Название группы")]
         [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
-        [RegularExpression("^[а-яА-Я]{2,2}-[0-9]{2,2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
+        [RegularExpression("^[а-яА-Я]{1,3}-[0-9]{2,2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
         public string Name { get; set; }
 
         /// <summary>
@@ -63,6 +63,25 @@ namespace Kursach.Models
         /// Группа является бюджетной.
         /// </summary>
         public bool IsBudget { get; set; } = true;
+
+        /// <summary>
+        /// Подразделение.
+        /// </summary>
+        [Display(Name = "Подразделение")]
+        [Range(0, 2, ErrorMessage = "{0} должно находится в диапазоне от 0 до 2")]
+        public int Division { get; set; }
+
+        /// <summary>
+        /// СПО/НПО/ОВЗ.
+        /// </summary>
+        [Display(Name = "Образование")]
+        [Range(0, 2, ErrorMessage = "{0} должно находиться в диапазоне от 0 до 2")]
+        public int SpoNpo { get; set; }
+
+        /// <summary>
+        /// Группа является очной группой.
+        /// </summary>
+        public bool IsIntramural { get; set; } = true;
 
         /// <summary>
         /// Копия группы.
