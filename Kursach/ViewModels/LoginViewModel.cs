@@ -36,9 +36,11 @@ namespace Kursach.ViewModels
         readonly IDataBase dataBase;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public LoginViewModel(IRegionManager regionManager, IContainer container, IDataBase dataBase)
+        public LoginViewModel(IRegionManager regionManager,
+                              IDataBase dataBase, 
+                              IContainer container)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
