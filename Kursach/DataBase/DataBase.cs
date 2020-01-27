@@ -24,22 +24,11 @@ namespace Kursach.DataBase
         {
         }
 
-        private void InnerEx(Exception ex, StringBuilder sb)
-        {
-            if (ex == null)
-                return;
-
-            sb.Append(ex.Message);
-
-            if (ex.InnerException != null)
-                InnerEx(ex.InnerException, sb);
-        }
-
         /// <summary>
         /// Асинхронный запрос к базе.
         /// </summary>
         /// <returns></returns>
-        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string name = null)
+        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string callerName = null)
         {
             using (var connection = new MySqlConnection($"server={Settings.Default.mysqlHost};port={Settings.Default.mysqlPort};userid={Settings.Default.mysqlUser};pwd={Settings.Default.mysqlPwd};database={Settings.Default.mysqlDb};Convert Zero Datetime=True"))
             {
@@ -52,9 +41,7 @@ namespace Kursach.DataBase
                 }
                 catch (Exception ex)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    InnerEx(ex, sb);
-                    Logger.Log.Error($"Ошибка запроса к базе {{caller: {name}}}", ex);
+                    Logger.Log.Error($"Ошибка запроса к базе {{{Logger.GetParamsNamesValues(() => callerName)}}}", ex);
                     return defaultValue;
                 }
             }
