@@ -11,7 +11,7 @@ namespace Kursach.ViewModels
     class SignUpViewModel : BaseEditModeViewModel<User>
     {
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public SignUpViewModel(User user, bool isEditMode, IContainer container)
             : base(user, isEditMode, container) 
