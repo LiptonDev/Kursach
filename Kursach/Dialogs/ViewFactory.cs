@@ -15,7 +15,7 @@ namespace Kursach.Dialogs
         readonly IContainer container;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public ViewFactory(IContainer container)
         {
@@ -38,7 +38,7 @@ namespace Kursach.Dialogs
 
             var view = container.Resolve<FrameworkElement>(atr.ViewName);
 
-            if (view.GetType().Name == "FrameworkElement")
+            if (view.GetType().Name == nameof(FrameworkElement))
             {
                 Logger.Log.Error($"GetView<T> view is null, ViewModel: {viewModel}");
                 return null;
