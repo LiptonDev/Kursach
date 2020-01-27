@@ -33,8 +33,10 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <material:DialogHost Identifier="{Binding DialogIdentifier.Identifier}">
-        <ContentControl prism:RegionManager.RegionName="RootRegion"/>
-    </material:DialogHost>
-
+    <Grid>
+        <material:DialogHost Identifier="{Binding DialogIdentifier.Identifier}">
+            <ContentControl prism:RegionManager.RegionName="RootRegion"/>
+        </material:DialogHost>
+        <material:Snackbar MessageQueue="{Binding MessageQueue}"/>
+    </Grid>
 </Window>
