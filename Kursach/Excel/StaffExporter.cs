@@ -63,12 +63,12 @@ namespace Kursach.Excel
                 try
                 {
                     excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о сотрудниках: {{count: {staff.Count()}}}");
+                    Logger.Log.Info($"Экспорт информации о сотрудниках: {{{Logger.GetParamsNamesValues(() => staff.Count(), () => FileName)}}}");
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Экспорт информации о сотрудниках", ex);
+                    Logger.Log.Error($"Экспорт информации о сотрудниках: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
                     return false;
                 }
             }

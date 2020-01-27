@@ -5,9 +5,6 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kursach.Excel
@@ -77,14 +74,14 @@ namespace Kursach.Excel
                         }
                     }
 
-                    Logger.Log.Info($"Импорт данных о группах: {{count: {groups.Count}}}");
+                    Logger.Log.Info($"Импорт данных о группах: {{{Logger.GetParamsNamesValues(() => groups.Count, () => FileName)}}}");
 
                     return groups;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log.Error($"Импорт данных о группах", ex);
+                Logger.Log.Error($"Импорт данных о группах: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
 
                 return null;
             }

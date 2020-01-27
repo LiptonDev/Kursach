@@ -83,14 +83,14 @@ namespace Kursach.Excel
                         i++;
                     }
 
-                    Logger.Log.Info($"Импорт данных о студентах: {{count: {students.Count}}}");
+                    Logger.Log.Info($"Импорт данных о студентах: {{{Logger.GetParamsNamesValues(() => group.Name, () => students.Count, () => FileName)}}}");
 
                     return students;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log.Error($"Импорт данных о студентах", ex);
+                Logger.Log.Error($"Импорт данных о студентах: {{{Logger.GetParamsNamesValues(() => group.Name, () => FileName)}}}", ex);
 
                 return null;
             }
