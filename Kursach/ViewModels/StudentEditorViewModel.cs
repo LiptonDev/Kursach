@@ -5,6 +5,7 @@ using Kursach.Dialogs;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Kursach.DataBase;
+using System.Windows.Data;
 
 namespace Kursach.ViewModels
 {
@@ -15,19 +16,14 @@ namespace Kursach.ViewModels
     class StudentEditorViewModel : BaseEditModeViewModel<Student>
     {
         /// <summary>
-        /// Менеджер диалогов.
+        /// Группы.
         /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        readonly IDataBase dataBase;
+        public ListCollectionView Groups { get; }
 
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<Group> Groups { get; }
+        ObservableCollection<Group> groups { get; }
 
         Group selectedGroup;
         /// <summary>
@@ -47,28 +43,46 @@ namespace Kursach.ViewModels
         }
 
         /// <summary>
-        /// Ctor.
+        /// Менеджер диалогов.
         /// </summary>
-        public StudentEditorViewModel(Student student, bool isEditMode, IContainer container, IDataBase dataBase, IDialogManager dialogManager)
+        readonly IDialogManager dialogManager;
+
+        /// <summary>
+        /// База данных.
+        /// </summary>
+        readonly IDataBase dataBase;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public StudentEditorViewModel(Student student,
+                                      bool isEditMode,
+                                      int groupId,
+                                      IDataBase dataBase,
+                                      IDialogManager dialogManager,
+                                      IContainer container)
             : base(student, isEditMode, container)
         {
             this.dialogManager = dialogManager;
             this.dataBase = dataBase;
 
-            Groups = new ObservableCollection<Group>();
+            groups = new ObservableCollection<Group>();
 
-            Load();
+            Groups = new ListCollectionView(groups);
+            Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
+
+            Load(groupId);
         }
 
         /// <summary>
         /// Загрузка групп.
         /// </summary>
-        private async void Load()
+        private async void Load(int groupId)
         {
             var res = await dataBase.GetGroupsAsync();
-            Groups.AddRange(res);
+            groups.AddRange(res);
 
-            SelectedGroup = Groups.FirstOrDefault(x => x.Id == EditableObject.GroupId);
+            SelectedGroup = groups.FirstOrDefault(x => x.Id == groupId);
         }
     }
 }

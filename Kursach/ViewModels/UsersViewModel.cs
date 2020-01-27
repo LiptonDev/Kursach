@@ -6,6 +6,7 @@ using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.ObjectModel;
 using Kursach.DataBase;
+using MaterialDesignThemes.Wpf;
 
 namespace Kursach.ViewModels
 {
@@ -20,10 +21,13 @@ namespace Kursach.ViewModels
         public ObservableCollection<User> Users { get; }
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public UsersViewModel(IDataBase dataBase, IDialogManager dialogManager, IContainer container)
-            : base(dataBase, dialogManager, container)
+        public UsersViewModel(IDataBase dataBase,
+                              IDialogManager dialogManager,
+                              ISnackbarMessageQueue snackbarMessageQueue,
+                              IContainer container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, container)
         {
             Users = new ObservableCollection<User>();
 
@@ -47,14 +51,10 @@ namespace Kursach.ViewModels
             var res = await dataBase.SignUpAsync(editor);
             var msg = res ? "Пользователь добавлен" : "Пользователь не добавлен";
 
-            User user = null;
             if (res)
-            {
-                user = await dataBase.GetUserAsync(editor.Login, null, false);
-                Users.Add(user);
-            }
+                Users.Add(editor);
 
-            Log(msg, user);
+            Log(msg, editor);
         }
 
         /// <summary>
@@ -65,7 +65,6 @@ namespace Kursach.ViewModels
         public override async void Edit(User user)
         {
             var editor = await dialogManager.SignUp(user, true);
-
             if (editor == null)
                 return;
 
@@ -119,10 +118,10 @@ namespace Kursach.ViewModels
             Users.AddRange(res);
         }
 
-        async void Log(string msg, User user)
+        void Log(string msg, User user)
         {
             Logger.Log.Info($"{msg}: {{login: {user?.Login}, mode: {user?.Mode}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            snackbarMessageQueue.Enqueue(msg);
         }
     }
 }

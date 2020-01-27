@@ -1,27 +1,34 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.DataBase;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using Kursach.Models;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
-using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Students view model.
     /// </summary>
-    class StudentsViewModel : BaseViewModel<Student>, IExcelExporterViewModel
+    class StudentsViewModel : BaseViewModel<Student>, IExcelExporterViewModel, IExcelImporterViewModel
     {
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<Group> Groups { get; }
+        public ListCollectionView Groups { get; }
+
+        /// <summary>
+        /// Группы.
+        /// </summary>
+        ObservableCollection<Group> groups { get; }
 
         /// <summary>
         /// Студенты выбранной группы.
@@ -50,19 +57,27 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Импорт данных.
         /// </summary>
-        readonly IImporter<IEnumerable<Student>, Group> importer;
+        readonly IAsyncImporter<IEnumerable<Student>, Group> importer;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public StudentsViewModel(IDataBase dataBase, IDialogManager dialogManager, IExporter<Group, IEnumerable<Student>> exporter, IImporter<IEnumerable<Student>, Group> importer, IContainer container)
-            : base(dataBase, dialogManager, container)
+        public StudentsViewModel(IDataBase dataBase,
+                                 IDialogManager dialogManager,
+                                 IExporter<Group, IEnumerable<Student>> exporter,
+                                 IAsyncImporter<IEnumerable<Student>, Group> importer,
+                                 ISnackbarMessageQueue snackbarMessageQueue,
+                                 IContainer container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, container)
         {
             this.exporter = exporter;
             this.importer = importer;
 
-            Groups = new ObservableCollection<Group>();
+            groups = new ObservableCollection<Group>();
             Students = new ObservableCollection<Student>();
+
+            Groups = new ListCollectionView(groups);
+            Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
@@ -83,8 +98,7 @@ namespace Kursach.ViewModels
         /// </summary>
         public override async void Add()
         {
-            var editor = await dialogManager.StudentEditor(null, false);
-
+            var editor = await dialogManager.StudentEditor(null, false, SelectedGroup?.Id ?? 0);
             if (editor == null)
                 return;
 
@@ -92,9 +106,7 @@ namespace Kursach.ViewModels
             var msg = res ? "Студент добавлен" : "Студент не добавлен";
 
             if (editor.GroupId == selectedGroup.Id)
-            {
                 LoadStudents(selectedGroup);
-            }
 
             Log(msg, editor);
         }
@@ -104,8 +116,7 @@ namespace Kursach.ViewModels
         /// </summary>
         public override async void Edit(Student student)
         {
-            var editor = await dialogManager.StudentEditor(student, true);
-
+            var editor = await dialogManager.StudentEditor(student, true, student.GroupId);
             if (editor == null)
                 return;
 
@@ -156,20 +167,29 @@ namespace Kursach.ViewModels
         public void ExportToExcel()
         {
             if (SelectedGroup == null)
+            {
+                snackbarMessageQueue.Enqueue("Вы не выбрали группу");
                 return;
+            }
 
-            exporter.Export(SelectedGroup, Students);
+            var res = exporter.Export(SelectedGroup, Students);
+            var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
+
+            snackbarMessageQueue.Enqueue(msg);
         }
 
         /// <summary>
         /// Импорт данных о группе.
         /// </summary>
-        private async void ImportFromExcel()
+        public async void ImportFromExcel()
         {
             if (SelectedGroup == null)
+            {
+                snackbarMessageQueue.Enqueue("Вы не выбрали группу");
                 return;
+            }
 
-            var students = importer.Import(SelectedGroup);
+            var students = await importer.Import(SelectedGroup);
 
             if (students == null)
                 return;
@@ -178,12 +198,8 @@ namespace Kursach.ViewModels
 
             if (res)
             {
-                Logger.Log.Info($"Импорт данных в группу: {{{SelectedGroup.Name}}}, кол-во студентов добавлено: {{{students.Count()}}}");
+                snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
                 LoadStudents(SelectedGroup);
-            }
-            else
-            {
-                Logger.Log.Error($"Импорт данных в группу: {{{SelectedGroup.Name}}}");
             }
         }
 
@@ -192,9 +208,9 @@ namespace Kursach.ViewModels
         /// </summary>
         protected override async void Load()
         {
-            Groups.Clear();
+            groups.Clear();
             var res = await dataBase.GetGroupsAsync();
-            Groups.AddRange(res);
+            groups.AddRange(res);
         }
 
         /// <summary>
@@ -210,10 +226,10 @@ namespace Kursach.ViewModels
             Students.AddRange(res);
         }
 
-        async void Log(string msg, Student student)
+        void Log(string msg, Student student)
         {
             Logger.Log.Info($"{msg}: {{student: {student}, group: {student.GroupId}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            snackbarMessageQueue.Enqueue(msg);
         }
     }
 }
