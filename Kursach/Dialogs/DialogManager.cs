@@ -28,7 +28,7 @@ namespace Kursach.Dialogs
         readonly IViewFactory viewFactory;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public DialogManager(IContainer container, IViewFactory viewFactory)
         {
@@ -86,9 +86,9 @@ namespace Kursach.Dialogs
         /// Окно редактирования студента.
         /// </summary>
         /// <returns></returns>
-        public async Task<Student> StudentEditor(Student student, bool isEditMode)
+        public async Task<Student> StudentEditor(Student student, bool isEditMode, int groupId)
         {
-            return await show<Student, StudentEditorViewModel>(new object[] { student, isEditMode });
+            return await show<Student, StudentEditorViewModel>(new object[] { student, isEditMode, groupId });
         }
 
         /// <summary>
@@ -113,9 +113,9 @@ namespace Kursach.Dialogs
         /// Окно редактирования группы.
         /// </summary>
         /// <returns></returns>
-        public async Task<Group> GroupEditor(Group group, bool isEditMode)
+        public async Task<Group> GroupEditor(Group group, bool isEditMode, int division)
         {
-            return await show<Group, GroupEditorViewModel>(new object[] { group, isEditMode });
+            return await show<Group, GroupEditorViewModel>(new object[] { group, isEditMode, division });
         }
 
         /// <summary>

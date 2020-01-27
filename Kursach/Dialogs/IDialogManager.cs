@@ -36,7 +36,7 @@ namespace Kursach.Dialogs
         /// Окно редактирования группы.
         /// </summary>
         /// <returns></returns>
-        Task<Group> GroupEditor(Group group, bool isEditMode);
+        Task<Group> GroupEditor(Group group, bool isEditMode, int division);
 
         /// <summary>
         /// Окно выбора куратора.
@@ -54,6 +54,6 @@ namespace Kursach.Dialogs
         /// Окно редактирования студента.
         /// </summary>
         /// <returns></returns>
-        Task<Student> StudentEditor(Student student, bool isEditMode);
+        Task<Student> StudentEditor(Student student, bool isEditMode, int groupId);
     }
 }
