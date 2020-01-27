@@ -30,7 +30,7 @@ namespace Kursach.Models
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Ошибка чтения настроек: {ex.Message}");
+                    Logger.Log.Error($"Ошибка чтения настроек", ex);
                 }
             }
 
@@ -53,7 +53,7 @@ namespace Kursach.Models
             }
             catch (Exception ex)
             {
-                Logger.Log.Error($"Ошибка сохранения настроек: {ex.Message}");
+                Logger.Log.Error($"Ошибка сохранения настроек", ex);
             }
         }
         #endregion
