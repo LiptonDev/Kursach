@@ -1,10 +1,10 @@
-﻿using Kursach.Models;
-using Kursach.Dialogs;
+﻿using Kursach.Dialogs;
+using Kursach.Models;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Kursach.Excel
 {
@@ -23,11 +23,11 @@ namespace Kursach.Excel
         /// <summary>
         /// Экспорт данных о сотрудниках.
         /// </summary>
-        /// <param name="staffs">Сотрудники.</param>
-        public void Export(IEnumerable<Staff> staffs)
+        /// <param name="staff">Сотрудники.</param>
+        public bool Export(IEnumerable<Staff> staff)
         {
             if (!SelectFile("сотрудники"))
-                return;
+                return false;
 
             using (var excel = new ExcelPackage())
             {
@@ -38,20 +38,16 @@ namespace Kursach.Excel
 
                 //ФИО
                 worksheet.Cells["A1"]
-                    .SetValue("ФИО")
-                    .SetHorizontalAligment(ExcelHorizontalAlignment.Center)
-                    .SetVerticalAligment(ExcelVerticalAlignment.Center)
-                    .SetBold();
+                    .SetValueWithBold("ФИО")
+                    .SetVerticalHorizontalAligment();
 
                 //Должнось
                 worksheet.Cells["B1"]
-                    .SetValue("Должность")
-                    .SetHorizontalAligment(ExcelHorizontalAlignment.Center)
-                    .SetVerticalAligment(ExcelVerticalAlignment.Center)
-                    .SetBold();
+                    .SetValueWithBold("Должность")
+                    .SetVerticalHorizontalAligment();
 
                 int i = 0;
-                foreach (var item in staffs)
+                foreach (var item in staff)
                 {
                     worksheet.Cells[2 + i, 1].SetValue(item);
                     worksheet.Cells[2 + i, 2].SetValue(item.Position);
@@ -67,11 +63,13 @@ namespace Kursach.Excel
                 try
                 {
                     excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о сотрудниках");
+                    Logger.Log.Info($"Экспорт информации о сотрудниках: {{count: {staff.Count()}}}");
+                    return true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Ошибка экспорта информации о сотрудниках: {{{ex.Message}}}");
+                    Logger.Log.Error($"Экспорт информации о сотрудниках", ex);
+                    return false;
                 }
             }
         }
