@@ -29,6 +29,9 @@ namespace Kursach.ViewModels
         /// </summary>
         public bool IsEditMode { get; }
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public BaseEditModeViewModel(T obj, bool isEditMode, IContainer container)
         {
             IsEditMode = isEditMode;
