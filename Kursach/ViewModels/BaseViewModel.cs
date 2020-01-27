@@ -1,10 +1,10 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.DataBase;
 using Kursach.Dialogs;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using System.Windows.Input;
-using Kursach.DataBase;
 
 namespace Kursach.ViewModels
 {
@@ -25,11 +25,23 @@ namespace Kursach.ViewModels
         /// </summary>
         protected readonly IDialogManager dialogManager;
 
-        public BaseViewModel(IDataBase dataBase, IDialogManager dialogManager, IContainer container)
+        /// <summary>
+        /// Очередь сообщений.
+        /// </summary>
+        protected readonly ISnackbarMessageQueue snackbarMessageQueue;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public BaseViewModel(IDataBase dataBase, 
+                             IDialogManager dialogManager, 
+                             ISnackbarMessageQueue snackbarMessageQueue, 
+                             IContainer container)
         {
             this.dataBase = dataBase;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
+            this.snackbarMessageQueue = snackbarMessageQueue;
 
             AddCommand = new DelegateCommand(Add);
             EditCommand = new DelegateCommand<T>(Edit);
