@@ -1,5 +1,18 @@
-﻿namespace Kursach.Excel
+﻿using System.Threading.Tasks;
+
+namespace Kursach.Excel
 {
+    /// <summary>
+    /// Экспорт данных.
+    /// </summary>
+    interface IAsyncExporter<T>
+    {
+        /// <summary>
+        /// Экспорт данных.
+        /// </summary>
+        Task<bool> Export(T arg);
+    }
+
     /// <summary>
     /// Экспорт данных.
     /// </summary>
@@ -8,7 +21,7 @@
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        void Export(T arg);
+        bool Export(T arg);
     }
 
     /// <summary>
@@ -19,6 +32,6 @@
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        void Export(T1 arg, T2 arg2);
+        bool Export(T1 arg, T2 arg2);
     }
 }
