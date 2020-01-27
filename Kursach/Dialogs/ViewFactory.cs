@@ -32,7 +32,7 @@ namespace Kursach.Dialogs
 
             if (atr == null)
             {
-                Logger.Log.Error($"DialogNameAttribute is null, ViewModel: {viewModel}");
+                Logger.Log.Error($"DialogNameAttribute is null: {{{Logger.GetParamsNamesValues(() => viewModel)}}}");
                 return null;
             }
 
@@ -40,7 +40,7 @@ namespace Kursach.Dialogs
 
             if (view.GetType().Name == nameof(FrameworkElement))
             {
-                Logger.Log.Error($"GetView<T> view is null, ViewModel: {viewModel}");
+                Logger.Log.Error($"GetView<T> view is null: {{{Logger.GetParamsNamesValues(() => viewModel)}}}");
                 return null;
             }
 
