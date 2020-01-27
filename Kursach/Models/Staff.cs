@@ -17,6 +17,10 @@ namespace Kursach.Models
         [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
         public string Position { get; set; }
 
+        /// <summary>
+        /// Копия сотрудника.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return MemberwiseClone();

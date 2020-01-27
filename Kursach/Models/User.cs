@@ -1,5 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using Kursach.Models;
 using Kursach.ViewModels;
 using PropertyChanged;
 using System;
@@ -43,6 +42,10 @@ namespace Kursach.Models
         /// </summary>
         public UserMode Mode { get; set; }
 
+        /// <summary>
+        /// Копия пользователя.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return MemberwiseClone();

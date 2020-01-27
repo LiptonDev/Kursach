@@ -48,6 +48,10 @@ namespace Kursach.Models
         /// </summary>
         public bool Expelled { get; set; }
 
+        /// <summary>
+        /// Копия студента.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return MemberwiseClone();
