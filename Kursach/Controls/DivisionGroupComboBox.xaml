@@ -1,0 +1,21 @@
+﻿<ComboBox 
+    x:Class="Kursach.Controls.DivisionGroupComboBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    ItemsSource="{Binding Groups}"
+    SelectedItem="{Binding SelectedGroup}"
+    material:HintAssist.Hint="Группа"
+    Style="{StaticResource BaseComboBox}">
+    
+    <ComboBox.GroupStyle>
+        <GroupStyle>
+            <GroupStyle.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name, Converter={StaticResource DivisionConverter}}"
+                               Style="{StaticResource MarginBlock}"/>
+                </DataTemplate>
+            </GroupStyle.HeaderTemplate>
+        </GroupStyle>
+    </ComboBox.GroupStyle>
+</ComboBox>
