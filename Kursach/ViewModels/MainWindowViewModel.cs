@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
 using Kursach.Models;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
 using System.Windows.Input;
@@ -18,6 +19,11 @@ namespace Kursach.ViewModels
         public IProgramSettings Settings { get; }
 
         /// <summary>
+        /// Очередь сообщений.
+        /// </summary>
+        public ISnackbarMessageQueue MessageQueue { get; }
+
+        /// <summary>
         /// Идентификатор диалоговых окон.
         /// </summary>
         public IDialogIdentifier DialogIdentifier { get; }
@@ -28,13 +34,17 @@ namespace Kursach.ViewModels
         readonly IRegionManager regionManager;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public MainWindowViewModel(IProgramSettings settings, IRegionManager regionManager, IContainer container)
+        public MainWindowViewModel(IProgramSettings settings, 
+                                   IRegionManager regionManager, 
+                                   ISnackbarMessageQueue messageQueue, 
+                                   IContainer container)
         {
             Settings = settings;
             this.regionManager = regionManager;
             DialogIdentifier = container.ResolveRootDialogIdentifier();
+            MessageQueue = messageQueue;
 
             LoadCommand = new DelegateCommand(OnLoad);
             CloseCommand = new DelegateCommand(OnClose);
