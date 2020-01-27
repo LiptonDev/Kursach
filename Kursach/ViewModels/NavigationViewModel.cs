@@ -32,9 +32,9 @@ namespace Kursach.ViewModels
         {
             if (navigationContext.Parameters.ContainsKey("user"))
             {
-                var robj = navigationContext.Parameters["user"] as User;
-                User = robj;
-                User.Mode = robj.Mode;
+                var user = navigationContext.Parameters["user"] as User;
+                User = user;
+                User.Mode = user.Mode;
             }
 
             Load();
