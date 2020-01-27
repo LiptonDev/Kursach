@@ -9,35 +9,63 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Kursach.DataBase;
+using MaterialDesignThemes.Wpf;
+using System.Linq;
 
 namespace Kursach.ViewModels
 {
     /// <summary>
     /// Groups view model.
     /// </summary>
-    class GroupsViewModel : BaseViewModel<Group>, IExcelExporterViewModel
+    class GroupsViewModel : BaseViewModel<Group>, IExcelExporterViewModel, IExcelImporterViewModel
     {
         /// <summary>
         /// Группы.
         /// </summary>
         public ObservableCollection<Group> Groups { get; }
 
+        int selectedDivision = -1;
+        /// <summary>
+        /// Выбранное подразделение.
+        /// </summary>
+        public int SelectedDivision
+        {
+            get => selectedDivision;
+            set
+            {
+                selectedDivision = value;
+                Load();
+            }
+        }
+
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        readonly IExporter<IEnumerable<Group>> exporter;
+        readonly IAsyncExporter<IEnumerable<Group>> exporter;
 
         /// <summary>
-        /// Ctor.
+        /// Импорт данных.
         /// </summary>
-        public GroupsViewModel(IDataBase dataBase, IContainer container, IDialogManager dialogManager, IExporter<IEnumerable<Group>> exporter)
-            : base(dataBase, dialogManager, container)
+        readonly IAsyncImporter<IEnumerable<Group>> importer;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public GroupsViewModel(IDataBase dataBase,
+                               IDialogManager dialogManager,
+                               IAsyncExporter<IEnumerable<Group>> exporter,
+                               IAsyncImporter<IEnumerable<Group>> importer,
+                               ISnackbarMessageQueue snackbarMessageQueue,
+                               IContainer container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, container)
         {
             this.exporter = exporter;
+            this.importer = importer;
 
             Groups = new ObservableCollection<Group>();
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
+            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
         }
 
         /// <summary>
@@ -46,19 +74,23 @@ namespace Kursach.ViewModels
         public ICommand ExportToExcelCommand { get; }
 
         /// <summary>
+        /// Команда импорта данных из Excel.
+        /// </summary>
+        public ICommand ImportFromExcelCommand { get; }
+
+        /// <summary>
         /// Добавление группы.
         /// </summary>
         public override async void Add()
         {
-            var editor = await dialogManager.GroupEditor(null, false);
-
+            var editor = await dialogManager.GroupEditor(null, false, SelectedDivision == -1 ? 0 : SelectedDivision);
             if (editor == null)
                 return;
 
             var res = await dataBase.AddGroupAsync(editor);
             var msg = res ? "Группа добавлена" : "Группа не добавлена";
 
-            if (res)
+            if (res && editor.Division == SelectedDivision)
                 Groups.Add(editor);
 
             Log(msg, editor.Name, editor.CuratorId);
@@ -69,8 +101,7 @@ namespace Kursach.ViewModels
         /// </summary>
         public override async void Edit(Group group)
         {
-            var editor = await dialogManager.GroupEditor(group, true);
-
+            var editor = await dialogManager.GroupEditor(group, true, group.Division);
             if (editor == null)
                 return;
 
@@ -85,6 +116,12 @@ namespace Kursach.ViewModels
                 group.End = editor.End;
                 group.Specialty = editor.Specialty;
                 group.IsBudget = editor.IsBudget;
+                group.Division = editor.Division;
+                group.SpoNpo = editor.SpoNpo;
+                group.IsIntramural = editor.IsIntramural;
+
+                if (group.Division != SelectedDivision)
+                    Groups.Remove(group);
             }
 
             Log(msg, group.Name, group.CuratorId);
@@ -112,9 +149,31 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        public void ExportToExcel()
+        public async void ExportToExcel()
         {
-            exporter.Export(Groups);
+            var res = await exporter.Export(Groups);
+            var msg = res ? "Группы экспортированы" : "Группы не экспортированы";
+
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Импорт данных.
+        /// </summary>
+        public async void ImportFromExcel()
+        {
+            var groups = await importer.Import();
+
+            if (groups == null)
+                return;
+
+            var res = await dataBase.AddGroupsAsync(groups);
+
+            if (res)
+            {
+                snackbarMessageQueue.Enqueue($"Добавлено групп: {groups.Count()}");
+                Load();
+            }
         }
 
         /// <summary>
@@ -122,15 +181,18 @@ namespace Kursach.ViewModels
         /// </summary>
         protected override async void Load()
         {
+            if (SelectedDivision == -1)
+                return;
+
             Groups.Clear();
-            var res = await dataBase.GetGroupsAsync();
+            var res = await dataBase.GetGroupsAsync(SelectedDivision);
             Groups.AddRange(res);
         }
 
-        async void Log(string msg, string name, int id)
+        void Log(string msg, string name, int id)
         {
             Logger.Log.Info($"{msg}: {{name: {name}, curatorId: {id}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            snackbarMessageQueue.Enqueue(msg);
         }
     }
 }
