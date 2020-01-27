@@ -15,18 +15,37 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <UniformGrid Rows="1">
+        <ComboBox SelectedIndex="{Binding SelectedDivision, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                  material:HintAssist.Hint="Подразделение">
+            <ComboBoxItem>
+                1 подразделение
+            </ComboBoxItem>
+
+            <ComboBoxItem>
+                2 подразделение
+            </ComboBoxItem>
+
+            <ComboBoxItem>
+                3 подразделение
+            </ComboBoxItem>
+        </ComboBox>
+
+        <UniformGrid Rows="1"
+                     Grid.Row="1">
             <Button Content="Добавить группу"
                     Style="{StaticResource AddButton}"/>
 
             <controls:ExportToExcelButton/>
+
+            <controls:ImportFromExcelButton/>
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding Groups}"
-                      Grid.Row="1">
+                      Grid.Row="2">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
