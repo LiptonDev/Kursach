@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Kursach.DataBase;
+using MaterialDesignThemes.Wpf;
 
 namespace Kursach.ViewModels
 {
@@ -28,10 +29,14 @@ namespace Kursach.ViewModels
         readonly IExporter<IEnumerable<Staff>> exporter;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public StaffViewModel(IDataBase dataBase, IExporter<IEnumerable<Staff>> exporter, IDialogManager dialogManager, IContainer container)
-            : base(dataBase, dialogManager, container)
+        public StaffViewModel(IDataBase dataBase,
+                              IExporter<IEnumerable<Staff>> exporter,
+                              IDialogManager dialogManager,
+                              ISnackbarMessageQueue snackbarMessageQueue,
+                              IContainer container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, container)
         {
             this.exporter = exporter;
 
@@ -50,7 +55,10 @@ namespace Kursach.ViewModels
         /// </summary>
         public void ExportToExcel()
         {
-            exporter.Export(Staff);
+            var res = exporter.Export(Staff);
+            var msg = res ? "Сотрудники экспортированы" : "Сотрудники не экспортированы";
+
+            snackbarMessageQueue.Enqueue(msg);
         }
 
         /// <summary>
@@ -59,7 +67,6 @@ namespace Kursach.ViewModels
         public override async void Add()
         {
             var editor = await dialogManager.StaffEditor(null, false);
-
             if (editor == null)
                 return;
 
@@ -78,7 +85,6 @@ namespace Kursach.ViewModels
         public override async void Edit(Staff staff)
         {
             var editor = await dialogManager.StaffEditor(staff, true);
-
             if (editor == null)
                 return;
 
@@ -124,10 +130,10 @@ namespace Kursach.ViewModels
             Staff.AddRange(res);
         }
 
-        async void Log(string msg, object staff)
+        void Log(string msg, Staff staff)
         {
             Logger.Log.Info($"{msg}: {{staff: {staff}}}");
-            await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+            snackbarMessageQueue.Enqueue(msg);
         }
     }
 }
