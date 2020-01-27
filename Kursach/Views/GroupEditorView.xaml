@@ -21,6 +21,36 @@
             <DatePicker SelectedDate="{Binding EditableObject.End, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         material:HintAssist.Hint="Дата окончания обучения"/>
 
+            <ComboBox SelectedIndex="{Binding EditableObject.Division, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      material:HintAssist.Hint="Подразделение">
+                <ComboBoxItem>
+                    1 подразделение
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    2 подразделение
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    3 подразделение
+                </ComboBoxItem>
+            </ComboBox>
+
+            <ComboBox SelectedIndex="{Binding EditableObject.SpoNpo, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      material:HintAssist.Hint="Образование">
+                <ComboBoxItem>
+                    СПО
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    НПО
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    ОВЗ
+                </ComboBoxItem>
+            </ComboBox>
+
             <TextBox Text="{Binding EditableObject.CuratorId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="ИД куратора"
                      IsReadOnly="True"
@@ -33,6 +63,10 @@
             <CheckBox IsChecked="{Binding EditableObject.IsBudget}"
                       Margin="5"
                       Content="Бюджетная группа"/>
+
+            <CheckBox IsChecked="{Binding EditableObject.IsIntramural}"
+                      Margin="5"
+                      Content="Очная группа"/>
 
             <controls:EditorButtons/>
         </StackPanel>
