@@ -1,9 +1,11 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using Kursach.Models;
+using Kursach.Properties;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +18,7 @@ namespace Kursach.DataBase
     class DataBase : IDataBase
     {
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public DataBase()
         {
@@ -37,9 +39,9 @@ namespace Kursach.DataBase
         /// Асинхронный запрос к базе.
         /// </summary>
         /// <returns></returns>
-        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, [CallerMemberName]string name = null)
+        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string name = null)
         {
-            using (var connection = new MySqlConnection("server=localhost;UserId=root;database=kursach;Convert Zero Datetime=True"))
+            using (var connection = new MySqlConnection($"server={Settings.Default.mysqlHost};port={Settings.Default.mysqlPort};userid={Settings.Default.mysqlUser};pwd={Settings.Default.mysqlPwd};database={Settings.Default.mysqlDb};Convert Zero Datetime=True"))
             {
                 try
                 {
@@ -52,12 +54,13 @@ namespace Kursach.DataBase
                 {
                     StringBuilder sb = new StringBuilder();
                     InnerEx(ex, sb);
-                    Logger.Log.Error($"Ошибка запроса к базе: {{ex: {sb.ToString()}, member: {name}}}");
-                    return default;
+                    Logger.Log.Error($"Ошибка запроса к базе {{caller: {name}}}", ex);
+                    return defaultValue;
                 }
             }
         }
 
+        #region User region
         /// <summary>
         /// Получить пользователя.
         /// </summary>
@@ -96,14 +99,16 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<SignInLog>> GetSignInLogsAsync(User user)
         {
-            return await QueryAsync(async con => await con.QueryAsync<SignInLog>("SELECT * FROM signinlogs WHERE userId = @Id", user));
+            return await QueryAsync(async con =>
+            {
+                return await con.QueryAsync<SignInLog>("SELECT * FROM signinlogs WHERE userId = @Id", user);
+            }, Enumerable.Empty<SignInLog>());
         }
 
         /// <summary>
         /// Регистрация нового пользователя.
         /// </summary>
         /// <param name="user">Пользователь.</param>
-        /// <param name="mode">Права.</param>
         /// <returns></returns>
         public async Task<bool> SignUpAsync(User user)
         {
@@ -124,7 +129,10 @@ namespace Kursach.DataBase
         /// <returns></returns>
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await QueryAsync(async con => await con.GetAllAsync<User>());
+            return await QueryAsync(async con =>
+            {
+                return await con.GetAllAsync<User>();
+            }, Enumerable.Empty<User>());
         }
 
         /// <summary>
@@ -152,17 +160,22 @@ namespace Kursach.DataBase
                 return await con.UpdateAsync(user);
             });
         }
+        #endregion
 
+        #region Group region
         /// <summary>
         /// Получение всех групп.
         /// </summary>
+        /// <param name="divisionId">Подразделение (от 0 до 2). -1 - все группы.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<Group>> GetGroupsAsync()
+        public async Task<IEnumerable<Group>> GetGroupsAsync(int divisionId = -1)
         {
             return await QueryAsync(async con =>
             {
-                return await con.GetAllAsync<Group>();
-            });
+                if (divisionId == -1)
+                    return await con.GetAllAsync<Group>();
+                else return await con.QueryAsync<Group>("SELECT * FROM groups WHERE division = @division", new { division = divisionId });
+            }, Enumerable.Empty<Group>());
         }
 
         /// <summary>
@@ -175,18 +188,6 @@ namespace Kursach.DataBase
             return await QueryAsync(async con =>
             {
                 return await con.DeleteAsync(group);
-            });
-        }
-
-        /// <summary>
-        /// Получение всех работников.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IEnumerable<Staff>> GetStaffsAsync()
-        {
-            return await QueryAsync(async con =>
-            {
-                return await con.GetAllAsync<Staff>();
             });
         }
 
@@ -233,6 +234,62 @@ namespace Kursach.DataBase
         }
 
         /// <summary>
+        /// Добавить группы.
+        /// </summary>
+        /// <param name="groups">Группы.</param>
+        /// <returns></returns>
+        public async Task<bool> AddGroupsAsync(IEnumerable<Group> groups)
+        {
+            return await QueryAsync(async con =>
+            {
+                await con.InsertAsync(groups);
+
+                return true;
+            });
+        }
+        #endregion
+
+        #region Staff region
+        /// <summary>
+        /// Получить первого (создать если нет) сотрудника.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetOrCreateFirstStaffIdAsync()
+        {
+            return await QueryAsync(async con =>
+            {
+                var staff = await con.QueryFirstOrDefaultAsync<Staff>("SELECT id FROM staff");
+                if (staff == null)
+                {
+                    staff = new Staff
+                    {
+                        LastName = "Иванов",
+                        FirstName = "Иван",
+                        MiddleName = "Иванович",
+                        Position = "Должность"
+                    };
+
+                    var insert = await AddStaffAsync(staff);
+
+                    return insert ? staff.Id : -1;
+                }
+                else return staff.Id;
+            });
+        }
+
+        /// <summary>
+        /// Получение всех работников.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Staff>> GetStaffsAsync()
+        {
+            return await QueryAsync(async con =>
+            {
+                return await con.GetAllAsync<Staff>();
+            }, Enumerable.Empty<Staff>());
+        }
+
+        /// <summary>
         /// Удалить сотрудника.
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
@@ -272,7 +329,9 @@ namespace Kursach.DataBase
                 return true;
             });
         }
+        #endregion
 
+        #region Student region
         /// <summary>
         /// Сохранить студента.
         /// </summary>
@@ -337,7 +396,29 @@ namespace Kursach.DataBase
             return await QueryAsync(async con =>
             {
                 return await con.QueryAsync<Student>("SELECT * FROM students WHERE groupId = @Id", group);
-            });
+            }, Enumerable.Empty<Student>());
         }
+
+        /// <summary>
+        /// Получение количества студентов в группах.
+        /// </summary>
+        /// <param name="groups">Группы.</param>
+        /// <returns></returns>
+        public async Task<Dictionary<Group, int>> GetStudentsCountAsync(IEnumerable<Group> groups)
+        {
+            return await QueryAsync(async con =>
+            {
+                var students = new Dictionary<Group, int>();
+
+                foreach (var item in groups)
+                {
+                    var res = await con.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM students WHERE groupId = @Id", item);
+                    students[item] = res;
+                }
+
+                return students;
+            }, new Dictionary<Group, int>());
+        }
+        #endregion
     }
 }

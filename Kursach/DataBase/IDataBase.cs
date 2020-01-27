@@ -9,6 +9,7 @@ namespace Kursach.DataBase
     /// </summary>
     interface IDataBase
     {
+        #region User region
         /// <summary>
         /// Получить пользователя.
         /// </summary>
@@ -59,12 +60,15 @@ namespace Kursach.DataBase
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
         Task<bool> SaveUserAsync(User user);
+        #endregion
 
+        #region Group region
         /// <summary>
         /// Получение всех групп.
         /// </summary>
+        /// <param name="divisionId">Подразделение (от 0 до 2). -1 - все группы.</param>
         /// <returns></returns>
-        Task<IEnumerable<Group>> GetGroupsAsync();
+        Task<IEnumerable<Group>> GetGroupsAsync(int divisionId = -1);
 
         /// <summary>
         /// Удаление группы.
@@ -72,12 +76,6 @@ namespace Kursach.DataBase
         /// <param name="group">Группа.</param>
         /// <returns></returns>
         Task<bool> RemoveGroupAsync(Group group);
-
-        /// <summary>
-        /// Получение всех работников.
-        /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<Staff>> GetStaffsAsync();
 
         /// <summary>
         /// Сохранить группу.
@@ -92,6 +90,27 @@ namespace Kursach.DataBase
         /// <param name="group">Группа.</param>
         /// <returns></returns>
         Task<bool> AddGroupAsync(Group group);
+
+        /// <summary>
+        /// Добавить группы.
+        /// </summary>
+        /// <param name="groups">Группы.</param>
+        /// <returns></returns>
+        Task<bool> AddGroupsAsync(IEnumerable<Group> groups);
+        #endregion
+
+        #region Staff region
+        /// <summary>
+        /// Получить первого (создать если нет) сотрудника.
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetOrCreateFirstStaffIdAsync();
+
+        /// <summary>
+        /// Получение всех работников.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Staff>> GetStaffsAsync();
 
         /// <summary>
         /// Удалить сотрудника.
@@ -113,7 +132,9 @@ namespace Kursach.DataBase
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
         Task<bool> AddStaffAsync(Staff staff);
+        #endregion
 
+        #region Student region
         /// <summary>
         /// Сохранить студента.
         /// </summary>
@@ -148,5 +169,13 @@ namespace Kursach.DataBase
         /// <param name="group">Группа.</param>
         /// <returns></returns>
         Task<IEnumerable<Student>> GetStudentsAsync(Group group);
+
+        /// <summary>
+        /// Получение количества студентов в группах.
+        /// </summary>
+        /// <param name="groups">Группы.</param>
+        /// <returns></returns>
+        Task<Dictionary<Group, int>> GetStudentsCountAsync(IEnumerable<Group> groups);
+        #endregion
     }
 }

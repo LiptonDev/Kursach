@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Kursach.Models;
 
@@ -19,51 +20,49 @@ namespace Kursach.DataBase
 
         public async Task<bool> SaveStudentAsync(Student student)
         {
+            await Task.Delay(Delay);
             return true;
         }
 
         public async Task<bool> RemoveStudentAsync(Student student)
         {
+            await Task.Delay(Delay);
             return true;
         }
 
         public async Task<bool> AddStudentAsync(Student student)
         {
+            await Task.Delay(Delay);
             return true;
         }
 
         public async Task<bool> SaveStaffAsync(Staff staff)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
         public async Task<bool> AddStaffAsync(Staff staff)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
         public async Task<bool> RemoveStaffAsync(Staff staff)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
         public async Task<bool> SaveGroupAsync(Group group)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
         public async Task<bool> AddGroupAsync(Group group)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
@@ -84,7 +83,6 @@ namespace Kursach.DataBase
         public async Task<bool> RemoveGroupAsync(Group group)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
@@ -105,34 +103,7 @@ namespace Kursach.DataBase
                     Start = DateTime.Now,
                     Specialty = "Оооооочень длинное название специальности для теста",
                     IsBudget = true,
-                    Curator = new Staff
-                    {
-                        FirstName = "Имя",
-                        LastName = "Фамилия",
-                        MiddleName = "Отчество",
-                        Position = "Шестерка",
-                        Id = i
-                    },
-                    Students = new ObservableCollection<Student>()
                 };
-
-                for (int a = 0; a < 15; a++)
-                {
-                    bool exp = rn.Next(0, 2) == 1;
-                    group.Students.Add(new Student
-                    {
-                        FirstName = "Имя",
-                        LastName = "Фамилия",
-                        MiddleName = "Отчество",
-                        Birthdate = DateTime.Now,
-                        DecreeOfEnrollment = "№53-К от 23.08.2017",
-                        Notice = exp ? "отч. ПР№107-К от 13.09.2019 по иниц. обуч." : "",
-                        Expelled = exp,
-                        PoPkNumber = 1337,
-                        GroupId = i,
-                        Id = a
-                    });
-                }
 
                 groups.Add(group);
             }
@@ -143,7 +114,6 @@ namespace Kursach.DataBase
         public async Task<bool> AddSignInLogAsync(User user)
         {
             await Task.Delay(Delay);
-
             return true;
         }
 
@@ -153,7 +123,7 @@ namespace Kursach.DataBase
             List<SignInLog> logs = new List<SignInLog>();
             for (int i = 0; i < 50; i++)
             {
-                logs.Add(new SignInLog { User = user });
+                logs.Add(new SignInLog { UserId = i });
             }
             return logs;
         }
@@ -189,7 +159,7 @@ namespace Kursach.DataBase
             return true;
         }
 
-        public async Task<bool> SignUpAsync(LoginUser user, UserMode mode)
+        public async Task<bool> SignUpAsync(User user)
         {
             await Task.Delay(Delay);
             return true;
@@ -201,6 +171,31 @@ namespace Kursach.DataBase
         {
             await Task.Delay(Delay);
             return true;
+        }
+
+        public async Task<IEnumerable<Student>> GetStudentsAsync(Group group)
+        {
+            await Task.Delay(Delay);
+            List<Student> students = new List<Student>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                students.Add(new Student
+                {
+                    Birthdate = DateTime.Now,
+                    DecreeOfEnrollment = "Приказ",
+                    Expelled = rn.Next(0, 2) == 1,
+                    FirstName = "Имя"+i,
+                    LastName = "Фамилия"+i,
+                    MiddleName= "Отчество"+i,
+                    GroupId = group.Id,
+                    Notice = "Notice",
+                    PoPkNumber = i,
+                    Id = i
+                });
+            }
+
+            return students;
         }
     }
 }
