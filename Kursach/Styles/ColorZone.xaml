@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="material:ColorZone" x:Key="CornerZone" BasedOn="{StaticResource CenterControl}">
-        <Setter Property="Mode" Value="Dark"/>
         <Setter Property="material:ShadowAssist.ShadowDepth" Value="Depth4"/>
         <Setter Property="CornerRadius" Value="4"/>
     </Style>
