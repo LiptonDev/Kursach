@@ -28,6 +28,7 @@
             <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
             <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
             <converters:UserModeToVisibility x:Key="AdminUserModeToVisibility" NeedMode="Admin"/>
+            <converters:DivisionConverter x:Key="DivisionConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 

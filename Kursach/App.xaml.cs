@@ -5,6 +5,7 @@ using Kursach.Excel;
 using Kursach.Models;
 using Kursach.ViewModels;
 using Kursach.Views;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -58,6 +59,9 @@ namespace Kursach
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //snack
+            containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
             //settings
             containerRegistry.RegisterDelegate<IProgramSettings>(x => ProgramSettings.Load(), Reuse.Singleton);
 
@@ -108,10 +112,11 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();
 
             //excel
-            containerRegistry.RegisterSingleton<IExporter<Group, IEnumerable<Student>>, GroupExporter>();
+            containerRegistry.RegisterSingleton<IExporter<Group, IEnumerable<Student>>, StudentsExporter>();
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
-            containerRegistry.RegisterSingleton<IExporter<IEnumerable<Group>>, GroupsExporter>();
-            containerRegistry.RegisterSingleton<IImporter<IEnumerable<Student>, Group>, GroupImporter>();
+            containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<Group>>, GroupsExporter>();
+            containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>, Group>, StudentsImporter>();
+            containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Group>>, GroupsImporter>();
         }
     }
 

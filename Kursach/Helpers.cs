@@ -1,6 +1,8 @@
 ﻿using DryIoc;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
+using System;
+using System.Collections.Generic;
 
 namespace Kursach
 {

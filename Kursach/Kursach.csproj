@@ -32,6 +32,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -141,6 +142,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DivisionGroupComboBox.xaml.cs">
+      <DependentUpon>DivisionGroupComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\EditDeleteButtons.xaml.cs">
       <DependentUpon>EditDeleteButtons.xaml</DependentUpon>
     </Compile>
@@ -150,14 +154,19 @@
     <Compile Include="Controls\ExportToExcelButton.xaml.cs">
       <DependentUpon>ExportToExcelButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ImportFromExcelButton.xaml.cs">
+      <DependentUpon>ImportFromExcelButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SelectorButtons.xaml.cs">
       <DependentUpon>SelectorButtons.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ActualSizeConverter.cs" />
+    <Compile Include="Converters\DivisionConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\ExpelledConverter.cs" />
     <Compile Include="Converters\IsBudgetConverter.cs" />
     <Compile Include="Converters\UserModeToVisibility.cs" />
+    <Compile Include="Excel\GroupsImporter.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\Staff.cs" />
@@ -170,12 +179,12 @@
     <Compile Include="DataBase\DesignDataBase.cs" />
     <Compile Include="Excel\BaseExporter.cs" />
     <Compile Include="Excel\BaseImporter.cs" />
-    <Compile Include="Excel\GroupImporter.cs" />
+    <Compile Include="Excel\StudentsImporter.cs" />
     <Compile Include="Excel\GroupsExporter.cs" />
     <Compile Include="Excel\IImporter.cs" />
     <Compile Include="ViewModels\IEditMode.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
-    <Compile Include="Excel\GroupExporter.cs" />
+    <Compile Include="Excel\StudentsExporter.cs" />
     <Compile Include="Excel\IExporter.cs" />
     <Compile Include="Excel\StaffExporter.cs" />
     <Compile Include="ViewModels\BaseEditModeViewModel.cs" />
@@ -185,6 +194,7 @@
     <Compile Include="ViewModels\GroupsViewModel.cs" />
     <Compile Include="ViewModels\IBaseViewModel.cs" />
     <Compile Include="ViewModels\IExcelExporterViewModel.cs" />
+    <Compile Include="ViewModels\IExcelImporterViewModel.cs" />
     <Compile Include="ViewModels\ISelectorViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\SelectStaffViewModel.cs" />
@@ -243,6 +253,10 @@
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\DivisionGroupComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EditDeleteButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ExportToExcelButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ImportFromExcelButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -430,9 +448,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="FodyWeavers.xsd">
       <SubType>Designer</SubType>
     </None>
