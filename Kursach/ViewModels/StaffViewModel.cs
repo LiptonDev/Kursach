@@ -132,7 +132,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, Staff staff)
         {
-            Logger.Log.Info($"{msg}: {{staff: {staff}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => staff)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

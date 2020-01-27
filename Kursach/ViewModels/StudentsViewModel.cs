@@ -228,7 +228,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, Student student)
         {
-            Logger.Log.Info($"{msg}: {{student: {student}, group: {student.GroupId}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => student, () => student.GroupId)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

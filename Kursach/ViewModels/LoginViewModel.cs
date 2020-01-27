@@ -39,7 +39,7 @@ namespace Kursach.ViewModels
         /// Конструктор.
         /// </summary>
         public LoginViewModel(IRegionManager regionManager,
-                              IDataBase dataBase, 
+                              IDataBase dataBase,
                               IContainer container)
         {
             this.regionManager = regionManager;
@@ -72,12 +72,12 @@ namespace Kursach.ViewModels
             if (user == null)
             {
                 await dialogIdentifier.ShowMessageBoxAsync("Неверный логин или пароль", MaterialMessageBoxButtons.Ok);
-                Logger.Log.Info($"Неудачная попытка входа в систему: {{login: {User.Login}}}");
+                Logger.Log.Info($"Неудачная попытка входа в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
                 return;
             }
             else
             {
-                Logger.Log.Info($"Успешный вход в систему: {{login: {User.Login}}}");
+                Logger.Log.Info($"Успешный вход в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
                 await dataBase.AddSignInLogAsync(user);
 
                 NavigationParameters parameters = new NavigationParameters();

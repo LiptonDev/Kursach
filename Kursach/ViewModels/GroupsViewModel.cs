@@ -93,7 +93,7 @@ namespace Kursach.ViewModels
             if (res && editor.Division == SelectedDivision)
                 Groups.Add(editor);
 
-            Log(msg, editor.Name, editor.CuratorId);
+            Log(msg, editor);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Kursach.ViewModels
                     Groups.Remove(group);
             }
 
-            Log(msg, group.Name, group.CuratorId);
+            Log(msg, group);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Kursach.ViewModels
             if (res)
                 Groups.Remove(group);
 
-            Log(msg, group.Name, group.CuratorId);
+            Log(msg, group);
         }
 
         /// <summary>
@@ -151,7 +151,8 @@ namespace Kursach.ViewModels
         /// </summary>
         public async void ExportToExcel()
         {
-            var res = await exporter.Export(Groups);
+            var groups = await dataBase.GetGroupsAsync();
+            var res = await exporter.Export(groups);
             var msg = res ? "Группы экспортированы" : "Группы не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
@@ -189,9 +190,9 @@ namespace Kursach.ViewModels
             Groups.AddRange(res);
         }
 
-        void Log(string msg, string name, int id)
+        void Log(string msg, Group group)
         {
-            Logger.Log.Info($"{msg}: {{name: {name}, curatorId: {id}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => group.Name, () => group.CuratorId)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

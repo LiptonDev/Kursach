@@ -120,7 +120,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, User user)
         {
-            Logger.Log.Info($"{msg}: {{login: {user?.Login}, mode: {user?.Mode}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => user.Login, () => user.Mode)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }
