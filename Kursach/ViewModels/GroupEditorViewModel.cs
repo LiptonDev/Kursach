@@ -18,12 +18,18 @@ namespace Kursach.ViewModels
         readonly IDialogManager dialogManager;
 
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
-        public GroupEditorViewModel(Group group, bool isEditMode, IContainer container, IDialogManager dialogManager)
+        public GroupEditorViewModel(Group group,
+                                    bool isEditMode,
+                                    int division,
+                                    IContainer container,
+                                    IDialogManager dialogManager)
             : base(group, isEditMode, container)
         {
             this.dialogManager = dialogManager;
+
+            EditableObject.Division = division;
 
             OpenStaffSelectorCommand = new DelegateCommand(OpenStaffSelector);
         }
