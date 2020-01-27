@@ -19,10 +19,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ComboBox ItemsSource="{Binding Groups}"
-                  SelectedItem="{Binding SelectedGroup}"
-                  material:HintAssist.Hint="Группа"/>
-        
+        <controls:DivisionGroupComboBox/>
+
         <UniformGrid Grid.Row="1"
                      Rows="1">
             <Button Content="Добавить студента"
@@ -30,9 +28,7 @@
 
             <controls:ExportToExcelButton/>
 
-            <Button Content="Импорт данных"
-                    Command="{Binding ImportFromExcelCommand}"
-                    Style="{StaticResource UserModeButton}"/>
+            <controls:ImportFromExcelButton/>
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding Students}"
