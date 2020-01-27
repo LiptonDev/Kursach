@@ -11,7 +11,7 @@ namespace Kursach.ViewModels
     class StaffEditorViewModel : BaseEditModeViewModel<Staff>
     {
         /// <summary>
-        /// Ctor.
+        /// Конструктор.
         /// </summary>
         public StaffEditorViewModel(Staff staff, bool isEditMode, IContainer container)
             : base(staff, isEditMode, container)
