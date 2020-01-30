@@ -49,6 +49,11 @@ namespace Kursach.Models
         public bool Expelled { get; set; }
 
         /// <summary>
+        /// В академ. отпуске.
+        /// </summary>
+        public bool OnSabbatical { get; set; }
+
+        /// <summary>
         /// Копия студента.
         /// </summary>
         /// <returns></returns>

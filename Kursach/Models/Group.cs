@@ -12,6 +12,9 @@ namespace Kursach.Models
     [Table("groups")]
     class Group : ValidateViewModel, ICloneable
     {
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public Group()
         {
         }
@@ -28,7 +31,7 @@ namespace Kursach.Models
         /// </summary>
         [Display(Name = "Название группы")]
         [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
-        [RegularExpression("^[а-яА-Я]{1,3}-[0-9]{2,2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
+        [RegularExpression("^[а-яА-Я]{1,3}-[0-9]{2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
         public string Name { get; set; }
 
         /// <summary>
