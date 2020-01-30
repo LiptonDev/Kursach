@@ -1,9 +1,28 @@
-﻿using DryIoc;
-using MaterialDesignXaml.DialogsHelper;
+﻿using Kursach.Models;
 using Prism.Regions;
 
 namespace Kursach
 {
+    static class NavigationParametersFluent
+    {
+        public static NavigationParameters GetNavigationParameters()
+        {
+            return new NavigationParameters();
+        }
+
+        public static NavigationParameters SetUser(this NavigationParameters @params, User user)
+        {
+            @params.Add("user", user);
+            return @params;
+        }
+
+        public static NavigationParameters SetValue(this NavigationParameters @params, string key, object value)
+        {
+            @params.Add(key, value);
+            return @params;
+        }
+    }
+
     static class RegionManagerHelper
     {
         public static void RequestNavigateInRootRegion(this IRegionManager regionManager, string view, NavigationParameters parameters = null)
@@ -14,11 +33,6 @@ namespace Kursach
         public static void RequstNavigateInMainRegion(this IRegionManager regionManager, string view, NavigationParameters parameters = null)
         {
             regionManager.RequestNavigate(RegionNames.MainRegion, view, parameters);
-        }
-
-        public static IDialogIdentifier ResolveRootDialogIdentifier(this IContainer container)
-        {
-            return container.Resolve<IDialogIdentifier>("rootdialog");
         }
     }
 }

@@ -62,9 +62,6 @@ namespace Kursach
             //snack
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
-            //settings
-            containerRegistry.RegisterDelegate<IProgramSettings>(x => ProgramSettings.Load(), Reuse.Singleton);
-
             //views
             containerRegistry.RegisterSingleton<LoginView>();
             containerRegistry.RegisterSingleton<MainView>();
@@ -85,7 +82,7 @@ namespace Kursach
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton, "rootdialog");
-            containerRegistry.RegisterSingleton<IViewFactory, ViewFactory>();
+            containerRegistry.RegisterSingleton<IDialogsFactoryView, DialogsFactoryView>();
             containerRegistry.Register<FrameworkElement, SignInLogsView>(nameof(SignInLogsView));
             containerRegistry.Register<FrameworkElement, GroupEditorView>(nameof(GroupEditorView));
             containerRegistry.Register<FrameworkElement, SelectStaffView>(nameof(SelectStaffView));
@@ -125,6 +122,11 @@ namespace Kursach
         public static void RegisterDelegate<T>(this IContainerRegistry containerRegistry, Func<IResolverContext, T> func, IReuse reuse, string key = null)
         {
             containerRegistry.GetContainer().RegisterDelegate<T>(func, reuse, serviceKey: key);
+        }
+
+        public static IDialogIdentifier ResolveRootDialogIdentifier(this IContainer container)
+        {
+            return container.Resolve<IDialogIdentifier>("rootdialog");
         }
     }
 }

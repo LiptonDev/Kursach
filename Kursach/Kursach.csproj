@@ -142,6 +142,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\AddButton.xaml.cs">
+      <DependentUpon>AddButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DivisionGroupComboBox.xaml.cs">
       <DependentUpon>DivisionGroupComboBox.xaml</DependentUpon>
     </Compile>
@@ -171,8 +174,8 @@
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Student.cs" />
-    <Compile Include="Dialogs\IViewFactory.cs" />
-    <Compile Include="Dialogs\ViewFactory.cs" />
+    <Compile Include="Dialogs\IDialogsFactoryView.cs" />
+    <Compile Include="Dialogs\DialogsFactoryView.cs" />
     <Compile Include="Dialogs\DialogManager.cs" />
     <Compile Include="Dialogs\DialogNameAttribute.cs" />
     <Compile Include="Dialogs\IDialogManager.cs" />
@@ -182,51 +185,53 @@
     <Compile Include="Excel\StudentsImporter.cs" />
     <Compile Include="Excel\GroupsExporter.cs" />
     <Compile Include="Excel\IImporter.cs" />
-    <Compile Include="ViewModels\IEditMode.cs" />
+    <Compile Include="Models\StudentsCount.cs" />
+    <Compile Include="Dialogs\IEditMode.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
     <Compile Include="Excel\StudentsExporter.cs" />
     <Compile Include="Excel\IExporter.cs" />
     <Compile Include="Excel\StaffExporter.cs" />
-    <Compile Include="ViewModels\BaseEditModeViewModel.cs" />
-    <Compile Include="ViewModels\BaseSelectorViewModel.cs" />
+    <Compile Include="Dialogs\BaseEditModeViewModel.cs" />
+    <Compile Include="Dialogs\BaseSelectorViewModel.cs" />
+    <Compile Include="UI\BoundPasswordBox.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\GroupEditorViewModel.cs" />
+    <Compile Include="Dialogs\GroupEditorViewModel.cs" />
     <Compile Include="ViewModels\GroupsViewModel.cs" />
     <Compile Include="ViewModels\IBaseViewModel.cs" />
     <Compile Include="ViewModels\IExcelExporterViewModel.cs" />
     <Compile Include="ViewModels\IExcelImporterViewModel.cs" />
-    <Compile Include="ViewModels\ISelectorViewModel.cs" />
+    <Compile Include="Dialogs\ISelectorViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
-    <Compile Include="ViewModels\SelectStaffViewModel.cs" />
-    <Compile Include="ViewModels\SignInLogsViewModel.cs" />
-    <Compile Include="ViewModels\SignUpViewModel.cs" />
-    <Compile Include="ViewModels\StaffEditorViewModel.cs" />
+    <Compile Include="Dialogs\SelectStaffViewModel.cs" />
+    <Compile Include="Dialogs\SignInLogsViewModel.cs" />
+    <Compile Include="Dialogs\SignUpViewModel.cs" />
+    <Compile Include="Dialogs\StaffEditorViewModel.cs" />
     <Compile Include="ViewModels\StaffViewModel.cs" />
-    <Compile Include="ViewModels\StudentEditorViewModel.cs" />
+    <Compile Include="Dialogs\StudentEditorViewModel.cs" />
     <Compile Include="ViewModels\StudentsViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
-    <Compile Include="Views\GroupEditorView.xaml.cs">
+    <Compile Include="Dialogs\GroupEditorView.xaml.cs">
       <DependentUpon>GroupEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GroupsView.xaml.cs">
       <DependentUpon>GroupsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SelectStaffView.xaml.cs">
+    <Compile Include="Dialogs\SelectStaffView.xaml.cs">
       <DependentUpon>SelectStaffView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignInLogsView.xaml.cs">
+    <Compile Include="Dialogs\SignInLogsView.xaml.cs">
       <DependentUpon>SignInLogsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SignUpView.xaml.cs">
+    <Compile Include="Dialogs\SignUpView.xaml.cs">
       <DependentUpon>SignUpView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StaffEditorView.xaml.cs">
+    <Compile Include="Dialogs\StaffEditorView.xaml.cs">
       <DependentUpon>StaffEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StaffView.xaml.cs">
       <DependentUpon>StaffView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StudentEditorView.xaml.cs">
+    <Compile Include="Dialogs\StudentEditorView.xaml.cs">
       <DependentUpon>StudentEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StudentsView.xaml.cs">
@@ -253,6 +258,10 @@
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AddButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DivisionGroupComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -321,7 +330,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\GroupEditorView.xaml">
+    <Page Include="Dialogs\GroupEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\UserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,13 +365,10 @@
     <Compile Include="Logger.cs" />
     <Compile Include="DataBase\DataBase.cs" />
     <Compile Include="DataBase\IDataBase.cs" />
-    <Compile Include="Models\IProgramSettings.cs" />
-    <Compile Include="Models\ProgramSettings.cs" />
     <Compile Include="Models\SignInLog.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserMode.cs" />
     <Compile Include="Regions.cs" />
-    <Compile Include="UIHelper\PasswordBox.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -373,19 +383,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\SelectStaffView.xaml">
+    <Page Include="Dialogs\SelectStaffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignInLogsView.xaml">
+    <Page Include="Dialogs\SignInLogsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SignUpView.xaml">
+    <Page Include="Dialogs\SignUpView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\StaffEditorView.xaml">
+    <Page Include="Dialogs\StaffEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -393,7 +403,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\StudentEditorView.xaml">
+    <Page Include="Dialogs\StudentEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

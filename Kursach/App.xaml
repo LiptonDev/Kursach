@@ -23,9 +23,9 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/ComboBox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/DatePicker.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/StackPanel.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/UserControl.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
             <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
             <converters:UserModeToVisibility x:Key="AdminUserModeToVisibility" NeedMode="Admin"/>
             <converters:DivisionConverter x:Key="DivisionConverter"/>
