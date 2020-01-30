@@ -1,0 +1,53 @@
+﻿<UserControl 
+    x:Class="Kursach.Dialogs.StudentEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Kursach.Dialogs"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vm:StudentEditorViewModel, IsDesignTimeCreatable=True}"
+    Style="{StaticResource MaxSizeUserControl}">
+
+    <material:DialogHost Identifier="{Binding Identifier}">
+        <StackPanel Margin="5">
+            <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
+
+            <TextBox Text="{Binding EditableObject.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Фамилия"/>
+
+            <TextBox Text="{Binding EditableObject.FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Имя"/>
+
+            <TextBox Text="{Binding EditableObject.MiddleName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Отчество"/>
+
+            <DatePicker SelectedDate="{Binding EditableObject.Birthdate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        material:HintAssist.Hint="Дата рождения"/>
+
+            <TextBox Text="{Binding EditableObject.PoPkNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="№ по п/к"/>
+
+            <TextBox Text="{Binding EditableObject.DecreeOfEnrollment, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Приказ о зачислении"/>
+
+            <TextBox Text="{Binding EditableObject.Notice, UpdateSourceTrigger=PropertyChanged}"
+                     material:HintAssist.Hint="Примечание"/>
+
+            <controls:DivisionGroupComboBox/>
+
+            <CheckBox IsChecked="{Binding EditableObject.Expelled}"
+                      Margin="5"
+                      Content="Студент отчислен"/>
+
+            <CheckBox IsChecked="{Binding EditableObject.OnSabbatical}"
+                      Margin="5"
+                      Content="В академ. отпуске"/>
+
+            <controls:EditorButtons/>
+        </StackPanel>
+    </material:DialogHost>
+
+</UserControl>

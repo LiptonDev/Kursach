@@ -5,9 +5,9 @@ using System.Windows;
 namespace Kursach.Dialogs
 {
     /// <summary>
-    /// View factory.
+    /// Dialogs view factory.
     /// </summary>
-    class ViewFactory : IViewFactory
+    class DialogsFactoryView : IDialogsFactoryView
     {
         /// <summary>
         /// Контейнер.
@@ -17,7 +17,7 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public ViewFactory(IContainer container)
+        public DialogsFactoryView(IContainer container)
         {
             this.container = container;
         }

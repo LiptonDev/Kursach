@@ -1,9 +1,9 @@
 ﻿namespace Kursach.Dialogs
 {
     /// <summary>
-    /// View factory.
+    /// Dialogs view factory.
     /// </summary>
-    interface IViewFactory
+    interface IDialogsFactoryView
     {
         /// <summary>
         /// Получить view.

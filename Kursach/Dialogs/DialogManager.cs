@@ -1,6 +1,5 @@
 ﻿using DryIoc;
 using Kursach.Models;
-using Kursach.ViewModels;
 using MaterialDesignXaml.DialogsHelper;
 using Microsoft.Win32;
 using System.Threading.Tasks;
@@ -25,12 +24,12 @@ namespace Kursach.Dialogs
         /// <summary>
         /// View factory.
         /// </summary>
-        readonly IViewFactory viewFactory;
+        readonly IDialogsFactoryView viewFactory;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public DialogManager(IContainer container, IViewFactory viewFactory)
+        public DialogManager(IContainer container, IDialogsFactoryView viewFactory)
         {
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.container = container;
@@ -43,9 +42,11 @@ namespace Kursach.Dialogs
         /// <returns></returns>
         public string SelectImportFile()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Выберите файл группы для импорта";
-            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Выберите файл группы для импорта",
+                Filter = "xlsx files (*.xlsx)|*.xlsx"
+            };
 
             if (ofd.ShowDialog() == true)
                 return ofd.FileName;
@@ -59,17 +60,24 @@ namespace Kursach.Dialogs
         /// <returns></returns>
         public string SelectExportFileName(string defName)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-
-            sfd.Title = "Введите имя файла для сохранения";
-            sfd.Filter = "xlsx files (*.xlsx)|*.xlsx";
-            sfd.FileName = defName;
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Title = "Введите имя файла для сохранения",
+                Filter = "xlsx files (*.xlsx)|*.xlsx",
+                FileName = defName
+            };
 
             if (sfd.ShowDialog() == true)
                 return sfd.FileName;
             else return null;
         }
 
+        /// <summary>
+        /// Открыть диалог.
+        /// </summary>
+        /// <param name="args">Аргументы для VM.</param>
+        /// <param name="dialogIdentifier">Идентификатор, где будет показан диалог.</param>
+        /// <returns></returns>
         async Task<T> show<T, VM>(object[] args = null, IDialogIdentifier dialogIdentifier = null)
         {
             var vm = container.Resolve<VM>(args: args);

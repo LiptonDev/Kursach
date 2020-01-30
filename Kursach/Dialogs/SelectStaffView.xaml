@@ -1,0 +1,44 @@
+﻿<UserControl 
+    x:Class="Kursach.Dialogs.SelectStaffView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Kursach.Dialogs"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vm:SelectStaffViewModel, IsDesignTimeCreatable=True}"
+    Style="{StaticResource MaxSizeUserControl}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Выбор куратора"
+                   Style="{StaticResource TitleBlock}"/>
+
+        <ListBox ItemsSource="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}"
+                 Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding StringFormat='ФИО: {0}'}"
+                                   Style="{StaticResource MarginBlock}"/>
+
+                        <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"
+                                   Style="{StaticResource MarginBlock}"/>
+
+                        <Separator/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <controls:SelectorButtons Grid.Row="2"/>
+    </Grid>
+
+</UserControl>

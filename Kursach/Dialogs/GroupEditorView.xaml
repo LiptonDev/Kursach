@@ -1,0 +1,81 @@
+﻿<UserControl 
+    x:Class="Kursach.Dialogs.GroupEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Kursach.Dialogs"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vm:GroupEditorViewModel, IsDesignTimeCreatable=True}"
+    Style="{StaticResource MaxSizeUserControl}">
+
+    <material:DialogHost Identifier="{Binding Identifier}">
+        <StackPanel Margin="5">
+            <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
+
+            <TextBox Text="{Binding EditableObject.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Название группы"/>
+
+            <TextBox Text="{Binding EditableObject.Specialty, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Специальность"/>
+
+            <DatePicker SelectedDate="{Binding EditableObject.Start, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        material:HintAssist.Hint="Дата начала обучения"/>
+
+            <DatePicker SelectedDate="{Binding EditableObject.End, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        material:HintAssist.Hint="Дата окончания обучения"/>
+
+            <ComboBox SelectedIndex="{Binding EditableObject.Division, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      material:HintAssist.Hint="Подразделение">
+                <ComboBoxItem>
+                    1 подразделение
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    2 подразделение
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    3 подразделение
+                </ComboBoxItem>
+            </ComboBox>
+
+            <ComboBox SelectedIndex="{Binding EditableObject.SpoNpo, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      material:HintAssist.Hint="Образование">
+                <ComboBoxItem>
+                    СПО
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    НПО
+                </ComboBoxItem>
+
+                <ComboBoxItem>
+                    ОВЗ
+                </ComboBoxItem>
+            </ComboBox>
+
+            <TextBox Text="{Binding EditableObject.CuratorId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="ИД куратора"
+                     IsReadOnly="True"
+                     ToolTip="Нажмите дважды, чтобы открыть окно выбора куратора">
+                <TextBox.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenStaffSelectorCommand}"/>
+                </TextBox.InputBindings>
+            </TextBox>
+
+            <CheckBox IsChecked="{Binding EditableObject.IsBudget}"
+                      Margin="5"
+                      Content="Бюджетная группа"/>
+
+            <CheckBox IsChecked="{Binding EditableObject.IsIntramural}"
+                      Margin="5"
+                      Content="Очная группа"/>
+
+            <controls:EditorButtons/>
+        </StackPanel>
+    </material:DialogHost>
+
+</UserControl>
