@@ -5,7 +5,12 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Kursach.Controls"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Kursach.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vm:StaffViewModel, IsDesignTimeCreatable=True}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,8 +19,7 @@
         </Grid.RowDefinitions>
 
         <UniformGrid Rows="1">
-            <Button Content="Добавить сотрудника"
-                    Style="{StaticResource AddButton}"/>
+            <controls:AddButton Content="Добавить сотрудника"/>
 
             <controls:ExportToExcelButton/>
         </UniformGrid>
@@ -29,7 +33,7 @@
                             <StackPanel.Resources>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
                             </StackPanel.Resources>
-                            
+
                             <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"/>
 
                             <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"/>

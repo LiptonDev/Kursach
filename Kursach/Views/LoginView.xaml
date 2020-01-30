@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:uihelper="clr-namespace:Kursach.UIHelper"
+    xmlns:ui="clr-namespace:Kursach.UI"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <material:ColorZone Style="{StaticResource CornerZone}">
@@ -16,7 +16,7 @@
                      Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             
             <PasswordBox Style="{StaticResource MaterialPasswordBox}"
-                         uihelper:PasswordBoxAssistant.BoundPassword="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+                         ui:BoundPasswordBox.Password="{Binding User.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
             
             <Button Content="Войти"
                     Command="{Binding TryLoginCommand}"/>
