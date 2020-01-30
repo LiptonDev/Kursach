@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Regx = System.Text.RegularExpressions;
 
 namespace Kursach.Excel
 {
@@ -56,10 +55,10 @@ namespace Kursach.Excel
                         while (true)
                         {
                             int currentRow = 3 + row; //текущая строка
-                            string name = worksheet.Cells[currentRow, 2 + i6].GetValue<string>(); //название группы
+                            string name = worksheet.Cells[currentRow, 2 + i6].GetValue<string>() ?? ""; //название группы
 
                             //проверка регулярным выражением, формата: А-11, АА-11, ААА-11
-                            if (!Regx.Regex.IsMatch(name ?? "", "^[а-яА-Я]{1,3}-[0-9]{2}$"))
+                            if (!name.IsMatch("^[а-яА-Я]{1,3}-[0-9]{2}$"))
                                 break;
 
                             var group = new Group

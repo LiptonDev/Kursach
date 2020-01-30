@@ -41,7 +41,7 @@ namespace Kursach.Excel
             {
                 var worksheet = excel.Workbook.Worksheets.Add(DateTime.Now.ToString("MMMM"));
 
-                //Глобальный стиль.
+                //Глобальный стиль
                 worksheet.Cells.SetFontName("Arial").SetFontSize(10);
 
                 var now = DateTime.Now;

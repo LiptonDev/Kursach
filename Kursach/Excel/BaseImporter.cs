@@ -1,4 +1,5 @@
 ﻿using Kursach.Dialogs;
+using System;
 
 namespace Kursach.Excel
 {
@@ -32,7 +33,7 @@ namespace Kursach.Excel
 
             FileName = fileName;
 
-            return fileName != null;
+            return !fileName.IsEmpty();
         }
     }
 }

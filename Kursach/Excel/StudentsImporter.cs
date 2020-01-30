@@ -59,7 +59,7 @@ namespace Kursach.Excel
                     group.End = GetDate(worksheet.Cells["E3"]) ?? group.End;
 
                     //специальность
-                    var spec = worksheet.Cells["A5"].GetValue<string>();
+                    var spec = worksheet.Cells["A5"].GetValue<string>() ?? "";
                     var specMatch = Regx.Regex.Match(spec, "[0-9]{1,2}.{1,255}");
                     if (specMatch.Success)
                     {
@@ -74,7 +74,7 @@ namespace Kursach.Excel
                     {
                         var fio = worksheet.Cells[8 + i, 2]; //ФИО
                         var strFio = fio.GetValue<string>();
-                        if (strFio == null) //конец
+                        if (strFio.IsEmpty()) //конец
                             break;
 
                         var fioArr = strFio.Split(' ');
@@ -116,8 +116,8 @@ namespace Kursach.Excel
         const string dateRegex = "[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}";
         DateTime? GetDate(ExcelRange excelRange)
         {
-            var date = excelRange.GetValue<string>();
-            var dateMatch = Regx.Regex.Match(date, dateRegex);
+            var date = excelRange.GetValue<string>() ?? "";
+            var dateMatch = date.Match(dateRegex);
             if (dateMatch.Success)
                 return DateTime.Parse(dateMatch.Value);
             else return null;
