@@ -49,6 +49,14 @@ namespace Kursach.ViewModels
         readonly IAsyncImporter<IEnumerable<Group>> importer;
 
         /// <summary>
+        /// Конструктор для DesignTime.
+        /// </summary>
+        public GroupsViewModel()
+        {
+
+        }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public GroupsViewModel(IDataBase dataBase,

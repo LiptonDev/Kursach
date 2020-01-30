@@ -31,11 +31,19 @@ namespace Kursach.ViewModels
         protected readonly ISnackbarMessageQueue snackbarMessageQueue;
 
         /// <summary>
+        /// Конструктор для DesignTime.
+        /// </summary>
+        public BaseViewModel()
+        {
+            dataBase = new DesignDataBase();
+        }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
-        public BaseViewModel(IDataBase dataBase, 
-                             IDialogManager dialogManager, 
-                             ISnackbarMessageQueue snackbarMessageQueue, 
+        public BaseViewModel(IDataBase dataBase,
+                             IDialogManager dialogManager,
+                             ISnackbarMessageQueue snackbarMessageQueue,
                              IContainer container)
         {
             this.dataBase = dataBase;

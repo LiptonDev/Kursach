@@ -3,7 +3,6 @@ using DryIoc;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
-using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -30,6 +29,18 @@ namespace Kursach.ViewModels
         /// Идентификатор диалоговых окон.
         /// </summary>
         readonly IDialogIdentifier dialogIdentifier;
+
+        /// <summary>
+        /// Конструктор для DesignTime.
+        /// </summary>
+        public MainViewModel()
+        {
+            User = new Models.User
+            {
+                Login = "DESIGN TIME USER",
+                Mode = Models.UserMode.Admin
+            };
+        }
 
         /// <summary>
         /// Конструктор.
@@ -120,9 +131,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void Groups()
         {
-            NavigationParameters parameters = new NavigationParameters();
-            parameters.Add("user", User);
-            regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView, parameters);
+            regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
             LeftMenuOpened = false;
         }
 
@@ -133,7 +142,7 @@ namespace Kursach.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("user", User);
-            regionManager.RequstNavigateInMainRegion(RegionViews.StaffView, parameters);
+            regionManager.RequstNavigateInMainRegion(RegionViews.StaffView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
             LeftMenuOpened = false;
         }
 
@@ -144,7 +153,7 @@ namespace Kursach.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("user", User);
-            regionManager.RequstNavigateInMainRegion(RegionViews.StudentsView, parameters);
+            regionManager.RequstNavigateInMainRegion(RegionViews.StudentsView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
             LeftMenuOpened = false;
         }
 

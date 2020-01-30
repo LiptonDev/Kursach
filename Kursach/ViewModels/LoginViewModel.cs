@@ -2,6 +2,7 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Models;
+using Kursach.Properties;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -48,7 +49,11 @@ namespace Kursach.ViewModels
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
-            User = new User();
+            User = new User
+            {
+                Login = Settings.Default.lastLogin,
+                Password = Settings.Default.lastPassword
+            };
         }
 
         /// <summary>
@@ -67,6 +72,9 @@ namespace Kursach.ViewModels
                 return;
             }
 
+            Settings.Default.lastLogin = User.Login;
+            Settings.Default.lastPassword = User.Password;
+
             var user = await dataBase.GetUserAsync(User.Login, User.Password, true);
 
             if (user == null)
@@ -80,9 +88,7 @@ namespace Kursach.ViewModels
                 Logger.Log.Info($"Успешный вход в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
                 await dataBase.AddSignInLogAsync(user);
 
-                NavigationParameters parameters = new NavigationParameters();
-                parameters.Add("user", user);
-                parameters.Add("fromLogin", true);
+                NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
                 regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
             }

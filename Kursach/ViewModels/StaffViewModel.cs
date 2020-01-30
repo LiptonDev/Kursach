@@ -29,6 +29,14 @@ namespace Kursach.ViewModels
         readonly IExporter<IEnumerable<Staff>> exporter;
 
         /// <summary>
+        /// Конструктор для DesignTime
+        /// </summary>
+        public StaffViewModel()
+        {
+
+        }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public StaffViewModel(IDataBase dataBase,

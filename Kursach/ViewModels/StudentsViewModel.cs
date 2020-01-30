@@ -60,6 +60,14 @@ namespace Kursach.ViewModels
         readonly IAsyncImporter<IEnumerable<Student>, Group> importer;
 
         /// <summary>
+        /// Конструктор для DesignTime.
+        /// </summary>
+        public StudentsViewModel()
+        {
+
+        }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public StudentsViewModel(IDataBase dataBase,
@@ -134,6 +142,7 @@ namespace Kursach.ViewModels
                 student.DecreeOfEnrollment = editor.DecreeOfEnrollment;
                 student.Notice = editor.Notice;
                 student.PoPkNumber = editor.PoPkNumber;
+                student.OnSabbatical = editor.OnSabbatical;
 
                 if (student.GroupId != selectedGroup.Id)
                     Students.Remove(student);
@@ -195,8 +204,9 @@ namespace Kursach.ViewModels
                 return;
 
             var res = await dataBase.AddStudentsAsync(students);
+            var updateGroup = await dataBase.SaveGroupAsync(SelectedGroup);
 
-            if (res)
+            if (res && updateGroup)
             {
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
                 LoadStudents(SelectedGroup);

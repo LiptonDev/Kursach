@@ -1,12 +1,12 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.Models;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.ObjectModel;
-using Kursach.DataBase;
-using MaterialDesignThemes.Wpf;
 
 namespace Kursach.ViewModels
 {
@@ -19,6 +19,14 @@ namespace Kursach.ViewModels
         /// Пользователи.
         /// </summary>
         public ObservableCollection<User> Users { get; }
+
+        /// <summary>
+        /// Конструктор для DesignTime.
+        /// </summary>
+        public UsersViewModel()
+        {
+
+        }
 
         /// <summary>
         /// Конструктор.
