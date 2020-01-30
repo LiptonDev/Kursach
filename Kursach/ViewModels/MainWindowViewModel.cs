@@ -4,6 +4,7 @@ using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
+using System.Threading.Tasks;
 
 namespace Kursach.ViewModels
 {
@@ -54,11 +55,12 @@ namespace Kursach.ViewModels
             notifyClient.SetStatus(Consts.LoginStatus);
         }
 
-        private void NotifyClient_Disconnected()
+        private async void NotifyClient_Disconnected()
         {
             MessageQueue.Enqueue("Сервер уведомлений не доступен");
 
-            notifyClient.ConnectAsync();
+            await Task.Delay(2000);
+            await notifyClient.ConnectAsync();
         }
 
         private void NotifyClient_Connected()
