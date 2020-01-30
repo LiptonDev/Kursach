@@ -1,95 +1,159 @@
-﻿#if design
+﻿using Kursach.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Kursach.Models;
 
 namespace Kursach.DataBase
 {
     class DesignDataBase : IDataBase
     {
-        const int Delay = 100;
         Random rn = new Random();
 
-        public async Task LoadStudentsAsync()
+        public Task<bool> SaveStudentAsync(Student student)
         {
-            await Task.Delay(Delay);
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> SaveStudentAsync(Student student)
+        public Task<bool> RemoveStudentAsync(Student student)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> RemoveStudentAsync(Student student)
+        public Task<bool> AddStudentAsync(Student student)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> AddStudentAsync(Student student)
+        public Task<bool> SaveStaffAsync(Staff staff)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> SaveStaffAsync(Staff staff)
+        public Task<bool> AddStaffAsync(Staff staff)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> AddStaffAsync(Staff staff)
+        public Task<bool> RemoveStaffAsync(Staff staff)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> RemoveStaffAsync(Staff staff)
+        public Task<bool> SaveGroupAsync(Group group)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> SaveGroupAsync(Group group)
+        public Task<bool> AddGroupAsync(Group group)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<bool> AddGroupAsync(Group group)
+        public Task<IEnumerable<Staff>> GetStaffsAsync()
         {
-            await Task.Delay(Delay);
-            return true;
-        }
-
-        public async Task<IEnumerable<Staff>> GetStaffsAsync()
-        {
-            await Task.Delay(Delay);
-
             List<Staff> staff = new List<Staff>();
 
             for (int i = 0; i < 50; i++)
             {
-                staff.Add(new Staff { FirstName = "First Name", LastName = "Last Name", MiddleName = "Middle Name", Position = "Position / BGK", Id = i });
+                staff.Add(new Staff
+                {
+                    FirstName = "First Name",
+                    LastName = "Last Name",
+                    MiddleName = "Middle Name",
+                    Position = "Position / BGK",
+                    Id = i
+                });
             }
 
-            return staff;
+            return Task.FromResult(staff.AsEnumerable());
         }
 
-        public async Task<bool> RemoveGroupAsync(Group group)
+        public Task<bool> RemoveGroupAsync(Group group)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsAsync()
+        public Task<bool> AddSignInLogAsync(User user)
         {
-            await Task.Delay(Delay);
+            return Task.FromResult(true);
+        }
 
+        public Task<IEnumerable<SignInLog>> GetSignInLogsAsync(User user)
+        {
+            List<SignInLog> logs = new List<SignInLog>();
+            for (int i = 0; i < 50; i++)
+            {
+                logs.Add(new SignInLog { UserId = i });
+            }
+            return Task.FromResult(logs.AsEnumerable());
+        }
+
+        public Task<User> GetUserAsync(string login, string password, bool usePassword)
+        {
+            return Task.FromResult(GetUser(login, password, 0));
+        }
+
+        public Task<IEnumerable<User>> GetUsersAsync()
+        {
+            List<User> users = new List<User>();
+            for (int i = 0; i < 50; i++)
+            {
+                users.Add(GetUser(i.ToString(), "password", i, UserMode.ReadWrite));
+            }
+
+            return Task.FromResult(users.AsEnumerable());
+        }
+
+        public Task<bool> RemoveUserAsync(User user)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> SaveUserAsync(User user)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> SignUpAsync(User user)
+        {
+            return Task.FromResult(true);
+        }
+
+        private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) => 
+            new User { Id = id, Login = login, Password = password, Mode = mode };
+
+        public Task<bool> AddStudentsAsync(IEnumerable<Student> students)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<IEnumerable<Student>> GetStudentsAsync(Group group)
+        {
+            List<Student> students = new List<Student>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                students.Add(new Student
+                {
+                    Birthdate = DateTime.Now,
+                    DecreeOfEnrollment = "Приказ",
+                    Expelled = rn.Next(0, 2) == 1,
+                    FirstName = "Имя" + i,
+                    LastName = "Фамилия" + i,
+                    MiddleName = "Отчество" + i,
+                    GroupId = group.Id,
+                    Notice = "Notice",
+                    PoPkNumber = i,
+                    Id = i
+                });
+            }
+
+            return Task.FromResult(students.AsEnumerable());
+        }
+
+        public Task<IEnumerable<Group>> GetGroupsAsync(int divisionId = -1)
+        {
             List<Group> groups = new List<Group>();
 
             for (int i = 0; i < 25; i++)
@@ -103,100 +167,29 @@ namespace Kursach.DataBase
                     Start = DateTime.Now,
                     Specialty = "Оооооочень длинное название специальности для теста",
                     IsBudget = true,
+                    Division = divisionId,
+                    IsIntramural = true,
                 };
 
                 groups.Add(group);
             }
 
-            return groups;
+            return Task.FromResult(groups.AsEnumerable());
         }
 
-        public async Task<bool> AddSignInLogAsync(User user)
+        public Task<bool> AddGroupsAsync(IEnumerable<Group> groups)
         {
-            await Task.Delay(Delay);
-            return true;
+            return Task.FromResult(true);
         }
 
-        public async Task<IEnumerable<SignInLog>> GetSignInLogsAsync(User user)
+        public Task<int> GetOrCreateFirstStaffIdAsync()
         {
-            await Task.Delay(Delay);
-            List<SignInLog> logs = new List<SignInLog>();
-            for (int i = 0; i < 50; i++)
-            {
-                logs.Add(new SignInLog { UserId = i });
-            }
-            return logs;
+            return Task.FromResult(1);
         }
 
-        public async Task<User> GetUserAsync(string login, string password, bool usePassword)
+        public Task<Dictionary<Group, StudentsCount>> GetStudentsCountAsync(IEnumerable<Group> groups)
         {
-            await Task.Delay(Delay);
-            return GetUser(login, password, 0);
-        }
-
-        public async Task<IEnumerable<User>> GetUsersAsync()
-        {
-            await Task.Delay(Delay);
-
-            List<User> users = new List<User>();
-            for (int i = 0; i < 50; i++)
-            {
-                users.Add(GetUser(i.ToString(), "password", i, UserMode.ReadWrite));
-            }
-
-            return users;
-        }
-
-        public async Task<bool> RemoveUserAsync(User user)
-        {
-            await Task.Delay(Delay);
-            return true;
-        }
-
-        public async Task<bool> SaveUserAsync(User user)
-        {
-            await Task.Delay(Delay);
-            return true;
-        }
-
-        public async Task<bool> SignUpAsync(User user)
-        {
-            await Task.Delay(Delay);
-            return true;
-        }
-
-        private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) => new User { Id = id, Login = login, Password = password, Mode = mode };
-
-        public async Task<bool> AddStudentsAsync(IEnumerable<Student> students)
-        {
-            await Task.Delay(Delay);
-            return true;
-        }
-
-        public async Task<IEnumerable<Student>> GetStudentsAsync(Group group)
-        {
-            await Task.Delay(Delay);
-            List<Student> students = new List<Student>();
-
-            for (int i = 0; i < 20; i++)
-            {
-                students.Add(new Student
-                {
-                    Birthdate = DateTime.Now,
-                    DecreeOfEnrollment = "Приказ",
-                    Expelled = rn.Next(0, 2) == 1,
-                    FirstName = "Имя"+i,
-                    LastName = "Фамилия"+i,
-                    MiddleName= "Отчество"+i,
-                    GroupId = group.Id,
-                    Notice = "Notice",
-                    PoPkNumber = i,
-                    Id = i
-                });
-            }
-
-            return students;
+            return Task.FromResult(new Dictionary<Group, StudentsCount>());
         }
     }
 }
-#endif

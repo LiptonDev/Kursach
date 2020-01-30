@@ -175,7 +175,7 @@ namespace Kursach.DataBase
         /// </summary>
         /// <param name="groups">Группы.</param>
         /// <returns></returns>
-        Task<Dictionary<Group, int>> GetStudentsCountAsync(IEnumerable<Group> groups);
+        Task<Dictionary<Group, StudentsCount>> GetStudentsCountAsync(IEnumerable<Group> groups);
         #endregion
     }
 }

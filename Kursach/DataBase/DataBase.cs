@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kursach.DataBase
@@ -28,7 +27,9 @@ namespace Kursach.DataBase
         /// Асинхронный запрос к базе.
         /// </summary>
         /// <returns></returns>
-        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string callerName = null)
+        async Task<T> QueryAsync<T>(Func<MySqlConnection, Task<T>> func,
+                                    T defaultValue = default,
+                                    [CallerMemberName]string callerName = null)
         {
             using (var connection = new MySqlConnection($"server={Settings.Default.mysqlHost};port={Settings.Default.mysqlPort};userid={Settings.Default.mysqlUser};pwd={Settings.Default.mysqlPwd};database={Settings.Default.mysqlDb};Convert Zero Datetime=True"))
             {
@@ -391,20 +392,21 @@ namespace Kursach.DataBase
         /// </summary>
         /// <param name="groups">Группы.</param>
         /// <returns></returns>
-        public async Task<Dictionary<Group, int>> GetStudentsCountAsync(IEnumerable<Group> groups)
+        public async Task<Dictionary<Group, StudentsCount>> GetStudentsCountAsync(IEnumerable<Group> groups)
         {
             return await QueryAsync(async con =>
             {
-                var students = new Dictionary<Group, int>();
+                var students = new Dictionary<Group, StudentsCount>();
 
                 foreach (var item in groups)
                 {
-                    var res = await con.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM students WHERE groupId = @Id", item);
-                    students[item] = res;
+                    var total = await con.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM students WHERE groupId = @Id", item);
+                    var sabbatical = await con.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM students WHERE groupId = @Id AND onSabbatical = 1", item);
+                    students[item] = new StudentsCount(total, sabbatical, item.IsIntramural);
                 }
 
                 return students;
-            }, new Dictionary<Group, int>());
+            }, new Dictionary<Group, StudentsCount>());
         }
         #endregion
     }
