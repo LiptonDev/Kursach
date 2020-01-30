@@ -8,6 +8,7 @@ using DryIoc;
 using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
 using MaterialDesignXaml.DialogsHelper.Enums;
+using Regx = System.Text.RegularExpressions;
 
 namespace Kursach.Excel
 {
@@ -43,6 +44,7 @@ namespace Kursach.Excel
                 {
                     var worksheet = excel.Workbook.Worksheets[1];
 
+                    //проверка названия группы в файле и в программе
                     if (group.Name.ToLower() != worksheet.Name.ToLower())
                     {
                         var res = await dialogIdentifier.ShowMessageBoxAsync($"Выбранная группа: {group.Name}\nГруппа в файле: {worksheet.Name}\nПродолжить?", MaterialMessageBoxButtons.YesNo);
@@ -50,14 +52,29 @@ namespace Kursach.Excel
                             return null;
                     }
 
+                    //старт обучения
+                    group.Start = GetDate(worksheet.Cells["A3"]) ?? group.Start;
+
+                    //окончание обучения
+                    group.End = GetDate(worksheet.Cells["E3"]) ?? group.End;
+
+                    //специальность
+                    var spec = worksheet.Cells["A5"].GetValue<string>();
+                    var specMatch = Regx.Regex.Match(spec, "[0-9]{1,2}.{1,255}");
+                    if (specMatch.Success)
+                    {
+                        group.Specialty = specMatch.Value;
+                    }
+
+                    //список студентов
                     var students = new List<Student>();
 
                     var i = 0;
                     while (true)
                     {
-                        var fio = worksheet.Cells[8 + i, 2];
+                        var fio = worksheet.Cells[8 + i, 2]; //ФИО
                         var strFio = fio.GetValue<string>();
-                        if (strFio == null)
+                        if (strFio == null) //конец
                             break;
 
                         var fioArr = strFio.Split(' ');
@@ -94,6 +111,16 @@ namespace Kursach.Excel
 
                 return null;
             }
+        }
+
+        const string dateRegex = "[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}";
+        DateTime? GetDate(ExcelRange excelRange)
+        {
+            var date = excelRange.GetValue<string>();
+            var dateMatch = Regx.Regex.Match(date, dateRegex);
+            if (dateMatch.Success)
+                return DateTime.Parse(dateMatch.Value);
+            else return null;
         }
     }
 }

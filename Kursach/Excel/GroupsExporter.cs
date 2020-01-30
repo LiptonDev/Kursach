@@ -45,29 +45,28 @@ namespace Kursach.Excel
                 worksheet.Cells.SetFontName("Arial").SetFontSize(10);
 
                 var now = DateTime.Now;
-                var year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
-                var nowYear = now.Month >= 9 ? now.Year : now.Year;
+                int year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
+                int nowYear = now.Month >= 9 ? now.Year : now.Year;
 
-                var isFirst = now.Month >= 9;
-                var years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
+                bool isFirst = now.Month >= 9;
+                string years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
 
                 worksheet.Cells["B1:P1"]
                     .SetMerge()
                     .SetValueWithBold($"Контингент обучающихся ГБПОУ БГК {years} уч.год", 14)
                     .SetVerticalHorizontalAligment();
 
-                var division0 = groups.Where(x => x.Division == 0);
-                var division1 = groups.Where(x => x.Division == 1);
-                var division2 = groups.Where(x => x.Division == 2);
+                var division0 = groups.Where(x => x.Division == 0); //1-е подразделение
+                var division1 = groups.Where(x => x.Division == 1); //2-е подразделение
+                var division2 = groups.Where(x => x.Division == 2); //3-е подразделение
 
-                var divisions = new[] { division0, division1, division2 };
+                var divisions = new[] { division0, division1, division2 }; //все подразделения
 
-                var max = Enumerable.Max(new[] { division0.Count(), division1.Count(), division2.Count() });
-
+                int max = divisions.Max(x => x.Count()); //максимальное кол-во групп в любом подразделении
                 max += 2; //ВСЕГО, Очная, заочная
 
-                var intramuralCount = 0;
-                var correspondenceCount = 0;
+                int intramuralCount = 0; //общее кол-во студентов на очном
+                int correspondenceCount = 0; //общее кол-во студентов на заочном
 
                 //Заголовки
                 worksheet.Cells[2, 1, 2, 18].SetBold();
@@ -79,19 +78,30 @@ namespace Kursach.Excel
                     //Заголовки таблицы
                     SetTableHeader(worksheet, i6, max);
 
-                    var studentsCount = await dataBase.GetStudentsCountAsync(divisions[i]);
-                    var row = 0;
+                    var studentsCount = await dataBase.GetStudentsCountAsync(divisions[i]); //кол-во студентов в группах определенного подразделения
+                    int row = 0; //текущая строка
+                    int intraSabbatical = 0; //очное в академ. отпуске
+                    int corresSabbatical = 0; //заочное в академ. отпуске
+                    int intra = 0; //кол-во студентов текущего подразделения (очное)
+                    int corres = 0; //кол-во студентов текущего подразделения (заочное)
                     foreach (var item in studentsCount)
                     {
                         //Название группы, Б/К, пр.
                         SetGroupInfo(worksheet, row, i6, item);
+                        if (item.Value.IsIntramural)
+                        {
+                            intra += item.Value.Total;
+                            intraSabbatical += item.Value.OnSabbatical;
+                        }
+                        else
+                        {
+                            corres += item.Value.Total;
+                            corresSabbatical += item.Value.OnSabbatical;
+                        }
                         row++;
                     }
 
-                    var intra = studentsCount.Where(x => x.Key.IsIntramural).Sum(x => x.Value);
-                    var corres = studentsCount.Where(x => !x.Key.IsIntramural).Sum(x => x.Value);
-                    //Кол-во студентов в группах, в таблице
-                    SetTableCount(worksheet, max, i6, intra, corres);
+                    SetTableCount(worksheet, max, i6, intra, corres, intraSabbatical, corresSabbatical);
                     intramuralCount += intra;
                     correspondenceCount += corres;
                 }
@@ -140,12 +150,13 @@ namespace Kursach.Excel
         /// <summary>
         /// Информация о группе в таблице.
         /// </summary>
-        void SetGroupInfo(ExcelWorksheet worksheet, int row, int i6, KeyValuePair<Group, int> keyValuePair)
+        void SetGroupInfo(ExcelWorksheet worksheet, int row, int i6, KeyValuePair<Group, StudentsCount> keyValuePair)
         {
             worksheet.Cells[3 + row, 2 + i6].SetValueWithBold(keyValuePair.Key.Name); //Название
             worksheet.Cells[3 + row, 3 + i6].SetValue(SPOHelper.GetStrSpo(keyValuePair.Key.SpoNpo)); //СПО/НПО
             worksheet.Cells[3 + row, 4 + i6].SetValue(BudgetHelper.GetStrBudget(keyValuePair.Key.IsBudget)); //Б/К
-            worksheet.Cells[3 + row, 5 + i6].SetValue(keyValuePair.Value); //Кол-во
+            worksheet.Cells[3 + row, 5 + i6].SetValue(keyValuePair.Value.Total); //Кол-во
+            worksheet.Cells[3 + row, 6 + i6].SetValue(keyValuePair.Value.OnSabbatical); //Ак. отп.
         }
 
         /// <summary>
@@ -169,19 +180,22 @@ namespace Kursach.Excel
         /// <summary>
         /// Кол-во студентов в таблице.
         /// </summary>
-        void SetTableCount(ExcelWorksheet worksheet, int max, int i6, int intra, int corres)
+        void SetTableCount(ExcelWorksheet worksheet, int max, int i6, int intra, int corres, int intraSabbatical, int corresSabbatical)
         {
             //ВСЕГО в таблице
             worksheet.Cells[3 + max - 2, 2 + i6, 3 + max - 2, 4 + i6].SetMerge().SetValueWithBold("ВСЕГО:", 12);
             worksheet.Cells[3 + max - 2, 5 + i6].SetValueWithBold(intra + corres, 9.5f);
+            worksheet.Cells[3 + max - 2, 6 + i6].SetValueWithBold(intraSabbatical + corresSabbatical, 9.5f);
 
             //ОЧНАЯ в таблице
             worksheet.Cells[4 + max - 2, 2 + i6, 4 + max - 2, 4 + i6].SetMerge().SetValueWithBold("очная:", 11);
             worksheet.Cells[4 + max - 2, 5 + i6].SetValueWithBold(intra, 9.5f);
+            worksheet.Cells[4 + max - 2, 6 + i6].SetValueWithBold(intraSabbatical, 9.5f);
 
             //ЗАОЧНАЯ в таблице
             worksheet.Cells[5 + max - 2, 2 + i6, 5 + max - 2, 4 + i6].SetMerge().SetValueWithBold("заочная:", 11);
             worksheet.Cells[5 + max - 2, 5 + i6].SetValueWithBold(corres, 9.5f);
+            worksheet.Cells[5 + max - 2, 6 + i6].SetValueWithBold(corresSabbatical, 9.5f);
         }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Regx = System.Text.RegularExpressions;
 
 namespace Kursach.Excel
 {
@@ -41,28 +42,31 @@ namespace Kursach.Excel
                 {
                     var worksheet = excel.Workbook.Worksheets[1];
 
+                    //список групп
                     var groups = new List<Group>();
 
+                    //первый сотрудник из базы, если нет - создается новый "Иванов Иван Иванович"
                     int curator = await dataBase.GetOrCreateFirstStaffIdAsync();
 
                     for (int i = 0; i < 3; i++)
                     {
                         int i6 = i * 6;
 
-                        int row = 0;
+                        int row = 0; //строка
                         while (true)
                         {
-                            int currentRow = 3 + row;
-                            string name = worksheet.Cells[currentRow, 2 + i6].GetValue<string>();
+                            int currentRow = 3 + row; //текущая строка
+                            string name = worksheet.Cells[currentRow, 2 + i6].GetValue<string>(); //название группы
 
-                            if (!System.Text.RegularExpressions.Regex.IsMatch(name ?? "", "^[а-яА-Я]{1,3}-[0-9]{2,2}$"))
+                            //проверка регулярным выражением, формата: А-11, АА-11, ААА-11
+                            if (!Regx.Regex.IsMatch(name ?? "", "^[а-яА-Я]{1,3}-[0-9]{2}$"))
                                 break;
 
                             var group = new Group
                             {
                                 Name = name,
-                                SpoNpo = SPOHelper.GetIntSpo(worksheet.Cells[currentRow, 3 + i6].GetValue<string>()),
-                                IsBudget = BudgetHelper.GetBoolBudget(worksheet.Cells[currentRow, 4 + i6].GetValue<string>()),
+                                SpoNpo = SPOHelper.GetIntSpo(worksheet.Cells[currentRow, 3 + i6].GetValue<string>()), //СПО/НПО/ОВЗ -> int
+                                IsBudget = BudgetHelper.GetBoolBudget(worksheet.Cells[currentRow, 4 + i6].GetValue<string>()), //Б/К -> int
                                 Division = i,
                                 End = DateTime.Now,
                                 Start = DateTime.Now,
