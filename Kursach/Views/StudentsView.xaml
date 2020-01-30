@@ -45,7 +45,7 @@
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
                             </StackPanel.Resources>
 
-                            <TextBlock Text="{Binding StringFormat='ФИО: {0}'}"/>
+                            <TextBlock Text="{Binding FullName, StringFormat='ФИО: {0}'}"/>
 
                             <TextBlock Text="{Binding Birthdate, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}"/>
 
