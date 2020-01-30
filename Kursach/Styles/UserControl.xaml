@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Kursach.Converters">
+
+    <converters:ActualSizeConverter x:Key="ActualSizeConverter" Add="-50"/>
+
+    <Style TargetType="UserControl" x:Key="MaxSizeUserControl">
+        <Setter Property="MaxHeight" Value="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Converter={StaticResource ActualSizeConverter}}"/>
+        <Setter Property="MaxWidth" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Converter={StaticResource ActualSizeConverter}}"/>
+    </Style>
+
+</ResourceDictionary>

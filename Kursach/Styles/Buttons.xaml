@@ -3,59 +3,67 @@
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialHelper="clr-namespace:MaterialDesignXaml.DialogsHelper.Controls;assembly=MaterialDesignXaml.DialogsHelper"
+    xmlns:materialHelperCommand="clr-namespace:MaterialDesignXaml.DialogsHelper;assembly=MaterialDesignXaml.DialogsHelper"
     xmlns:converters="clr-namespace:Kursach.Converters">
 
     <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
 
+    <!-- Базовая кнопка -->
     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}" x:Key="FlatButton">
         <Setter Property="Margin" Value="5"/>
     </Style>
 
+    <!-- Стиль для всех кнопок -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}"/>
 
+    <!-- Кнопка, доступная только для владельцев прав ReadWrite -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="UserModeButton">
         <Setter Property="Visibility" Value="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
     </Style>
 
-    <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="AddButton">
-        <Setter Property="Command" Value="{Binding AddCommand}"/>
+    <!-- Кнопка выбрать для диалогов-селекторов -->
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="OkDialogButton">
+        <Setter Property="Command" Value="{Binding Path=(materialHelperCommand:IClosableDialog.CloseDialogCommand)}"/>
+        <Setter Property="Content" Value="Выбрать"/>
     </Style>
 
+    <!-- Кнопка "Редактировать" -->
     <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="EditButton">
-        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.EditCommand}"/>
+        <Setter Property="Command" Value="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
         <Setter Property="CommandParameter" Value="{Binding}"/>
         <Setter Property="Content" Value="Редактировать"/>
     </Style>
 
+    <!-- Кнопка "Удалить" -->
     <Style TargetType="Button" BasedOn="{StaticResource UserModeButton}" x:Key="DeleteButton">
-        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.DeleteCommand}"/>
+        <Setter Property="Command" Value="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
         <Setter Property="CommandParameter" Value="{Binding}"/>
         <Setter Property="Content" Value="Удалить"/>
     </Style>
 
-    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="OkDialogButton">
-        <Setter Property="Command" Value="{Binding CloseDialogCommand}"/>
-        <Setter Property="Content" Value="Выбрать"/>
-    </Style>
-
-    <Style TargetType="Button" BasedOn="{StaticResource OkDialogButton}" x:Key="CancelDialogButton">
+    <!-- Кнопка "Закрыть" для диалогов -->
+    <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="CancelDialogButton">
         <Setter Property="Command" Value="{x:Static material:DialogHost.CloseDialogCommand}"/>
         <Setter Property="CommandParameter" Value="{x:Null}"/>
         <Setter Property="Content" Value="Закрыть"/>
     </Style>
 
+    <!-- Кнопка "Дальше" на домашней странице -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="NextSliderButton">
         <Setter Property="Command" Value="{x:Static material:Transitioner.MoveNextCommand}"/>
         <Setter Property="Content" Value="Дальше"/>
     </Style>
 
+    <!-- Кнопка "Назад" на домашней странице -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="PreviousSliderButton">
         <Setter Property="Command" Value="{x:Static material:Transitioner.MovePreviousCommand}"/>
         <Setter Property="Content" Value="Назад"/>
     </Style>
 
+    <!-- Кнопка "Добавить" или "Сохранить" для диалога редактирования -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="IsEditModeButton">
         <Setter Property="Content" Value="Добавить"/>
+        <Setter Property="Command" Value="{Binding Path=(materialHelperCommand:IClosableDialog.CloseDialogCommand)}"/>
 
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsEditMode}" Value="True">
@@ -64,6 +72,7 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Стиль для кнопок диалогов -->
     <Style TargetType="materialHelper:DialogButton" BasedOn="{StaticResource FlatButton}"/>
 
 </ResourceDictionary>
