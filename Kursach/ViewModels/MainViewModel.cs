@@ -122,7 +122,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void OpenUsers()
         {
-            regionManager.RequstNavigateInMainRegion(RegionViews.UsersView);
+            regionManager.ReqeustNavigateInMainRegion(RegionViews.UsersView);
             LeftMenuOpened = false;
         }
 
@@ -131,7 +131,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void Groups()
         {
-            regionManager.RequstNavigateInMainRegion(RegionViews.GroupsView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
+            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.GroupsView, User);
             LeftMenuOpened = false;
         }
 
@@ -140,9 +140,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void GoToStaff()
         {
-            NavigationParameters parameters = new NavigationParameters();
-            parameters.Add("user", User);
-            regionManager.RequstNavigateInMainRegion(RegionViews.StaffView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
+            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.StaffView, User);
             LeftMenuOpened = false;
         }
 
@@ -151,9 +149,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void Students()
         {
-            NavigationParameters parameters = new NavigationParameters();
-            parameters.Add("user", User);
-            regionManager.RequstNavigateInMainRegion(RegionViews.StudentsView, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
+            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.StudentsView, User);
             LeftMenuOpened = false;
         }
 
@@ -162,7 +158,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void Home()
         {
-            regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
+            regionManager.ReqeustNavigateInMainRegion(RegionViews.WelcomeView);
             LeftMenuOpened = false;
         }
 

@@ -90,7 +90,7 @@ namespace Kursach.ViewModels
 
                 NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
-                regionManager.RequstNavigateInMainRegion(RegionViews.WelcomeView);
+                regionManager.ReqeustNavigateInMainRegion(RegionViews.WelcomeView);
             }
         }
     }
