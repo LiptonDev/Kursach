@@ -30,9 +30,14 @@ namespace Kursach
             regionManager.RequestNavigate(RegionNames.RootRegion, view, parameters);
         }
 
-        public static void RequstNavigateInMainRegion(this IRegionManager regionManager, string view, NavigationParameters parameters = null)
+        public static void ReqeustNavigateInMainRegion(this IRegionManager regionManager, string view, NavigationParameters parameters = null)
         {
             regionManager.RequestNavigate(RegionNames.MainRegion, view, parameters);
+        }
+
+        public static void RequstNavigateInMainRegionWithUser(this IRegionManager regionManager, string view, User user)
+        {
+            regionManager.ReqeustNavigateInMainRegion(view, NavigationParametersFluent.GetNavigationParameters().SetUser(user));
         }
     }
 }
