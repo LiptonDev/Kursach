@@ -13,13 +13,6 @@ namespace Kursach.Models
     class Group : ValidateViewModel, ICloneable
     {
         /// <summary>
-        /// Конструктор.
-        /// </summary>
-        public Group()
-        {
-        }
-
-        /// <summary>
         /// Id.
         /// </summary>
         [DoNotNotify]
