@@ -11,6 +11,7 @@ using System.Windows.Input;
 using Kursach.DataBase;
 using MaterialDesignThemes.Wpf;
 using System.Linq;
+using Kursach.NotifyClient;
 
 namespace Kursach.ViewModels
 {
@@ -64,8 +65,9 @@ namespace Kursach.ViewModels
                                IAsyncExporter<IEnumerable<Group>> exporter,
                                IAsyncImporter<IEnumerable<Group>> importer,
                                ISnackbarMessageQueue snackbarMessageQueue,
+                               INotifyClient notifyClient,
                                IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
         {
             this.exporter = exporter;
             this.importer = importer;
@@ -74,6 +76,20 @@ namespace Kursach.ViewModels
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
+
+            notifyClient.GroupChanged += NotifyClient_GroupChanged;
+        }
+
+        /// <summary>
+        /// Группа в подразделении обновлена.
+        /// </summary>
+        private void NotifyClient_GroupChanged(int oldId, int newId)
+        {
+            if (selectedDivision == oldId || selectedDivision == newId)
+                Load();
+
+            if (oldId == -1 && newId == -1) //import
+                Load();
         }
 
         /// <summary>
@@ -98,8 +114,11 @@ namespace Kursach.ViewModels
             var res = await dataBase.AddGroupAsync(editor);
             var msg = res ? "Группа добавлена" : "Группа не добавлена";
 
-            if (res && editor.Division == SelectedDivision)
+            if (res && editor.Division == selectedDivision)
                 Groups.Add(editor);
+
+            if (res)
+                notifyClient.ChangeGroup(editor.Division, editor.Division);
 
             Log(msg, editor);
         }
@@ -118,6 +137,9 @@ namespace Kursach.ViewModels
 
             if (res)
             {
+                int oldId = group.Division;
+                int newId = editor.Division;
+
                 group.CuratorId = editor.CuratorId;
                 group.Name = editor.Name;
                 group.Start = editor.Start;
@@ -128,8 +150,10 @@ namespace Kursach.ViewModels
                 group.SpoNpo = editor.SpoNpo;
                 group.IsIntramural = editor.IsIntramural;
 
-                if (group.Division != SelectedDivision)
+                if (group.Division != selectedDivision)
                     Groups.Remove(group);
+
+                notifyClient.ChangeGroup(oldId, newId);
             }
 
             Log(msg, group);
@@ -149,7 +173,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Группа удалена" : "Группа не удалена";
 
             if (res)
+            {
                 Groups.Remove(group);
+                notifyClient.ChangeGroup(selectedDivision, selectedDivision);
+            }
 
             Log(msg, group);
         }
@@ -182,6 +209,7 @@ namespace Kursach.ViewModels
             {
                 snackbarMessageQueue.Enqueue($"Добавлено групп: {groups.Count()}");
                 Load();
+                notifyClient.ChangeGroup(-1, -1);
             }
         }
 

@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Kursach.DataBase;
 using MaterialDesignThemes.Wpf;
+using Kursach.NotifyClient;
 
 namespace Kursach.ViewModels
 {
@@ -43,14 +44,17 @@ namespace Kursach.ViewModels
                               IExporter<IEnumerable<Staff>> exporter,
                               IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
+                              INotifyClient notifyClient,
                               IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
         {
             this.exporter = exporter;
 
             Staff = new ObservableCollection<Staff>();
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
+
+            notifyClient.StaffChanged += Load;
         }
 
         /// <summary>
@@ -82,7 +86,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Сотрудник добавлен" : "Сотрудник не добавлен";
 
             if (res)
+            {
                 Staff.Add(editor);
+                notifyClient.ChangeStaff();
+            }
 
             Log(msg, editor);
         }
@@ -105,6 +112,8 @@ namespace Kursach.ViewModels
                 staff.LastName = editor.LastName;
                 staff.MiddleName = editor.MiddleName;
                 staff.Position = editor.Position;
+
+                notifyClient.ChangeStaff();
             }
 
             Log(msg, staff);
@@ -123,7 +132,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Сотрудник удален" : "Сотрудник не удален";
 
             if (res)
+            {
                 Staff.Remove(staff);
+                notifyClient.ChangeStaff();
+            }
 
             Log(msg, staff);
         }

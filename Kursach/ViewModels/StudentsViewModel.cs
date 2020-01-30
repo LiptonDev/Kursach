@@ -4,6 +4,7 @@ using Kursach.DataBase;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using Kursach.Models;
+using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -45,7 +46,7 @@ namespace Kursach.ViewModels
             set
             {
                 selectedGroup = value;
-                LoadStudents(value);
+                LoadStudents();
             }
         }
 
@@ -75,8 +76,9 @@ namespace Kursach.ViewModels
                                  IExporter<Group, IEnumerable<Student>> exporter,
                                  IAsyncImporter<IEnumerable<Student>, Group> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
+                                 INotifyClient notifyClient,
                                  IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
         {
             this.exporter = exporter;
             this.importer = importer;
@@ -89,6 +91,17 @@ namespace Kursach.ViewModels
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
+
+            notifyClient.StudentChanged += NotifyClient_StudentChanged;
+        }
+
+        /// <summary>
+        /// Студент изменен в группе.
+        /// </summary>
+        private void NotifyClient_StudentChanged(int oldId, int newId)
+        {
+            if (selectedGroup?.Id == oldId || selectedGroup?.Id == newId)
+                LoadStudents();
         }
 
         /// <summary>
@@ -106,15 +119,20 @@ namespace Kursach.ViewModels
         /// </summary>
         public override async void Add()
         {
-            var editor = await dialogManager.StudentEditor(null, false, SelectedGroup?.Id ?? 0);
+            var editor = await dialogManager.StudentEditor(null, false, selectedGroup?.Id ?? 0);
             if (editor == null)
                 return;
 
             var res = await dataBase.AddStudentAsync(editor);
             var msg = res ? "Студент добавлен" : "Студент не добавлен";
 
-            if (editor.GroupId == selectedGroup.Id)
-                LoadStudents(selectedGroup);
+            if (res)
+            {
+                if (editor.GroupId == selectedGroup.Id)
+                    Students.Add(editor);
+
+                notifyClient.ChangeStudent(editor.GroupId, editor.GroupId);
+            }
 
             Log(msg, editor);
         }
@@ -133,6 +151,9 @@ namespace Kursach.ViewModels
 
             if (res)
             {
+                int oldId = student.GroupId;
+                int newId = editor.GroupId;
+
                 student.FirstName = editor.FirstName;
                 student.LastName = editor.LastName;
                 student.MiddleName = editor.MiddleName;
@@ -146,6 +167,8 @@ namespace Kursach.ViewModels
 
                 if (student.GroupId != selectedGroup.Id)
                     Students.Remove(student);
+
+                notifyClient.ChangeStudent(oldId, newId);
             }
 
             Log(msg, student);
@@ -165,7 +188,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Студент удален" : "Студент не удален";
 
             if (res)
+            {
                 Students.Remove(student);
+                notifyClient.ChangeStudent(student.GroupId, student.GroupId);
+            }
 
             Log(msg, student);
         }
@@ -175,13 +201,13 @@ namespace Kursach.ViewModels
         /// </summary>
         public void ExportToExcel()
         {
-            if (SelectedGroup == null)
+            if (selectedGroup == null)
             {
                 snackbarMessageQueue.Enqueue("Вы не выбрали группу");
                 return;
             }
 
-            var res = exporter.Export(SelectedGroup, Students);
+            var res = exporter.Export(selectedGroup, Students);
             var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
@@ -192,24 +218,29 @@ namespace Kursach.ViewModels
         /// </summary>
         public async void ImportFromExcel()
         {
-            if (SelectedGroup == null)
+            if (selectedGroup == null)
             {
                 snackbarMessageQueue.Enqueue("Вы не выбрали группу");
                 return;
             }
 
-            var students = await importer.Import(SelectedGroup);
+            var students = await importer.Import(selectedGroup);
 
             if (students == null)
                 return;
 
             var res = await dataBase.AddStudentsAsync(students);
-            var updateGroup = await dataBase.SaveGroupAsync(SelectedGroup);
+            var updateGroup = await dataBase.SaveGroupAsync(selectedGroup);
 
-            if (res && updateGroup)
+            if (res)
             {
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
-                LoadStudents(SelectedGroup);
+                LoadStudents();
+                notifyClient.ChangeStudent(selectedGroup.Id, selectedGroup.Id);
+            }
+            if (updateGroup)
+            {
+                notifyClient.ChangeGroup(selectedGroup.Division, selectedGroup.Division);
             }
         }
 
@@ -226,13 +257,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Загрузка студентов группы.
         /// </summary>
-        private async void LoadStudents(Group group)
+        private async void LoadStudents()
         {
             Students.Clear();
-            if (group == null)
+            if (selectedGroup == null)
                 return;
 
-            var res = await dataBase.GetStudentsAsync(group);
+            var res = await dataBase.GetStudentsAsync(selectedGroup);
             Students.AddRange(res);
         }
 

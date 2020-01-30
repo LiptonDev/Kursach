@@ -3,6 +3,7 @@ using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
 using Kursach.Models;
+using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -34,12 +35,15 @@ namespace Kursach.ViewModels
         public UsersViewModel(IDataBase dataBase,
                               IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
+                              INotifyClient notifyClient,
                               IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, container)
+            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
         {
             Users = new ObservableCollection<User>();
 
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
+
+            notifyClient.UserChanged += Load;
         }
 
         /// <summary>
@@ -60,7 +64,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Пользователь добавлен" : "Пользователь не добавлен";
 
             if (res)
+            {
                 Users.Add(editor);
+                notifyClient.ChangeUser();
+            }
 
             Log(msg, editor);
         }
@@ -83,6 +90,7 @@ namespace Kursach.ViewModels
             {
                 user.Login = editor.Login;
                 user.Mode = editor.Mode;
+                notifyClient.ChangeUser();
             }
 
             Log(msg, user);
@@ -103,7 +111,10 @@ namespace Kursach.ViewModels
             var msg = res ? "Пользователь удален" : "Пользователь не удален";
 
             if (res)
+            {
                 Users.Remove(user);
+                notifyClient.ChangeUser();
+            }
 
             Log(msg, user);
         }

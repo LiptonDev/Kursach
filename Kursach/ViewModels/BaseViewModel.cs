@@ -2,6 +2,7 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Dialogs;
+using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using System.Windows.Input;
@@ -31,6 +32,11 @@ namespace Kursach.ViewModels
         protected readonly ISnackbarMessageQueue snackbarMessageQueue;
 
         /// <summary>
+        /// Клиент сервера уведомлений.
+        /// </summary>
+        protected readonly INotifyClient notifyClient;
+
+        /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public BaseViewModel()
@@ -44,12 +50,14 @@ namespace Kursach.ViewModels
         public BaseViewModel(IDataBase dataBase,
                              IDialogManager dialogManager,
                              ISnackbarMessageQueue snackbarMessageQueue,
+                             INotifyClient notifyClient,
                              IContainer container)
         {
             this.dataBase = dataBase;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
             this.snackbarMessageQueue = snackbarMessageQueue;
+            this.notifyClient = notifyClient;
 
             AddCommand = new DelegateCommand(Add);
             EditCommand = new DelegateCommand<T>(Edit);

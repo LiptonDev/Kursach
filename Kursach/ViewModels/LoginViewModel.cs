@@ -2,6 +2,7 @@
 using DryIoc;
 using Kursach.DataBase;
 using Kursach.Models;
+using Kursach.NotifyClient;
 using Kursach.Properties;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -37,15 +38,22 @@ namespace Kursach.ViewModels
         readonly IDataBase dataBase;
 
         /// <summary>
+        /// Клиент сервера уведомлений.
+        /// </summary>
+        readonly INotifyClient notifyClient;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public LoginViewModel(IRegionManager regionManager,
                               IDataBase dataBase,
+                              INotifyClient notifyClient,
                               IContainer container)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dataBase = dataBase;
+            this.notifyClient = notifyClient;
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
@@ -85,6 +93,7 @@ namespace Kursach.ViewModels
             }
             else
             {
+                notifyClient.SetStatus(true);
                 Logger.Log.Info($"Успешный вход в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
                 await dataBase.AddSignInLogAsync(user);
 

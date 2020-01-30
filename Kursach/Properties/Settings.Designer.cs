@@ -151,5 +151,17 @@ namespace Kursach.Properties {
                 this["lastPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080")]
+        public string notifyServer {
+            get {
+                return ((string)(this["notifyServer"]));
+            }
+            set {
+                this["notifyServer"] = value;
+            }
+        }
     }
 }

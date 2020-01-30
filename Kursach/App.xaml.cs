@@ -3,6 +3,7 @@ using Kursach.DataBase;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using Kursach.Models;
+using Kursach.NotifyClient;
 using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignThemes.Wpf;
@@ -59,6 +60,13 @@ namespace Kursach
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //notify client
+#if !design
+            containerRegistry.RegisterSingleton<INotifyClient, NotifyClient.NotifyClient>();
+#else
+            containerRegistry.RegisterSingleton<INotifyClient, DesignNotifyClient>();
+#endif
+
             //snack
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
