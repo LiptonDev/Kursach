@@ -6,7 +6,6 @@
 
     <Button Style="{StaticResource CancelDialogButton}"/>
 
-    <Button Command="{Binding CloseDialogCommand}"
-            Style="{StaticResource IsEditModeButton}"/>
+    <Button Style="{StaticResource IsEditModeButton}"/>
 
 </UniformGrid>
