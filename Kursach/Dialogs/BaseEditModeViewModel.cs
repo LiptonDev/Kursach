@@ -11,7 +11,7 @@ namespace Kursach.Dialogs
     /// <summary>
     /// Base edit mode view model.
     /// </summary>
-    class BaseEditModeViewModel<T> : IClosableDialog, IDialogIdentifier, IEditMode<T> where T : ValidateViewModel, ICloneable
+    class BaseEditModeViewModel<T> : ViewModelBase, IClosableDialog, IDialogIdentifier, IEditMode<T> where T : ValidateViewModel, ICloneable
     {
         /// <summary>
         /// Identifier.

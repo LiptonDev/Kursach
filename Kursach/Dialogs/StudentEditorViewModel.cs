@@ -38,6 +38,8 @@ namespace Kursach.Dialogs
             {
                 selectedGroup = value;
                 EditableObject.GroupId = value?.Id ?? -1;
+
+                RaisePropertyChanged(nameof(SelectedGroup));
             }
         }
 
