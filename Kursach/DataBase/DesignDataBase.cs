@@ -120,7 +120,7 @@ namespace Kursach.DataBase
             return Task.FromResult(true);
         }
 
-        private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) => 
+        private User GetUser(string login, string password, int id, UserMode mode = UserMode.Admin) =>
             new User { Id = id, Login = login, Password = password, Mode = mode };
 
         public Task<bool> AddStudentsAsync(IEnumerable<Student> students)
@@ -156,7 +156,7 @@ namespace Kursach.DataBase
         {
             List<Group> groups = new List<Group>();
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 9; i++)
             {
                 var group = new Group
                 {
@@ -167,14 +167,15 @@ namespace Kursach.DataBase
                     Start = DateTime.Now,
                     Specialty = "Оооооочень длинное название специальности для теста",
                     IsBudget = true,
-                    Division = divisionId,
                     IsIntramural = true,
                 };
 
                 groups.Add(group);
             }
 
-            return Task.FromResult(groups.AsEnumerable());
+
+            var res = groups.ChunkWithIndex(3).ToDictionary(x => x.Index).SelectMany(x => x.Value.Chunk.Pipe(g => g.Division = x.Key));
+            return Task.FromResult(res);
         }
 
         public Task<bool> AddGroupsAsync(IEnumerable<Group> groups)
@@ -189,7 +190,14 @@ namespace Kursach.DataBase
 
         public Task<Dictionary<Group, StudentsCount>> GetStudentsCountAsync(IEnumerable<Group> groups)
         {
-            return Task.FromResult(new Dictionary<Group, StudentsCount>());
+            Dictionary<Group, StudentsCount> count = new Dictionary<Group, StudentsCount>();
+
+            foreach (var item in groups)
+            {
+                count[item] = new StudentsCount(rn.Next(0, 25), rn.Next(0, 6), rn.Next(0, 2) == 1);
+            }
+
+            return Task.FromResult(count);
         }
     }
 }

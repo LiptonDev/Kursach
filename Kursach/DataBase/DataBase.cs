@@ -17,13 +17,6 @@ namespace Kursach.DataBase
     class DataBase : IDataBase
     {
         /// <summary>
-        /// Конструктор.
-        /// </summary>
-        public DataBase()
-        {
-        }
-
-        /// <summary>
         /// Асинхронный запрос к базе.
         /// </summary>
         /// <returns></returns>
