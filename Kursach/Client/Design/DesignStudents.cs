@@ -16,7 +16,7 @@ namespace Kursach.Client.Design
         {
 
         }
-
+        Random rn = new Random();
         public event OnChanged<Student> OnChanged;
         public event StudentsImported Imported;
 
@@ -54,7 +54,14 @@ namespace Kursach.Client.Design
 
         public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
-            return Task.FromResult(new KursachResponse<Dictionary<int, StudentsCount>>(KursachResponseCode.Ok, new Dictionary<int, StudentsCount>()));
+            var res = new Dictionary<int, StudentsCount>();
+
+            for (int i = 0; i < 15; i++)
+            {
+                res.Add(i, new StudentsCount(rn.Next(15, 25), rn.Next(0, 5)));
+            }
+
+            return Task.FromResult(new KursachResponse<Dictionary<int, StudentsCount>>(KursachResponseCode.Ok, res));
         }
 
         public Task<KursachResponse<bool>> RemoveStudentAsync(Student student)

@@ -34,10 +34,10 @@ namespace Kursach.Client.Design
 
         public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
-            var groups = Enumerable.Range(0, 5).Select(x => new Group
+            var groups = Enumerable.Range(0, 15).Select(x => new Group
             {
                 CuratorId = 0,
-                Division = divisionId,
+                Division = x % 3,
                 End = DateTime.Now,
                 Start = DateTime.Now,
                 IsBudget = x % 2 == 0,
