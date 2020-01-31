@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using Kursach.Client.Classes;
+using Kursach.Client.Design;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
@@ -69,7 +70,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IGroups, DesignGroups>();
             containerRegistry.RegisterSingleton<IStudents, DesignStudents>();
             containerRegistry.RegisterSingleton<ILogin, DesignLogin>();
-            containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
+            containerRegistry.RegisterSingleton<IHubConfigurator, DesignConfigurator>();
             containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
 #endif
 
