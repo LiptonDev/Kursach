@@ -1,5 +1,4 @@
 ﻿using Kursach.Core.Models;
-using System.Collections.Generic;
 
 namespace Kursach.Core.ServerEvents
 {
@@ -18,7 +17,6 @@ namespace Kursach.Core.ServerEvents
         /// <summary>
         /// Добавлено несколько групп (импорт из Excel).
         /// </summary>
-        /// <param name="groups">Список групп.</param>
-        void GroupsImport(IEnumerable<Group> groups);
+        void GroupsImport();
     }
 }
