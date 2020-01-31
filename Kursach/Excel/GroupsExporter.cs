@@ -37,96 +37,95 @@ namespace Kursach.Excel
             if (!SelectFile("контингент по подразделениям"))
                 return false;
 
-            return true;
+            using (var excel = new ExcelPackage())
+            {
+                var worksheet = excel.Workbook.Worksheets.Add(DateTime.Now.ToString("MMMM"));
 
-            //using (var excel = new ExcelPackage())
-            //{
-            //    var worksheet = excel.Workbook.Worksheets.Add(DateTime.Now.ToString("MMMM"));
+                //Глобальный стиль
+                worksheet.Cells.SetFontName("Arial").SetFontSize(10);
 
-            //    //Глобальный стиль
-            //    worksheet.Cells.SetFontName("Arial").SetFontSize(10);
+                var now = DateTime.Now;
+                int year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
+                int nowYear = now.Month >= 9 ? now.Year : now.Year;
 
-            //    var now = DateTime.Now;
-            //    int year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
-            //    int nowYear = now.Month >= 9 ? now.Year : now.Year;
+                bool isFirst = now.Month >= 9;
+                string years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
 
-            //    bool isFirst = now.Month >= 9;
-            //    string years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
+                worksheet.Cells["B1:P1"]
+                    .SetMerge()
+                    .SetValueWithBold($"Контингент обучающихся ГБПОУ БГК {years} уч.год", 14)
+                    .SetVerticalHorizontalAligment();
 
-            //    worksheet.Cells["B1:P1"]
-            //        .SetMerge()
-            //        .SetValueWithBold($"Контингент обучающихся ГБПОУ БГК {years} уч.год", 14)
-            //        .SetVerticalHorizontalAligment();
+                var division0 = groups.Where(x => x.Division == 0); //1-е подразделение
+                var division1 = groups.Where(x => x.Division == 1); //2-е подразделение
+                var division2 = groups.Where(x => x.Division == 2); //3-е подразделение
 
-            //    var division0 = groups.Where(x => x.Division == 0); //1-е подразделение
-            //    var division1 = groups.Where(x => x.Division == 1); //2-е подразделение
-            //    var division2 = groups.Where(x => x.Division == 2); //3-е подразделение
+                var divisions = new[] { division0, division1, division2 }; //все подразделения
 
-            //    var divisions = new[] { division0, division1, division2 }; //все подразделения
+                int max = divisions.Max(x => x.Count()); //максимальное кол-во групп в любом подразделении
+                max += 2; //ВСЕГО, Очная, заочная
 
-            //    int max = divisions.Max(x => x.Count()); //максимальное кол-во групп в любом подразделении
-            //    max += 2; //ВСЕГО, Очная, заочная
+                int intramuralCount = 0; //общее кол-во студентов на очном
+                int correspondenceCount = 0; //общее кол-во студентов на заочном
 
-            //    int intramuralCount = 0; //общее кол-во студентов на очном
-            //    int correspondenceCount = 0; //общее кол-во студентов на заочном
+                //Заголовки
+                worksheet.Cells[2, 1, 2, 18].SetBold();
 
-            //    //Заголовки
-            //    worksheet.Cells[2, 1, 2, 18].SetBold();
+                for (int i = 0; i < 3; i++)
+                {
+                    var i6 = i * 6;
 
-            //    for (int i = 0; i < 3; i++)
-            //    {
-            //        var i6 = i * 6;
+                    //Заголовки таблицы
+                    SetTableHeader(worksheet, i6, max);
 
-            //        //Заголовки таблицы
-            //        SetTableHeader(worksheet, i6, max);
+                    var count = await client.Students.GetStudentsCountAsync(divisions[i].Select(x => x.Division)); //кол-во студентов в группах определенного подразделения
+                    var studentsCount = divisions[i].ToDictionary(x => x, x => count.Response[x.Id]);
+                    int row = 0; //текущая строка
+                    int intraSabbatical = 0; //очное в академ. отпуске
+                    int corresSabbatical = 0; //заочное в академ. отпуске
+                    int intra = 0; //кол-во студентов текущего подразделения (очное)
+                    int corres = 0; //кол-во студентов текущего подразделения (заочное)
+                    foreach (var item in studentsCount)
+                    {
+                        //Название группы, Б/ К, пр.
+                        SetGroupInfo(worksheet, row, i6, item);
+                        if (item.Key.IsIntramural)
+                        {
+                            intra += item.Value.Total;
+                            intraSabbatical += item.Value.OnSabbatical;
+                        }
+                        else
+                        {
+                            corres += item.Value.Total;
+                            corresSabbatical += item.Value.OnSabbatical;
+                        }
+                        row++;
+                    }
 
-            //        var studentsCount = await client.Students.GetStudentsCountAsync(divisions[i].Select(x => x.Division)); //кол-во студентов в группах определенного подразделения
-            //        int row = 0; //текущая строка
-            //        int intraSabbatical = 0; //очное в академ. отпуске
-            //        int corresSabbatical = 0; //заочное в академ. отпуске
-            //        int intra = 0; //кол-во студентов текущего подразделения (очное)
-            //        int corres = 0; //кол-во студентов текущего подразделения (заочное)
-            //        foreach (var item in studentsCount)
-            //        {
-            //            //Название группы, Б/К, пр.
-            //            SetGroupInfo(worksheet, row, i6, item);
-            //            if (item.Key.IsIntramural)
-            //            {
-            //                intra += item.Value.Total;
-            //                intraSabbatical += item.Value.OnSabbatical;
-            //            }
-            //            else
-            //            {
-            //                corres += item.Value.Total;
-            //                corresSabbatical += item.Value.OnSabbatical;
-            //            }
-            //            row++;
-            //        }
+                    SetTableCount(worksheet, max, i6, intra, corres, intraSabbatical, corresSabbatical);
+                    intramuralCount += intra;
+                    correspondenceCount += corres;
+                }
 
-            //        SetTableCount(worksheet, max, i6, intra, corres, intraSabbatical, corresSabbatical);
-            //        intramuralCount += intra;
-            //        correspondenceCount += corres;
-            //    }
+                //Кол-во студентов после таблицы.
+                SetCountAfterTable(worksheet, max, intramuralCount, correspondenceCount);
 
-            //    //Кол-во студентов после таблицы.
-            //    SetCountAfterTable(worksheet, max, intramuralCount, correspondenceCount);
+                worksheet.Cells.SetVerticalHorizontalAligment();
+                worksheet.Cells[2, 1, 2 + max + 1, 18].SetTable();
+                worksheet.Cells.AutoFitColumns(5);
 
-            //    worksheet.Cells.SetVerticalHorizontalAligment();
-            //    worksheet.Cells[2, 1, 2 + max + 1, 18].SetTable();
-            //    worksheet.Cells.AutoFitColumns(5);
-
-            //    try
-            //    {
-            //        excel.SaveAs(new FileInfo(FileName));
-            //        Logger.Log.Info($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => groups.Count(), () => FileName)}}}");
-            //        return true;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Logger.Log.Error($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
-            //        return false;
-            //    }
-            //}
+                try
+                {
+                    excel.SaveAs(new FileInfo(FileName));
+                    Logger.Log.Info($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => groups.Count(), () => FileName)}}}");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
+                    return false;
+                }
+            }
         }
 
         /// <summary>
