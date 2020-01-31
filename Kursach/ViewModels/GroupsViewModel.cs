@@ -231,7 +231,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, Group group)
         {
-            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => group.Name, () => group.CuratorId)}}}");
+            Logger.Log.Info($"{msg}: {{name: {group.Name}, curator: {group.CuratorId}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

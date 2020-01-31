@@ -30,7 +30,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Группы.
         /// </summary>
-        ObservableCollection<Group> groups { get; }
+        ObservableCollection<Group> groups;
 
         /// <summary>
         /// Студенты выбранной группы.
@@ -239,7 +239,7 @@ namespace Kursach.ViewModels
             var res = await client.Students.AddStudentsAsync(students, selectedGroup.Id);
             var updateGroup = await client.Groups.SaveGroupAsync(selectedGroup);
 
-            if (res)
+            if (res && updateGroup)
             {
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
             }
@@ -272,7 +272,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, Student student)
         {
-            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => student.FullName, () => student.GroupId)}}}");
+            Logger.Log.Info($"{msg}: {{fullName: {student.FullName}, groupId: {student.GroupId}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

@@ -154,7 +154,7 @@ namespace Kursach.ViewModels
 
         void Log(string msg, Staff staff)
         {
-            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => staff.FullName)}}}");
+            Logger.Log.Info($"{msg}: {{fullName: {staff.FullName}, position: {staff.Position}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

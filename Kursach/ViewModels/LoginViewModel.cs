@@ -72,12 +72,12 @@ namespace Kursach.ViewModels
             Settings.Default.lastPassword = User.Password;
 
             var res = await client.Login.LoginAsync(User.Login, User.Password);
-            User user = null;
+            User user;
             if (res && res.Error == LoginResponse.Ok)
                 user = res.Response;
             else
             {
-                string msg = null;
+                string msg;
                 switch (res.Error)
                 {
                     case LoginResponse.Ok:
@@ -108,7 +108,7 @@ namespace Kursach.ViewModels
             {
                 Consts.LoginStatus = true;
 
-                Logger.Log.Info($"Успешный вход в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
+                Logger.Log.Info($"Успешный вход в систему: {{login: {user.Login}, mode: {user.Mode}}}");
 
                 NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
