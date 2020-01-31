@@ -156,6 +156,7 @@
     </ApplicationDefinition>
     <Compile Include="Client\Delegates\ChangedDelegate.cs" />
     <Compile Include="Client\Classes\Client.cs" />
+    <Compile Include="Client\Design\DesignConfigurator.cs" />
     <Compile Include="Client\Design\DesignGroups.cs" />
     <Compile Include="Client\Design\DesignLogin.cs" />
     <Compile Include="Client\Design\DesignStaff.cs" />
