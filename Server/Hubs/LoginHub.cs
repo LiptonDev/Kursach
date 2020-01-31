@@ -4,6 +4,7 @@ using Kursach.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Server.DataBase;
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
@@ -44,15 +45,17 @@ namespace Server.Hubs
             var res = await dataBase.GetUserAsync(login, password, true);
 
             LoginResponse loginResponse = LoginResponse.Invalid;
+            Users[Context.ConnectionId] = res && res.Response != null;
             if (res && res.Response != null)
             {
-                Users[Context.ConnectionId] = true;
                 loginResponse = LoginResponse.Ok;
                 await HubHelper.GetHubContext<UsersHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
                 await HubHelper.GetHubContext<StaffHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
                 await HubHelper.GetHubContext<GroupsHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
                 await HubHelper.GetHubContext<StudentsHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
             }
+
+            Console.WriteLine($"Set status: {Context.ConnectionId} => {Users[Context.ConnectionId]}");
 
             return new KursachResponse<User, LoginResponse>(res.Code, loginResponse, res.Response);
         }
@@ -74,6 +77,8 @@ namespace Server.Hubs
         public void Logout()
         {
             Users.TryRemove(Context.ConnectionId, out _);
+
+            Console.WriteLine($"Set status: {Context.ConnectionId} => False");
 
             HubHelper.GetHubContext<UsersHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
             HubHelper.GetHubContext<StaffHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
