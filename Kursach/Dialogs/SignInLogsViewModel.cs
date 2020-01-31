@@ -1,4 +1,4 @@
-﻿using Kursach.Client;
+﻿using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;

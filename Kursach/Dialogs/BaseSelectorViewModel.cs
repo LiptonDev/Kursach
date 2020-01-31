@@ -1,5 +1,5 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
