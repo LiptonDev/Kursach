@@ -1,5 +1,5 @@
-﻿using Kursach.DataBase;
-using Kursach.Models;
+﻿using Kursach.Client;
+using Kursach.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -17,25 +17,24 @@ namespace Kursach.Dialogs
         public ObservableCollection<SignInLog> Logs { get; }
 
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public SignInLogsViewModel()
         {
-            dataBase = new DesignDataBase();
             Load(null);
         }
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public SignInLogsViewModel(User user, IDataBase dataBase)
+        public SignInLogsViewModel(User user, IClient client)
         {
-            this.dataBase = dataBase;
+            this.client = client;
 
             Logs = new ObservableCollection<SignInLog>();
 
@@ -47,8 +46,9 @@ namespace Kursach.Dialogs
         /// </summary>
         private async void Load(User user)
         {
-            var res = await dataBase.GetSignInLogsAsync(user);
-            Logs.AddRange(res.OrderByDescending(x => x.Date));
+            var res = await client.Users.GetSignInLogsAsync(user.Id);
+            if (res)
+                Logs.AddRange(res.Response.OrderByDescending(x => x.Date));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DryIoc;
-using Kursach.Models;
+using Kursach.Core.Models;
 
 namespace Kursach.Dialogs
 {

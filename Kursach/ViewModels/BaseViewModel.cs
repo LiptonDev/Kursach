@@ -1,21 +1,16 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Client;
 using Kursach.Dialogs;
-using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
     abstract class BaseViewModel<T> : NavigationViewModel, IBaseViewModel<T>
     {
-        /// <summary>
-        /// База данных.
-        /// </summary>
-        protected readonly IDataBase dataBase;
-
         /// <summary>
         /// Идентификатор диалогов.
         /// </summary>
@@ -34,34 +29,31 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Клиент сервера уведомлений.
         /// </summary>
-        protected readonly INotifyClient notifyClient;
+        protected readonly IClient client;
 
         /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public BaseViewModel()
         {
-            dataBase = new DesignDataBase();
         }
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public BaseViewModel(IDataBase dataBase,
-                             IDialogManager dialogManager,
+        public BaseViewModel(IDialogManager dialogManager,
                              ISnackbarMessageQueue snackbarMessageQueue,
-                             INotifyClient notifyClient,
+                             IClient client,
                              IContainer container)
         {
-            this.dataBase = dataBase;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dialogManager = dialogManager;
             this.snackbarMessageQueue = snackbarMessageQueue;
-            this.notifyClient = notifyClient;
+            this.client = client;
 
             AddCommand = new DelegateCommand(Add);
-            EditCommand = new DelegateCommand<T>(Edit);
-            DeleteCommand = new DelegateCommand<T>(Delete);
+            EditCommand = new AsyncCommand<T>(Edit);
+            DeleteCommand = new AsyncCommand<T>(Delete);
         }
 
         /// <summary>
@@ -87,11 +79,11 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Редактировать.
         /// </summary>
-        public abstract void Edit(T obj);
+        public abstract Task Edit(T obj);
 
         /// <summary>
         /// Удалить.
         /// </summary>
-        public abstract void Delete(T obj);
+        public abstract Task Delete(T obj);
     }
 }

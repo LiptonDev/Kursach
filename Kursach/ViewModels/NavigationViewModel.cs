@@ -1,5 +1,5 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.Models;
+using Kursach.Core.Models;
 using Prism.Regions;
 
 namespace Kursach.ViewModels

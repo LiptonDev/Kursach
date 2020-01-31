@@ -15,5 +15,6 @@
         public const string GroupsView = nameof(Views.GroupsView);
         public const string StaffView = nameof(Views.StaffView);
         public const string StudentsView = nameof(Views.StudentsView);
+        public const string ConnectingView = nameof(Views.ConnectingView);
     }
 }

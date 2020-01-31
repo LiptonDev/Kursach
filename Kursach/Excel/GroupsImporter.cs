@@ -1,6 +1,6 @@
-﻿using Kursach.DataBase;
+﻿using Kursach.Client;
+using Kursach.Core.Models;
 using Kursach.Dialogs;
-using Kursach.Models;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -15,16 +15,16 @@ namespace Kursach.Excel
     class GroupsImporter : BaseImporter, IAsyncImporter<IEnumerable<Group>>
     {
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public GroupsImporter(IDataBase dataBase, IDialogManager dialogManager) : base(dialogManager)
+        public GroupsImporter(IClient client, IDialogManager dialogManager) : base(dialogManager)
         {
-            this.dataBase = dataBase;
+            this.client = client;
         }
 
         /// <summary>
@@ -45,7 +45,8 @@ namespace Kursach.Excel
                     var groups = new List<Group>();
 
                     //первый сотрудник из базы, если нет - создается новый "Иванов Иван Иванович"
-                    int curator = await dataBase.GetOrCreateFirstStaffIdAsync();
+                    var res = await client.Staff.GetOrCreateFirstStaffIdAsync();
+                    int curator = res ? res.Response : -1;
 
                     for (int i = 0; i < 3; i++)
                     {

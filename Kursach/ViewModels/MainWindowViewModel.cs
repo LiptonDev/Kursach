@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.NotifyClient;
+using Kursach.Client;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
@@ -24,50 +24,56 @@ namespace Kursach.ViewModels
         public IDialogIdentifier DialogIdentifier { get; }
 
         /// <summary>
-        /// Клиент сервера уведомлений.
+        /// Клиент.
         /// </summary>
-        readonly INotifyClient notifyClient;
+        readonly IClient client;
+
+        /// <summary>
+        /// Менеджер регионов.
+        /// </summary>
+        readonly IRegionManager regionManager;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
         public MainWindowViewModel(IRegionManager regionManager,
                                    ISnackbarMessageQueue messageQueue,
-                                   INotifyClient notifyClient,
+                                   IClient client,
                                    IContainer container)
         {
             DialogIdentifier = container.ResolveRootDialogIdentifier();
             MessageQueue = messageQueue;
 
-            this.notifyClient = notifyClient;
+            this.client = client;
+            this.regionManager = regionManager;
 
-            notifyClient.Connected += NotifyClient_Connected;
-            notifyClient.Disconnected += NotifyClient_Disconnected;
-            notifyClient.Reconnected += NotifyClient_Reconnected;
+            this.client.HubConfigurator.Connected += NotifyClient_Connected;
+            this.client.HubConfigurator.Disconnected += NotifyClient_Disconnected;
+            this.client.HubConfigurator.Reconnected += NotifyClient_Reconnected;
 
-            notifyClient.ConnectAsync();
+            this.client.HubConfigurator.ConnectAsync();
         }
 
         private void NotifyClient_Reconnected()
         {
-            MessageQueue.Enqueue("Переподключен к серверу уведомлений");
-
-            notifyClient.SetStatus(Consts.LoginStatus);
+            System.Console.WriteLine("Reconnected!");
+            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
+            //configurator.SetStatus(Consts.LoginStatus);
         }
 
         private async void NotifyClient_Disconnected()
         {
-            MessageQueue.Enqueue("Сервер уведомлений не доступен");
-
+            System.Console.WriteLine("Disconnected!");
+            regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
             await Task.Delay(2000);
-            await notifyClient.ConnectAsync();
+            await client.HubConfigurator.ConnectAsync();
         }
 
         private void NotifyClient_Connected()
         {
-            MessageQueue.Enqueue("Подключен к серверу уведомлений");
-
-            notifyClient.SetStatus(Consts.LoginStatus);
+            System.Console.WriteLine("Connected!");
+            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
+            //configurator.SetStatus(Consts.LoginStatus);
         }
     }
 }

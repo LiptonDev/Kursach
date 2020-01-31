@@ -1,4 +1,4 @@
-﻿using Kursach.ViewModels;
+﻿using Kursach.Core.ViewModels;
 
 namespace Kursach.Dialogs
 {

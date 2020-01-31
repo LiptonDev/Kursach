@@ -1,5 +1,5 @@
 ﻿using DryIoc;
-using Kursach.Models;
+using Kursach.Core.Models;
 using MaterialDesignXaml.DialogsHelper;
 using Microsoft.Win32;
 using System.Threading.Tasks;

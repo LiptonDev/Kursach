@@ -1,6 +1,6 @@
-﻿using Kursach.DataBase;
+﻿using Kursach.Client;
+using Kursach.Core.Models;
 using Kursach.Dialogs;
-using Kursach.Models;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ namespace Kursach.Excel
     class GroupsExporter : BaseExporter, IAsyncExporter<IEnumerable<Group>>
     {
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public GroupsExporter(IDialogManager dialogManager, IDataBase dataBase) : base(dialogManager)
+        public GroupsExporter(IDialogManager dialogManager, IClient client) : base(dialogManager)
         {
-            this.dataBase = dataBase;
+            this.client = client;
         }
 
         /// <summary>
@@ -37,94 +37,96 @@ namespace Kursach.Excel
             if (!SelectFile("контингент по подразделениям"))
                 return false;
 
-            using (var excel = new ExcelPackage())
-            {
-                var worksheet = excel.Workbook.Worksheets.Add(DateTime.Now.ToString("MMMM"));
+            return true;
 
-                //Глобальный стиль
-                worksheet.Cells.SetFontName("Arial").SetFontSize(10);
+            //using (var excel = new ExcelPackage())
+            //{
+            //    var worksheet = excel.Workbook.Worksheets.Add(DateTime.Now.ToString("MMMM"));
 
-                var now = DateTime.Now;
-                int year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
-                int nowYear = now.Month >= 9 ? now.Year : now.Year;
+            //    //Глобальный стиль
+            //    worksheet.Cells.SetFontName("Arial").SetFontSize(10);
 
-                bool isFirst = now.Month >= 9;
-                string years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
+            //    var now = DateTime.Now;
+            //    int year = now.Month >= 9 ? now.Year + 1 : now.Year - 1;
+            //    int nowYear = now.Month >= 9 ? now.Year : now.Year;
 
-                worksheet.Cells["B1:P1"]
-                    .SetMerge()
-                    .SetValueWithBold($"Контингент обучающихся ГБПОУ БГК {years} уч.год", 14)
-                    .SetVerticalHorizontalAligment();
+            //    bool isFirst = now.Month >= 9;
+            //    string years = $"{(isFirst ? nowYear : year)}-{(isFirst ? year : nowYear)}";
 
-                var division0 = groups.Where(x => x.Division == 0); //1-е подразделение
-                var division1 = groups.Where(x => x.Division == 1); //2-е подразделение
-                var division2 = groups.Where(x => x.Division == 2); //3-е подразделение
+            //    worksheet.Cells["B1:P1"]
+            //        .SetMerge()
+            //        .SetValueWithBold($"Контингент обучающихся ГБПОУ БГК {years} уч.год", 14)
+            //        .SetVerticalHorizontalAligment();
 
-                var divisions = new[] { division0, division1, division2 }; //все подразделения
+            //    var division0 = groups.Where(x => x.Division == 0); //1-е подразделение
+            //    var division1 = groups.Where(x => x.Division == 1); //2-е подразделение
+            //    var division2 = groups.Where(x => x.Division == 2); //3-е подразделение
 
-                int max = divisions.Max(x => x.Count()); //максимальное кол-во групп в любом подразделении
-                max += 2; //ВСЕГО, Очная, заочная
+            //    var divisions = new[] { division0, division1, division2 }; //все подразделения
 
-                int intramuralCount = 0; //общее кол-во студентов на очном
-                int correspondenceCount = 0; //общее кол-во студентов на заочном
+            //    int max = divisions.Max(x => x.Count()); //максимальное кол-во групп в любом подразделении
+            //    max += 2; //ВСЕГО, Очная, заочная
 
-                //Заголовки
-                worksheet.Cells[2, 1, 2, 18].SetBold();
+            //    int intramuralCount = 0; //общее кол-во студентов на очном
+            //    int correspondenceCount = 0; //общее кол-во студентов на заочном
 
-                for (int i = 0; i < 3; i++)
-                {
-                    var i6 = i * 6;
+            //    //Заголовки
+            //    worksheet.Cells[2, 1, 2, 18].SetBold();
 
-                    //Заголовки таблицы
-                    SetTableHeader(worksheet, i6, max);
+            //    for (int i = 0; i < 3; i++)
+            //    {
+            //        var i6 = i * 6;
 
-                    var studentsCount = await dataBase.GetStudentsCountAsync(divisions[i]); //кол-во студентов в группах определенного подразделения
-                    int row = 0; //текущая строка
-                    int intraSabbatical = 0; //очное в академ. отпуске
-                    int corresSabbatical = 0; //заочное в академ. отпуске
-                    int intra = 0; //кол-во студентов текущего подразделения (очное)
-                    int corres = 0; //кол-во студентов текущего подразделения (заочное)
-                    foreach (var item in studentsCount)
-                    {
-                        //Название группы, Б/К, пр.
-                        SetGroupInfo(worksheet, row, i6, item);
-                        if (item.Value.IsIntramural)
-                        {
-                            intra += item.Value.Total;
-                            intraSabbatical += item.Value.OnSabbatical;
-                        }
-                        else
-                        {
-                            corres += item.Value.Total;
-                            corresSabbatical += item.Value.OnSabbatical;
-                        }
-                        row++;
-                    }
+            //        //Заголовки таблицы
+            //        SetTableHeader(worksheet, i6, max);
 
-                    SetTableCount(worksheet, max, i6, intra, corres, intraSabbatical, corresSabbatical);
-                    intramuralCount += intra;
-                    correspondenceCount += corres;
-                }
+            //        var studentsCount = await client.Students.GetStudentsCountAsync(divisions[i].Select(x => x.Division)); //кол-во студентов в группах определенного подразделения
+            //        int row = 0; //текущая строка
+            //        int intraSabbatical = 0; //очное в академ. отпуске
+            //        int corresSabbatical = 0; //заочное в академ. отпуске
+            //        int intra = 0; //кол-во студентов текущего подразделения (очное)
+            //        int corres = 0; //кол-во студентов текущего подразделения (заочное)
+            //        foreach (var item in studentsCount)
+            //        {
+            //            //Название группы, Б/К, пр.
+            //            SetGroupInfo(worksheet, row, i6, item);
+            //            if (item.Key.IsIntramural)
+            //            {
+            //                intra += item.Value.Total;
+            //                intraSabbatical += item.Value.OnSabbatical;
+            //            }
+            //            else
+            //            {
+            //                corres += item.Value.Total;
+            //                corresSabbatical += item.Value.OnSabbatical;
+            //            }
+            //            row++;
+            //        }
 
-                //Кол-во студентов после таблицы.
-                SetCountAfterTable(worksheet, max, intramuralCount, correspondenceCount);
+            //        SetTableCount(worksheet, max, i6, intra, corres, intraSabbatical, corresSabbatical);
+            //        intramuralCount += intra;
+            //        correspondenceCount += corres;
+            //    }
 
-                worksheet.Cells.SetVerticalHorizontalAligment();
-                worksheet.Cells[2, 1, 2 + max + 1, 18].SetTable();
-                worksheet.Cells.AutoFitColumns(5);
+            //    //Кол-во студентов после таблицы.
+            //    SetCountAfterTable(worksheet, max, intramuralCount, correspondenceCount);
 
-                try
-                {
-                    excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => groups.Count(), () => FileName)}}}");
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log.Error($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
-                    return false;
-                }
-            }
+            //    worksheet.Cells.SetVerticalHorizontalAligment();
+            //    worksheet.Cells[2, 1, 2 + max + 1, 18].SetTable();
+            //    worksheet.Cells.AutoFitColumns(5);
+
+            //    try
+            //    {
+            //        excel.SaveAs(new FileInfo(FileName));
+            //        Logger.Log.Info($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => groups.Count(), () => FileName)}}}");
+            //        return true;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Logger.Log.Error($"Экспорт информации о группах: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
+            //        return false;
+            //    }
+            //}
         }
 
         /// <summary>

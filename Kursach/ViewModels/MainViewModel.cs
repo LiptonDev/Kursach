@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.NotifyClient;
+using Kursach.Client;
+using Kursach.Core.Models;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -32,30 +33,30 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
-        /// Клиент сервера уведомлений.
+        /// Клиент.
         /// </summary>
-        readonly INotifyClient notifyClient;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public MainViewModel()
         {
-            User = new Models.User
+            User = new User
             {
                 Login = "DESIGN TIME USER",
-                Mode = Models.UserMode.Admin
+                Mode = UserMode.Admin
             };
         }
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, INotifyClient notifyClient, IContainer container)
+        public MainViewModel(IRegionManager regionManager, IClient client, IContainer container)
         {
             this.regionManager = regionManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
-            this.notifyClient = notifyClient;
+            this.client = client;
 
             OpenUsersCommand = new DelegateCommand(OpenUsers);
             ExitCommand = new DelegateCommand(Exit);
@@ -122,7 +123,8 @@ namespace Kursach.ViewModels
             SlideNumber = 0;
             Logger.Log.Info("Выход из приложения");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
-            notifyClient.SetStatus(false);
+            client.Login.Logout();
+            Consts.LoginStatus = false;
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
-using Kursach.Models;
+using Kursach.Client;
+using Kursach.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
@@ -49,9 +49,9 @@ namespace Kursach.Dialogs
         readonly IDialogManager dialogManager;
 
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -67,13 +67,13 @@ namespace Kursach.Dialogs
         public StudentEditorViewModel(Student student,
                                       bool isEditMode,
                                       int groupId,
-                                      IDataBase dataBase,
+                                      IClient client,
                                       IDialogManager dialogManager,
                                       IContainer container)
             : base(student, isEditMode, container)
         {
             this.dialogManager = dialogManager;
-            this.dataBase = dataBase;
+            this.client = client;
 
             groups = new ObservableCollection<Group>();
 
@@ -88,10 +88,12 @@ namespace Kursach.Dialogs
         /// </summary>
         private async void Load(int groupId)
         {
-            var res = await dataBase.GetGroupsAsync();
-            groups.AddRange(res);
-
-            SelectedGroup = groups.FirstOrDefault(x => x.Id == groupId);
+            var res = await client.Groups.GetGroupsAsync();
+            if (res)
+            {
+                groups.AddRange(res.Response);
+                SelectedGroup = groups.FirstOrDefault(x => x.Id == groupId);
+            }
         }
     }
 }

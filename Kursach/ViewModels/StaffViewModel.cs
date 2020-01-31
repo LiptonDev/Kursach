@@ -1,16 +1,18 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.Client;
+using Kursach.Core.Models;
+using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using Kursach.DataBase;
-using MaterialDesignThemes.Wpf;
-using Kursach.NotifyClient;
 
 namespace Kursach.ViewModels
 {
@@ -40,13 +42,12 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StaffViewModel(IDataBase dataBase,
-                              IExporter<IEnumerable<Staff>> exporter,
+        public StaffViewModel(IExporter<IEnumerable<Staff>> exporter,
                               IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
-                              INotifyClient notifyClient,
+                              IClient client,
                               IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
+            : base(dialogManager, snackbarMessageQueue, client, container)
         {
             this.exporter = exporter;
 
@@ -54,7 +55,29 @@ namespace Kursach.ViewModels
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
 
-            notifyClient.StaffChanged += Load;
+            client.Staff.OnChanged += Staff_OnChanged;
+        }
+
+        /// <summary>
+        /// Изменения в сотрудниках.
+        /// </summary>
+        private void Staff_OnChanged(DbChangeStatus status, Staff staff)
+        {
+            switch (status)
+            {
+                case DbChangeStatus.Add:
+                    Staff.Add(staff);
+                    break;
+
+                case DbChangeStatus.Update:
+                    var current = Staff.FirstOrDefault(x => x.Id == staff.Id);
+                    current?.SetAllFields(staff);
+                    break;
+
+                case DbChangeStatus.Remove:
+                    Staff.Remove(staff);
+                    break;
+            }
         }
 
         /// <summary>
@@ -82,14 +105,8 @@ namespace Kursach.ViewModels
             if (editor == null)
                 return;
 
-            var res = await dataBase.AddStaffAsync(editor);
-            var msg = res ? "Сотрудник добавлен" : "Сотрудник не добавлен";
-
-            if (res)
-            {
-                Staff.Add(editor);
-                notifyClient.ChangeStaff();
-            }
+            var res = await client.Staff.AddStaffAsync(editor);
+            var msg = res ? "Сотрудник добавлен" : res;
 
             Log(msg, editor);
         }
@@ -97,24 +114,14 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Редактирование сотрудника.
         /// </summary>
-        public override async void Edit(Staff staff)
+        public override async Task Edit(Staff staff)
         {
             var editor = await dialogManager.StaffEditor(staff, true);
             if (editor == null)
                 return;
 
-            var res = await dataBase.SaveStaffAsync(editor);
-            var msg = res ? "Сотрудник сохранен" : "Сотрудник не сохранен";
-
-            if (res)
-            {
-                staff.FirstName = editor.FirstName;
-                staff.LastName = editor.LastName;
-                staff.MiddleName = editor.MiddleName;
-                staff.Position = editor.Position;
-
-                notifyClient.ChangeStaff();
-            }
+            var res = await client.Staff.SaveStaffAsync(editor);
+            var msg = res ? "Сотрудник сохранен" : res;
 
             Log(msg, staff);
         }
@@ -122,20 +129,14 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Удаление сотрудника.
         /// </summary>
-        public override async void Delete(Staff staff)
+        public override async Task Delete(Staff staff)
         {
-            var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить '{staff}'?", MaterialMessageBoxButtons.YesNo);
+            var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить '{staff.FullName}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
                 return;
 
-            var res = await dataBase.RemoveStaffAsync(staff);
-            var msg = res ? "Сотрудник удален" : "Сотрудник не удален";
-
-            if (res)
-            {
-                Staff.Remove(staff);
-                notifyClient.ChangeStaff();
-            }
+            var res = await client.Staff.RemoveStaffAsync(staff);
+            var msg = res ? "Сотрудник удален" : res;
 
             Log(msg, staff);
         }
@@ -146,13 +147,14 @@ namespace Kursach.ViewModels
         protected override async void Load()
         {
             Staff.Clear();
-            var res = await dataBase.GetStaffsAsync();
-            Staff.AddRange(res);
+            var res = await client.Staff.GetStaffsAsync();
+            if (res)
+                Staff.AddRange(res.Response);
         }
 
         void Log(string msg, Staff staff)
         {
-            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => staff)}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => staff.FullName)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

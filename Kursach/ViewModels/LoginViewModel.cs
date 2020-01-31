@@ -1,8 +1,8 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
-using Kursach.Models;
-using Kursach.NotifyClient;
+using Kursach.Client;
+using Kursach.Core;
+using Kursach.Core.Models;
 using Kursach.Properties;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -15,13 +15,8 @@ namespace Kursach.ViewModels
     /// <summary>
     /// Login view model.
     /// </summary>
-    class LoginViewModel : ViewModelBase
+    class LoginViewModel : NavigationViewModel
     {
-        /// <summary>
-        /// Пользователь для авторизации.
-        /// </summary>
-        public User User { get; }
-
         /// <summary>
         /// Менеджер регионов.
         /// </summary>
@@ -33,27 +28,20 @@ namespace Kursach.ViewModels
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        readonly IDataBase dataBase;
-
-        /// <summary>
-        /// Клиент сервера уведомлений.
-        /// </summary>
-        readonly INotifyClient notifyClient;
+        readonly IClient client;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
         public LoginViewModel(IRegionManager regionManager,
-                              IDataBase dataBase,
-                              INotifyClient notifyClient,
+                              IClient client,
                               IContainer container)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
-            this.dataBase = dataBase;
-            this.notifyClient = notifyClient;
+            this.client = client;
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
@@ -83,19 +71,44 @@ namespace Kursach.ViewModels
             Settings.Default.lastLogin = User.Login;
             Settings.Default.lastPassword = User.Password;
 
-            var user = await dataBase.GetUserAsync(User.Login, User.Password, true);
-
-            if (user == null)
-            {
-                await dialogIdentifier.ShowMessageBoxAsync("Неверный логин или пароль", MaterialMessageBoxButtons.Ok);
-                Logger.Log.Info($"Неудачная попытка входа в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
-                return;
-            }
+            var res = await client.Login.LoginAsync(User.Login, User.Password);
+            User user = null;
+            if (res && res.Error == LoginResponse.Ok)
+                user = res.Response;
             else
             {
-                notifyClient.SetStatus(true);
+                string msg = null;
+                switch (res.Error)
+                {
+                    case LoginResponse.Ok:
+                        msg = "Очень странно, что вы видите это";
+                        break;
+
+                    case LoginResponse.Invalid:
+                        msg = "Неправильный логин или пароль";
+                        break;
+
+                    case LoginResponse.ServerError:
+                        msg = "Ошибка сервера";
+                        break;
+
+                    default:
+                        msg = "Что-то явно пошло не так...";
+                        break;
+                }
+
+                if (res.Code != KursachResponseCode.Ok)
+                    msg = res;
+
+                await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);
+                return;
+            }
+
+            if (res && res.Error == LoginResponse.Ok)
+            {
+                Consts.LoginStatus = true;
+
                 Logger.Log.Info($"Успешный вход в систему: {{{Logger.GetParamsNamesValues(() => User.Login)}}}");
-                await dataBase.AddSignInLogAsync(user);
 
                 NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);

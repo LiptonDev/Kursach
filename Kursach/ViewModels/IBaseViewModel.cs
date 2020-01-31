@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -31,11 +32,11 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Редактирование.
         /// </summary>
-        void Edit(T obj);
+        Task Edit(T obj);
 
         /// <summary>
         /// Удаление.
         /// </summary>
-        void Delete(T obj);
+        Task Delete(T obj);
     }
 }

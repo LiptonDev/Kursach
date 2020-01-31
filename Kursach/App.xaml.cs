@@ -1,9 +1,9 @@
 ﻿using DryIoc;
-using Kursach.DataBase;
+using Kursach.Client;
+using Kursach.Client.Design;
+using Kursach.Core.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
-using Kursach.Models;
-using Kursach.NotifyClient;
 using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignThemes.Wpf;
@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 
@@ -60,12 +61,25 @@ namespace Kursach
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //notify client
+            //client
 #if !design
-            containerRegistry.RegisterSingleton<INotifyClient, NotifyClient.NotifyClient>();
+            containerRegistry.RegisterSingleton<IUsers, Users>();
+            containerRegistry.RegisterSingleton<IStaff, Staffs>();
+            containerRegistry.RegisterSingleton<IGroups, Groups>();
+            containerRegistry.RegisterSingleton<IStudents, Students>();
+            containerRegistry.RegisterSingleton<ILogin, Login>();
 #else
-            containerRegistry.RegisterSingleton<INotifyClient, DesignNotifyClient>();
+            containerRegistry.RegisterSingleton<IUsers, DesignUsers>();
+            containerRegistry.RegisterSingleton<IStaff, DesignStaff>();
+            containerRegistry.RegisterSingleton<IGroups, DesignGroups>();
+            containerRegistry.RegisterSingleton<IStudents, DesignStudents>();
+            containerRegistry.RegisterSingleton<ILogin, DesignLogin>();
 #endif
+            containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
+            containerRegistry.RegisterSingleton<IClient, Client.Client>();
+
+            //sync taskfactory
+            containerRegistry.RegisterDelegate<TaskFactory>(x => new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()), Reuse.Singleton);
 
             //snack
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
@@ -106,12 +120,7 @@ namespace Kursach
             containerRegistry.RegisterForNavigation<GroupsView>(RegionViews.GroupsView);
             containerRegistry.RegisterForNavigation<StaffView>(RegionViews.StaffView);
             containerRegistry.RegisterForNavigation<StudentsView>(RegionViews.StudentsView);
-
-#if !design
-            containerRegistry.RegisterSingleton<IDataBase, DataBase.DataBase>();
-#else
-            containerRegistry.RegisterSingleton<IDataBase, DesignDataBase>();
-#endif
+            containerRegistry.RegisterForNavigation<ConnectingView>(RegionViews.ConnectingView);
 
             //dialogs
             containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();

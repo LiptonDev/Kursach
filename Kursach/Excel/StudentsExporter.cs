@@ -1,5 +1,5 @@
-﻿using Kursach.Dialogs;
-using Kursach.Models;
+﻿using Kursach.Core.Models;
+using Kursach.Dialogs;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -122,7 +122,7 @@ namespace Kursach.Excel
         private void SetStudentInfo(ExcelWorksheet worksheet, Student item, int i)
         {
             worksheet.Cells[8 + i, 1].SetValue(i + 1);
-            worksheet.Cells[8 + i, 2].SetValue(item);
+            worksheet.Cells[8 + i, 2].SetValue(item.FullName);
             worksheet.Cells[8 + i, 3].SetValue(item.PoPkNumber);
             worksheet.Cells[8 + i, 4].SetValue(item.Birthdate?.ToString("dd.MM.yyyy"));
             worksheet.Cells[8 + i, 5].SetValue(item.DecreeOfEnrollment);

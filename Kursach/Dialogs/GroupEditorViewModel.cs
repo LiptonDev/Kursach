@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.Core.Models;
 using System.Windows.Input;
 
 namespace Kursach.Dialogs

@@ -1,16 +1,17 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Client;
+using Kursach.Core.Models;
+using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
-using Kursach.Models;
-using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -71,14 +72,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StudentsViewModel(IDataBase dataBase,
-                                 IDialogManager dialogManager,
+        public StudentsViewModel(IDialogManager dialogManager,
                                  IExporter<Group, IEnumerable<Student>> exporter,
                                  IAsyncImporter<IEnumerable<Student>, Group> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
-                                 INotifyClient notifyClient,
+                                 IClient client,
                                  IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
+            : base(dialogManager, snackbarMessageQueue, client, container)
         {
             this.exporter = exporter;
             this.importer = importer;
@@ -92,16 +92,55 @@ namespace Kursach.ViewModels
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
 
-            notifyClient.StudentChanged += NotifyClient_StudentChanged;
+            client.Students.OnChanged += Students_OnChanged;
+            client.Students.Imported += Students_Imported;
         }
 
         /// <summary>
-        /// Студент изменен в группе.
+        /// Импортированы студенты.
         /// </summary>
-        private void NotifyClient_StudentChanged(int oldId, int newId)
+        /// <param name="groupId">ИД группы, в которую были импортированы студенты.</param>
+        private void Students_Imported(int groupId)
         {
-            if (selectedGroup?.Id == oldId || selectedGroup?.Id == newId)
+            if (SelectedGroup.Id == groupId)
                 LoadStudents();
+        }
+
+        /// <summary>
+        /// Изменения в студентах.
+        /// </summary>
+        private void Students_OnChanged(DbChangeStatus status, Student student)
+        {
+            switch (status)
+            {
+                case DbChangeStatus.Add:
+                    if (selectedGroup != null && selectedGroup.Id == student.GroupId)
+                        Students.Add(student);
+                    break;
+
+                case DbChangeStatus.Update:
+                    if (selectedGroup == null)
+                        return;
+
+                    bool contains = Students.Contains(student);
+                    if (student.GroupId != selectedGroup.Id && contains)
+                    {
+                        Students.Remove(student);
+                    }
+                    else if (student.GroupId == selectedGroup.Id && !contains)
+                    {
+                        Students.Add(student);
+                    }
+                    else
+                    {
+                        var current = Students.FirstOrDefault(x => x.Id == student.Id);
+                        current?.SetAllFields(student);
+                    }
+                    break;
+
+                case DbChangeStatus.Remove:
+                    break;
+            }
         }
 
         /// <summary>
@@ -123,16 +162,8 @@ namespace Kursach.ViewModels
             if (editor == null)
                 return;
 
-            var res = await dataBase.AddStudentAsync(editor);
-            var msg = res ? "Студент добавлен" : "Студент не добавлен";
-
-            if (res)
-            {
-                if (editor.GroupId == selectedGroup.Id)
-                    Students.Add(editor);
-
-                notifyClient.ChangeStudent(editor.GroupId, editor.GroupId);
-            }
+            var res = await client.Students.AddStudentAsync(editor);
+            var msg = res ? "Студент добавлен" : res;
 
             Log(msg, editor);
         }
@@ -140,36 +171,14 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Редактирование студента.
         /// </summary>
-        public override async void Edit(Student student)
+        public override async Task Edit(Student student)
         {
             var editor = await dialogManager.StudentEditor(student, true, student.GroupId);
             if (editor == null)
                 return;
 
-            var res = await dataBase.SaveStudentAsync(editor);
-            var msg = res ? "Студент сохранен" : "Студент не сохранен";
-
-            if (res)
-            {
-                int oldId = student.GroupId;
-                int newId = editor.GroupId;
-
-                student.FirstName = editor.FirstName;
-                student.LastName = editor.LastName;
-                student.MiddleName = editor.MiddleName;
-                student.GroupId = editor.GroupId;
-                student.Birthdate = editor.Birthdate;
-                student.Expelled = editor.Expelled;
-                student.DecreeOfEnrollment = editor.DecreeOfEnrollment;
-                student.Notice = editor.Notice;
-                student.PoPkNumber = editor.PoPkNumber;
-                student.OnSabbatical = editor.OnSabbatical;
-
-                if (student.GroupId != selectedGroup.Id)
-                    Students.Remove(student);
-
-                notifyClient.ChangeStudent(oldId, newId);
-            }
+            var res = await client.Students.SaveStudentAsync(editor);
+            var msg = res ? "Студент сохранен" : res;
 
             Log(msg, student);
         }
@@ -178,20 +187,14 @@ namespace Kursach.ViewModels
         /// Удаление студента.
         /// </summary>
         /// <returns></returns>
-        public override async void Delete(Student student)
+        public override async Task Delete(Student student)
         {
-            var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить студента '{student}'?", MaterialMessageBoxButtons.YesNo);
+            var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить студента '{student.FullName}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
                 return;
 
-            var res = await dataBase.RemoveStudentAsync(student);
-            var msg = res ? "Студент удален" : "Студент не удален";
-
-            if (res)
-            {
-                Students.Remove(student);
-                notifyClient.ChangeStudent(student.GroupId, student.GroupId);
-            }
+            var res = await client.Students.RemoveStudentAsync(student);
+            var msg = res ? "Студент удален" : res;
 
             Log(msg, student);
         }
@@ -229,18 +232,12 @@ namespace Kursach.ViewModels
             if (students == null)
                 return;
 
-            var res = await dataBase.AddStudentsAsync(students);
-            var updateGroup = await dataBase.SaveGroupAsync(selectedGroup);
+            var res = await client.Students.AddStudentsAsync(students, selectedGroup.Id);
+            var updateGroup = await client.Groups.SaveGroupAsync(selectedGroup);
 
             if (res)
             {
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
-                LoadStudents();
-                notifyClient.ChangeStudent(selectedGroup.Id, selectedGroup.Id);
-            }
-            if (updateGroup)
-            {
-                notifyClient.ChangeGroup(selectedGroup.Division, selectedGroup.Division);
             }
         }
 
@@ -250,8 +247,9 @@ namespace Kursach.ViewModels
         protected override async void Load()
         {
             groups.Clear();
-            var res = await dataBase.GetGroupsAsync();
-            groups.AddRange(res);
+            var res = await client.Groups.GetGroupsAsync();
+            if (res)
+                groups.AddRange(res.Response);
         }
 
         /// <summary>
@@ -263,13 +261,14 @@ namespace Kursach.ViewModels
             if (selectedGroup == null)
                 return;
 
-            var res = await dataBase.GetStudentsAsync(selectedGroup);
-            Students.AddRange(res);
+            var res = await client.Students.GetStudentsAsync(selectedGroup.Id);
+            if (res)
+                Students.AddRange(res.Response);
         }
 
         void Log(string msg, Student student)
         {
-            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => student, () => student.GroupId)}}}");
+            Logger.Log.Info($"{msg}: {{{Logger.GetParamsNamesValues(() => student.FullName, () => student.GroupId)}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

@@ -1,4 +1,4 @@
-﻿using Kursach.Models;
+﻿using Kursach.Core.Models;
 using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
 

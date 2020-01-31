@@ -46,7 +46,7 @@ namespace Kursach
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
+            regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
         }
     }
 }

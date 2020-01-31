@@ -1,5 +1,5 @@
-﻿using Kursach.Dialogs;
-using Kursach.Models;
+﻿using Kursach.Core.Models;
+using Kursach.Dialogs;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.ViewModels;
+using Kursach.Core.ViewModels;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System;

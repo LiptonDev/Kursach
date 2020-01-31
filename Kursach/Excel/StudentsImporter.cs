@@ -1,13 +1,13 @@
-﻿using Kursach.Models;
+﻿using DryIoc;
+using Kursach.Core.Models;
 using Kursach.Dialogs;
+using MaterialDesignXaml.DialogsHelper;
+using MaterialDesignXaml.DialogsHelper.Enums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DryIoc;
-using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
-using MaterialDesignXaml.DialogsHelper.Enums;
 using Regx = System.Text.RegularExpressions;
 
 namespace Kursach.Excel

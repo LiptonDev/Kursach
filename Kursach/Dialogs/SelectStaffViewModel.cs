@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.DataBase;
-using Kursach.Models;
+using Kursach.Client;
+using Kursach.Core.Models;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -24,8 +24,8 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
-            : base(currentId, dialogIdentifier, dataBase)
+        public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client)
+            : base(currentId, dialogIdentifier, client)
         {
         }
 
@@ -35,10 +35,12 @@ namespace Kursach.Dialogs
         /// </summary>
         public override async void Load(int currentId)
         {
-            var res = await dataBase.GetStaffsAsync();
-            Items.AddRange(res);
-
-            SelectedItem = Items.FirstOrDefault(x => x.Id == currentId);
+            var res = await client.Staff.GetStaffsAsync();
+            if (res)
+            {
+                Items.AddRange(res.Response);
+                SelectedItem = Items.FirstOrDefault(x => x.Id == currentId);
+            }
         }
     }
 }

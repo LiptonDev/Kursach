@@ -1,13 +1,15 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.DataBase;
+using Kursach.Client;
+using Kursach.Core.Models;
+using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
-using Kursach.Models;
-using Kursach.NotifyClient;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Kursach.ViewModels
 {
@@ -32,18 +34,39 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public UsersViewModel(IDataBase dataBase,
-                              IDialogManager dialogManager,
+        public UsersViewModel(IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
-                              INotifyClient notifyClient,
+                              IClient client,
                               IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
+            : base(dialogManager, snackbarMessageQueue, client, container)
         {
             Users = new ObservableCollection<User>();
 
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
 
-            notifyClient.UserChanged += Load;
+            client.Users.OnChanged += Users_OnChanged;
+        }
+
+        /// <summary>
+        /// Изменения пользователей.
+        /// </summary>
+        private void Users_OnChanged(DbChangeStatus status, User user)
+        {
+            switch (status)
+            {
+                case DbChangeStatus.Add:
+                    Users.Add(user);
+                    break;
+
+                case DbChangeStatus.Update:
+                    var current = Users.FirstOrDefault(x => x.Id == user.Id);
+                    current?.SetAllFields(user);
+                    break;
+
+                case DbChangeStatus.Remove:
+                    Users.Remove(user);
+                    break;
+            }
         }
 
         /// <summary>
@@ -60,14 +83,8 @@ namespace Kursach.ViewModels
             if (editor == null)
                 return;
 
-            var res = await dataBase.SignUpAsync(editor);
-            var msg = res ? "Пользователь добавлен" : "Пользователь не добавлен";
-
-            if (res)
-            {
-                Users.Add(editor);
-                notifyClient.ChangeUser();
-            }
+            var res = await client.Users.AddUserAsync(editor);
+            var msg = res ? "Пользователь добавлен" : res;
 
             Log(msg, editor);
         }
@@ -77,21 +94,14 @@ namespace Kursach.ViewModels
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public override async void Edit(User user)
+        public override async Task Edit(User user)
         {
             var editor = await dialogManager.SignUp(user, true);
             if (editor == null)
                 return;
 
-            var res = await dataBase.SaveUserAsync(editor);
-            var msg = res ? "Пользователь сохранен" : "Пользователь не сохранен";
-
-            if (res)
-            {
-                user.Login = editor.Login;
-                user.Mode = editor.Mode;
-                notifyClient.ChangeUser();
-            }
+            var res = await client.Users.SaveUserAsync(editor);
+            var msg = res ? "Пользователь сохранен" : res;
 
             Log(msg, user);
         }
@@ -101,20 +111,14 @@ namespace Kursach.ViewModels
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public override async void Delete(User user)
+        public override async Task Delete(User user)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить '{user.Login}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
                 return;
 
-            var res = await dataBase.RemoveUserAsync(user);
-            var msg = res ? "Пользователь удален" : "Пользователь не удален";
-
-            if (res)
-            {
-                Users.Remove(user);
-                notifyClient.ChangeUser();
-            }
+            var res = await client.Users.RemoveUserAsync(user);
+            var msg = res ? "Пользователь удален" : res;
 
             Log(msg, user);
         }
@@ -133,8 +137,9 @@ namespace Kursach.ViewModels
         protected override async void Load()
         {
             Users.Clear();
-            var res = await dataBase.GetUsersAsync();
-            Users.AddRange(res);
+            var res = await client.Users.GetUsersAsync();
+            if (res)
+                Users.AddRange(res.Response);
         }
 
         void Log(string msg, User user)

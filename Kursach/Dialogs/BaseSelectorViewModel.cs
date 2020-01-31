@@ -1,5 +1,5 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.DataBase;
+using Kursach.Client;
 using MaterialDesignXaml.DialogsHelper;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -27,9 +27,9 @@ namespace Kursach.Dialogs
         public IDialogIdentifier OwnerIdentifier { get; }
 
         /// <summary>
-        /// База данных.
+        /// Клиент.
         /// </summary>
-        protected readonly IDataBase dataBase;
+        protected readonly IClient client;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -42,10 +42,10 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public BaseSelectorViewModel(int currentId, IDialogIdentifier dialogIdentifier, IDataBase dataBase)
+        public BaseSelectorViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client)
         {
             OwnerIdentifier = dialogIdentifier;
-            this.dataBase = dataBase;
+            this.client = client;
 
             Items = new ObservableCollection<T>();
 

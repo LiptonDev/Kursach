@@ -1,17 +1,18 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Models;
+using Kursach.Client;
+using Kursach.Core.Models;
+using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Kursach.DataBase;
-using MaterialDesignThemes.Wpf;
 using System.Linq;
-using Kursach.NotifyClient;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
@@ -60,14 +61,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public GroupsViewModel(IDataBase dataBase,
-                               IDialogManager dialogManager,
+        public GroupsViewModel(IDialogManager dialogManager,
                                IAsyncExporter<IEnumerable<Group>> exporter,
                                IAsyncImporter<IEnumerable<Group>> importer,
                                ISnackbarMessageQueue snackbarMessageQueue,
-                               INotifyClient notifyClient,
+                               IClient client,
                                IContainer container)
-            : base(dataBase, dialogManager, snackbarMessageQueue, notifyClient, container)
+            : base(dialogManager, snackbarMessageQueue, client, container)
         {
             this.exporter = exporter;
             this.importer = importer;
@@ -77,19 +77,43 @@ namespace Kursach.ViewModels
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
 
-            notifyClient.GroupChanged += NotifyClient_GroupChanged;
+            client.Groups.OnChanged += Groups_OnChanged;
         }
 
         /// <summary>
-        /// Группа в подразделении обновлена.
+        /// Изменения групп.
         /// </summary>
-        private void NotifyClient_GroupChanged(int oldId, int newId)
+        private void Groups_OnChanged(DbChangeStatus status, Group group)
         {
-            if (selectedDivision == oldId || selectedDivision == newId)
-                Load();
+            switch (status)
+            {
+                case DbChangeStatus.Add:
+                    if (group.Division == selectedDivision)
+                        Groups.Add(group);
+                    break;
 
-            if (oldId == -1 && newId == -1) //import
-                Load();
+                case DbChangeStatus.Update:
+                    bool contains = Groups.Contains(group);
+                    if (group.Division != selectedDivision && contains)
+                    {
+                        Groups.Remove(group);
+                    }
+                    else if (group.Division == selectedDivision && !contains)
+                    {
+                        Groups.Add(group);
+                    }
+                    else
+                    {
+                        var current = Groups.FirstOrDefault(x => x.Division == selectedDivision);
+                        current?.SetAllFields(group);
+                    }
+                    break;
+
+                case DbChangeStatus.Remove:
+                    if (group.Division == selectedDivision)
+                        Groups.Remove(group);
+                    break;
+            }
         }
 
         /// <summary>
@@ -111,14 +135,8 @@ namespace Kursach.ViewModels
             if (editor == null)
                 return;
 
-            var res = await dataBase.AddGroupAsync(editor);
-            var msg = res ? "Группа добавлена" : "Группа не добавлена";
-
-            if (res && editor.Division == selectedDivision)
-                Groups.Add(editor);
-
-            if (res)
-                notifyClient.ChangeGroup(editor.Division, editor.Division);
+            var res = await client.Groups.AddGroupAsync(editor);
+            var msg = res ? "Группа добавлена" : res;
 
             Log(msg, editor);
         }
@@ -126,35 +144,14 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Открытие окна редактирования группы.
         /// </summary>
-        public override async void Edit(Group group)
+        public override async Task Edit(Group group)
         {
             var editor = await dialogManager.GroupEditor(group, true, group.Division);
             if (editor == null)
                 return;
 
-            var res = await dataBase.SaveGroupAsync(editor);
-            var msg = res ? "Группа сохранена" : "Группа не сохранена";
-
-            if (res)
-            {
-                int oldId = group.Division;
-                int newId = editor.Division;
-
-                group.CuratorId = editor.CuratorId;
-                group.Name = editor.Name;
-                group.Start = editor.Start;
-                group.End = editor.End;
-                group.Specialty = editor.Specialty;
-                group.IsBudget = editor.IsBudget;
-                group.Division = editor.Division;
-                group.SpoNpo = editor.SpoNpo;
-                group.IsIntramural = editor.IsIntramural;
-
-                if (group.Division != selectedDivision)
-                    Groups.Remove(group);
-
-                notifyClient.ChangeGroup(oldId, newId);
-            }
+            var res = await client.Groups.SaveGroupAsync(editor);
+            var msg = res ? "Группа сохранена" : res;
 
             Log(msg, group);
         }
@@ -163,20 +160,14 @@ namespace Kursach.ViewModels
         /// Удаление группы.
         /// </summary>
         /// <returns></returns>
-        public override async void Delete(Group group)
+        public override async Task Delete(Group group)
         {
             var answ = await dialogIdentifier.ShowMessageBoxAsync($"Удалить группу '{group.Name}'?", MaterialMessageBoxButtons.YesNo);
             if (answ != MaterialMessageBoxButtons.Yes)
                 return;
 
-            var res = await dataBase.RemoveGroupAsync(group);
-            var msg = res ? "Группа удалена" : "Группа не удалена";
-
-            if (res)
-            {
-                Groups.Remove(group);
-                notifyClient.ChangeGroup(selectedDivision, selectedDivision);
-            }
+            var res = await client.Groups.RemoveGroupAsync(group);
+            var msg = res ? "Группа удалена" : res;
 
             Log(msg, group);
         }
@@ -186,8 +177,14 @@ namespace Kursach.ViewModels
         /// </summary>
         public async void ExportToExcel()
         {
-            var groups = await dataBase.GetGroupsAsync();
-            var res = await exporter.Export(groups);
+            var groups = await client.Groups.GetGroupsAsync();
+            if (!groups)
+            {
+                snackbarMessageQueue.Enqueue(groups);
+                return;
+            }
+
+            var res = await exporter.Export(groups.Response);
             var msg = res ? "Группы экспортированы" : "Группы не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
@@ -203,14 +200,10 @@ namespace Kursach.ViewModels
             if (groups == null)
                 return;
 
-            var res = await dataBase.AddGroupsAsync(groups);
+            var res = await client.Groups.AddGroupsAsync(groups);
 
             if (res)
-            {
                 snackbarMessageQueue.Enqueue($"Добавлено групп: {groups.Count()}");
-                Load();
-                notifyClient.ChangeGroup(-1, -1);
-            }
         }
 
         /// <summary>
@@ -222,8 +215,9 @@ namespace Kursach.ViewModels
                 return;
 
             Groups.Clear();
-            var res = await dataBase.GetGroupsAsync(SelectedDivision);
-            Groups.AddRange(res);
+            var res = await client.Groups.GetGroupsAsync(SelectedDivision);
+            if (res)
+                Groups.AddRange(res.Response);
         }
 
         void Log(string msg, Group group)
