@@ -99,7 +99,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Save student: {student.FullName}");
 
-            var res = await dataBase.AddStudentAsync(student);
+            var res = await dataBase.SaveStudentAsync(student);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).StudentChanged(DbChangeStatus.Update, student);
@@ -116,7 +116,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Remove student: {student.FullName}");
 
-            var res = await dataBase.AddStudentAsync(student);
+            var res = await dataBase.RemoveStudentAsync(student);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).StudentChanged(DbChangeStatus.Remove, student);
