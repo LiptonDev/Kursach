@@ -5,6 +5,9 @@
     /// </summary>
     static class ChangeAllFields
     {
+        /// <summary>
+        /// Установить всё св-ва объекта с другого объекта.
+        /// </summary>
         public static void SetAllFields<T>(this T source, T newObject)
         {
             if (source == null || newObject == null)
