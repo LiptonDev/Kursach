@@ -1,4 +1,6 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using System;
@@ -10,7 +12,7 @@ namespace Kursach.Client.Design
 {
     class DesignUsers : IUsers
     {
-        public DesignUsers(IHubConfigurator hubConfigurator)
+        public DesignUsers()
         {
         }
 

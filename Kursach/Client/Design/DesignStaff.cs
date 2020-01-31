@@ -1,4 +1,6 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ namespace Kursach.Client.Design
 {
     class DesignStaff : IStaff
     {
-        public DesignStaff(IHubConfigurator hubConfigurator)
+        public DesignStaff()
         {
 
         }

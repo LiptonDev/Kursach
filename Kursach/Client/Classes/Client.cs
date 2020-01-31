@@ -1,4 +1,6 @@
-﻿namespace Kursach.Client
+﻿using Kursach.Client.Interfaces;
+
+namespace Kursach.Client.Classes
 {
     /// <summary>
     /// Клиент сервера.

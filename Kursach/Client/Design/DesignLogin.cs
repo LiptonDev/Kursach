@@ -1,4 +1,5 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;

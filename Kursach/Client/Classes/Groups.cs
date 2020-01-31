@@ -1,31 +1,28 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
-    class Groups : IGroups
+    /// <summary>
+    /// Управление группами.
+    /// </summary>
+    class Groups : Invoker, IGroups
     {
-        /// <summary>
-        /// Прокси.
-        /// </summary>
-        IHubProxy proxy;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Groups(IHubConfigurator hubConfigurator, TaskFactory sync)
+        public Groups(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.GroupsHub)
         {
-            proxy = hubConfigurator.Hub.CreateHubProxy(HubNames.GroupsHub);
-
-            proxy.On<DbChangeStatus, Group>(nameof(GroupsEvents.GroupChanged),
+            Proxy.On<DbChangeStatus, Group>(nameof(GroupsEvents.GroupChanged),
                 (status, group) => sync.StartNew(() => OnChanged?.Invoke(status, group)));
 
-            proxy.On<IEnumerable<Group>>(nameof(GroupsEvents.GroupsImport),
-                (groups) => sync.StartNew(() => Imported?.Invoke(groups)));
+            Proxy.On(nameof(GroupsEvents.GroupsImport), () => sync.StartNew(() => Imported?.Invoke()));
         }
 
         /// <summary>
@@ -46,7 +43,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
-            return proxy.TryInvokeAsync<IEnumerable<Group>>(args: divisionId);
+            return TryInvokeAsync<IEnumerable<Group>>(args: divisionId);
         }
         #endregion
 
@@ -58,7 +55,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
-            return proxy.TryInvokeAsync<bool>(args: groups);
+            return TryInvokeAsync<bool>(args: groups);
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddGroupAsync(Group group)
         {
-            return proxy.TryInvokeAsync<bool>(args: group);
+            return TryInvokeAsync<bool>(args: group);
         }
 
         /// <summary>
@@ -78,7 +75,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> SaveGroupAsync(Group group)
         {
-            return proxy.TryInvokeAsync<bool>(args: group);
+            return TryInvokeAsync<bool>(args: group);
         }
 
         /// <summary>
@@ -88,7 +85,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> RemoveGroupAsync(Group group)
         {
-            return proxy.TryInvokeAsync<bool>(args: group);
+            return TryInvokeAsync<bool>(args: group);
         }
         #endregion
     }

@@ -1,11 +1,12 @@
-﻿using Kursach.Properties;
+﻿using Kursach.Client.Interfaces;
+using Kursach.Properties;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
     /// <summary>
     /// Конфигуратор подключения.
@@ -28,6 +29,11 @@ namespace Kursach.Client
         public event Action Reconnected;
 
         /// <summary>
+        /// Процесс переподключения к серверу.
+        /// </summary>
+        public event Action Reconnecting;
+
+        /// <summary>
         /// Hub.
         /// </summary>
         public HubConnection Hub { get; }
@@ -48,6 +54,7 @@ namespace Kursach.Client
 
             Hub.Closed += () => sync.StartNew(() => Disconnected?.Invoke());
             Hub.Reconnected += () => sync.StartNew(() => Reconnected?.Invoke());
+            Hub.Reconnecting += () => sync.StartNew(() => Reconnecting?.Invoke());
 
             Hub.Received += Console.WriteLine;
         }

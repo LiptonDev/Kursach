@@ -1,23 +1,20 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
-using Microsoft.AspNet.SignalR.Client;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
-    class Login : ILogin
+    /// <summary>
+    /// Управление авторизацией.
+    /// </summary>
+    class Login : Invoker, ILogin
     {
-        /// <summary>
-        /// Прокси.
-        /// </summary>
-        IHubProxy proxy;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Login(IHubConfigurator hubConfigurator)
+        public Login(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.LoginHub)
         {
-            proxy = hubConfigurator.Hub.CreateHubProxy(HubNames.LoginHub);
         }
 
         /// <summary>
@@ -28,7 +25,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
-            return proxy.TryInvokeAsync<User, LoginResponse>(argDefault: LoginResponse.ServerError, args: new object[] { login, password });
+            return TryInvokeAsync<User, LoginResponse>(argDefault: LoginResponse.ServerError, args: new object[] { login, password });
         }
 
         /// <summary>
@@ -36,7 +33,7 @@ namespace Kursach.Client
         /// </summary>
         public void Logout()
         {
-            proxy.TryInvokeAsync();
+            TryInvokeAsync();
         }
     }
 }

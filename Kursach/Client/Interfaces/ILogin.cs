@@ -1,6 +1,6 @@
 ﻿using Kursach.Core.ServerMethods;
 
-namespace Kursach.Client
+namespace Kursach.Client.Interfaces
 {
     /// <summary>
     /// Авторизация.

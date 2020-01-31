@@ -1,27 +1,25 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
-    class Staffs : IStaff
+    /// <summary>
+    /// Управление сотрудниками.
+    /// </summary>
+    class Staffs : Invoker, IStaff
     {
-        /// <summary>
-        /// Прокси.
-        /// </summary>
-        IHubProxy proxy;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Staffs(IHubConfigurator hubConfigurator, TaskFactory sync)
+        public Staffs(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StaffHub)
         {
-            proxy = hubConfigurator.Hub.CreateHubProxy(HubNames.StaffHub);
-
-            proxy.On<DbChangeStatus, Staff>(nameof(StaffEvents.StaffChange),
+            Proxy.On<DbChangeStatus, Staff>(nameof(StaffEvents.StaffChange),
                 (status, staff) => sync.StartNew(() => OnChanged?.Invoke(status, staff)));
         }
 
@@ -37,7 +35,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
-            return proxy.TryInvokeAsync<IEnumerable<Staff>>();
+            return TryInvokeAsync<IEnumerable<Staff>>();
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync()
         {
-            return proxy.TryInvokeAsync<int>();
+            return TryInvokeAsync<int>();
         }
         #endregion
 
@@ -58,7 +56,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddStaffAsync(Staff staff)
         {
-            return proxy.TryInvokeAsync<bool>(args: staff);
+            return TryInvokeAsync<bool>(args: staff);
         }
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> SaveStaffAsync(Staff staff)
         {
-            return proxy.TryInvokeAsync<bool>(args: staff);
+            return TryInvokeAsync<bool>(args: staff);
         }
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff)
         {
-            return proxy.TryInvokeAsync<bool>(args: staff);
+            return TryInvokeAsync<bool>(args: staff);
         }
         #endregion
     }

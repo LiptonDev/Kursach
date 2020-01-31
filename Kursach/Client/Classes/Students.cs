@@ -1,33 +1,28 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
     /// <summary>
     /// Управление студентами.
     /// </summary>
-    class Students : IStudents
+    class Students : Invoker, IStudents
     {
-        /// <summary>
-        /// Прокси.
-        /// </summary>
-        IHubProxy proxy;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Students(IHubConfigurator hubConfigurator, TaskFactory sync)
+        public Students(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StudentsHub)
         {
-            proxy = hubConfigurator.Hub.CreateHubProxy(HubNames.StudentsHub);
-
-            proxy.On<DbChangeStatus, Student>(nameof(StudentsEvents.StudentChanged),
+            Proxy.On<DbChangeStatus, Student>(nameof(StudentsEvents.StudentChanged),
                 (status, student) => sync.StartNew(() => OnChanged?.Invoke(status, student)));
 
-            proxy.On<int>(nameof(StudentsEvents.StudentsImportTo),
+            Proxy.On<int>(nameof(StudentsEvents.StudentsImportTo),
                 (groupId) => sync.StartNew(() => Imported?.Invoke(groupId)));
         }
 
@@ -49,7 +44,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
-            return proxy.TryInvokeAsync<IEnumerable<Student>>(args: groupId);
+            return TryInvokeAsync<IEnumerable<Student>>(args: groupId);
         }
 
         /// <summary>
@@ -60,7 +55,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
-            return proxy.TryInvokeAsync<Dictionary<int, StudentsCount>>(args: groupIds);
+            return TryInvokeAsync<Dictionary<int, StudentsCount>>(args: groupIds);
         }
         #endregion
 
@@ -72,7 +67,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddStudentAsync(Student student)
         {
-            return proxy.TryInvokeAsync<bool>(args: student);
+            return TryInvokeAsync<bool>(args: student);
         }
 
         /// <summary>
@@ -82,7 +77,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
         {
-            return proxy.TryInvokeAsync<bool>(args: new object[] { students, groupId });
+            return TryInvokeAsync<bool>(args: new object[] { students, groupId });
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> SaveStudentAsync(Student student)
         {
-            return proxy.TryInvokeAsync<bool>(args: student);
+            return TryInvokeAsync<bool>(args: student);
         }
 
         /// <summary>
@@ -102,7 +97,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> RemoveStudentAsync(Student student)
         {
-            return proxy.TryInvokeAsync<bool>(args: student);
+            return TryInvokeAsync<bool>(args: student);
         }
         #endregion
     }

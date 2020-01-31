@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Interfaces
 {
     /// <summary>
     /// Конфигуратор подключения.
@@ -28,6 +28,11 @@ namespace Kursach.Client
         /// Переподключен к серверу.
         /// </summary>
         event Action Reconnected;
+
+        /// <summary>
+        /// Процесс переподключения к серверу.
+        /// </summary>
+        event Action Reconnecting;
 
         /// <summary>
         /// Подключиться.

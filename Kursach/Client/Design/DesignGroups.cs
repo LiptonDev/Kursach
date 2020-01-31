@@ -1,4 +1,6 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using System;
@@ -26,7 +28,7 @@ namespace Kursach.Client.Design
 
         public Task<KursachResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
-            Imported?.Invoke(groups);
+            Imported?.Invoke();
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
 

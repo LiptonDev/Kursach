@@ -1,30 +1,25 @@
-﻿using Kursach.Core;
+﻿using Kursach.Client.Delegates;
+using Kursach.Client.Interfaces;
+using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kursach.Client
+namespace Kursach.Client.Classes
 {
     /// <summary>
     /// Управление пользователями.
     /// </summary>
-    class Users : IUsers
+    class Users : Invoker, IUsers
     {
-        /// <summary>
-        /// Прокси.
-        /// </summary>
-        IHubProxy proxy;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Users(IHubConfigurator hubConfigurator, TaskFactory sync)
+        public Users(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.UsersHub)
         {
-            proxy = hubConfigurator.Hub.CreateHubProxy(HubNames.UsersHub);
-
-            proxy.On<DbChangeStatus, User>(nameof(UsersEvents.UserChanged),
+            Proxy.On<DbChangeStatus, User>(nameof(UsersEvents.UserChanged),
                 (status, user) => sync.StartNew(() => OnChanged?.Invoke(status, user)));
         }
 
@@ -40,7 +35,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<User>>> GetUsersAsync()
         {
-            return proxy.TryInvokeAsync<IEnumerable<User>>();
+            return TryInvokeAsync<IEnumerable<User>>();
         }
 
         /// <summary>
@@ -52,7 +47,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
-            return proxy.TryInvokeAsync<User>(args: new object[] { login, password, usePassword });
+            return TryInvokeAsync<User>(args: new object[] { login, password, usePassword });
         }
         #endregion
 
@@ -64,7 +59,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
-            return proxy.TryInvokeAsync<IEnumerable<SignInLog>>(args: userId);
+            return TryInvokeAsync<IEnumerable<SignInLog>>(args: userId);
         }
         #endregion
 
@@ -76,7 +71,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> AddUserAsync(User user)
         {
-            return proxy.TryInvokeAsync<bool>(args: user);
+            return TryInvokeAsync<bool>(args: user);
         }
 
         /// <summary>
@@ -86,7 +81,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> SaveUserAsync(User user)
         {
-            return proxy.TryInvokeAsync<bool>(args: user);
+            return TryInvokeAsync<bool>(args: user);
         }
 
         /// <summary>
@@ -96,7 +91,7 @@ namespace Kursach.Client
         /// <returns></returns>
         public Task<KursachResponse<bool>> RemoveUserAsync(User user)
         {
-            return proxy.TryInvokeAsync<bool>(args: user);
+            return TryInvokeAsync<bool>(args: user);
         }
         #endregion
     }
