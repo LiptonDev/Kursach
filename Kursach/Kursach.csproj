@@ -154,29 +154,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Client\ChangedDelegate.cs" />
-    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\Delegates\ChangedDelegate.cs" />
+    <Compile Include="Client\Classes\Client.cs" />
     <Compile Include="Client\Design\DesignGroups.cs" />
     <Compile Include="Client\Design\DesignLogin.cs" />
     <Compile Include="Client\Design\DesignStaff.cs" />
     <Compile Include="Client\Design\DesignStudents.cs" />
     <Compile Include="Client\Design\DesignUsers.cs" />
-    <Compile Include="Client\Staffs.cs" />
-    <Compile Include="Client\Groups.cs" />
-    <Compile Include="Client\GroupsImportDelegate.cs" />
-    <Compile Include="Client\HubConfigurator.cs" />
-    <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\IGroups.cs" />
-    <Compile Include="Client\IHubConfigurator.cs" />
-    <Compile Include="Client\ILogin.cs" />
-    <Compile Include="Client\InvokerHelper.cs" />
-    <Compile Include="Client\IStaff.cs" />
-    <Compile Include="Client\IStudents.cs" />
-    <Compile Include="Client\IUsers.cs" />
-    <Compile Include="Client\Login.cs" />
-    <Compile Include="Client\Students.cs" />
-    <Compile Include="Client\StudentsImportDelegate.cs" />
-    <Compile Include="Client\Users.cs" />
+    <Compile Include="Client\Classes\Staffs.cs" />
+    <Compile Include="Client\Classes\Groups.cs" />
+    <Compile Include="Client\Delegates\GroupsImportDelegate.cs" />
+    <Compile Include="Client\Classes\HubConfigurator.cs" />
+    <Compile Include="Client\Interfaces\IClient.cs" />
+    <Compile Include="Client\Interfaces\IGroups.cs" />
+    <Compile Include="Client\Interfaces\IHubConfigurator.cs" />
+    <Compile Include="Client\Interfaces\ILogin.cs" />
+    <Compile Include="Client\Classes\Invoker.cs" />
+    <Compile Include="Client\Interfaces\IStaff.cs" />
+    <Compile Include="Client\Interfaces\IStudents.cs" />
+    <Compile Include="Client\Interfaces\IUsers.cs" />
+    <Compile Include="Client\Classes\Login.cs" />
+    <Compile Include="Client\Classes\Students.cs" />
+    <Compile Include="Client\Delegates\StudentsImportDelegate.cs" />
+    <Compile Include="Client\Classes\Users.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Controls\AddButton.xaml.cs">
       <DependentUpon>AddButton.xaml</DependentUpon>

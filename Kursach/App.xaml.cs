@@ -1,6 +1,6 @@
 ﻿using DryIoc;
-using Kursach.Client;
-using Kursach.Client.Design;
+using Kursach.Client.Classes;
+using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
@@ -50,13 +50,6 @@ namespace Kursach
             base.ConfigureViewModelLocator();
 
             ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
-            ViewModelLocationProvider.Register<LoginView, LoginViewModel>();
-            ViewModelLocationProvider.Register<MainView, MainViewModel>();
-            ViewModelLocationProvider.Register<GroupsView, GroupsViewModel>();
-            ViewModelLocationProvider.Register<UsersView, UsersViewModel>();
-            ViewModelLocationProvider.Register<StaffView, StaffViewModel>();
-            ViewModelLocationProvider.Register<StudentsView, StudentsViewModel>();
-            ViewModelLocationProvider.Register<WelcomeView, MainViewModel>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -68,39 +61,23 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IGroups, Groups>();
             containerRegistry.RegisterSingleton<IStudents, Students>();
             containerRegistry.RegisterSingleton<ILogin, Login>();
+            containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
+            containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
 #else
             containerRegistry.RegisterSingleton<IUsers, DesignUsers>();
             containerRegistry.RegisterSingleton<IStaff, DesignStaff>();
             containerRegistry.RegisterSingleton<IGroups, DesignGroups>();
             containerRegistry.RegisterSingleton<IStudents, DesignStudents>();
             containerRegistry.RegisterSingleton<ILogin, DesignLogin>();
-#endif
             containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
-            containerRegistry.RegisterSingleton<IClient, Client.Client>();
+            containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
+#endif
 
             //sync taskfactory
             containerRegistry.RegisterDelegate<TaskFactory>(x => new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()), Reuse.Singleton);
 
             //snack
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
-
-            //views
-            containerRegistry.RegisterSingleton<LoginView>();
-            containerRegistry.RegisterSingleton<MainView>();
-            containerRegistry.RegisterSingleton<WelcomeView>();
-            containerRegistry.RegisterSingleton<UsersView>();
-            containerRegistry.RegisterSingleton<GroupsView>();
-            containerRegistry.RegisterSingleton<StaffView>();
-            containerRegistry.RegisterSingleton<StudentsView>();
-
-            //vm's
-            containerRegistry.RegisterSingleton<MainWindowViewModel>();
-            containerRegistry.RegisterSingleton<LoginViewModel>();
-            containerRegistry.RegisterSingleton<MainViewModel>();
-            containerRegistry.RegisterSingleton<GroupsViewModel>();
-            containerRegistry.RegisterSingleton<UsersViewModel>();
-            containerRegistry.RegisterSingleton<StaffViewModel>();
-            containerRegistry.RegisterSingleton<StudentsViewModel>();
 
             //dialogs
             containerRegistry.RegisterDelegate<IDialogIdentifier>(x => new DialogIdentifier("RootIdentifier"), Reuse.Singleton, "rootdialog");
@@ -112,14 +89,17 @@ namespace Kursach
             containerRegistry.Register<FrameworkElement, StudentEditorView>(nameof(StudentEditorView));
             containerRegistry.Register<FrameworkElement, SignUpView>(nameof(SignUpView));
 
+            //vm's
+            containerRegistry.RegisterSingleton<MainViewModel>();
+
             //navigation
-            containerRegistry.RegisterForNavigation<LoginView>(RegionViews.LoginView);
-            containerRegistry.RegisterForNavigation<MainView>(RegionViews.MainView);
-            containerRegistry.RegisterForNavigation<WelcomeView>(RegionViews.WelcomeView);
-            containerRegistry.RegisterForNavigation<UsersView>(RegionViews.UsersView);
-            containerRegistry.RegisterForNavigation<GroupsView>(RegionViews.GroupsView);
-            containerRegistry.RegisterForNavigation<StaffView>(RegionViews.StaffView);
-            containerRegistry.RegisterForNavigation<StudentsView>(RegionViews.StudentsView);
+            containerRegistry.RegisterForNavigation<LoginView, LoginViewModel>(RegionViews.LoginView);
+            containerRegistry.RegisterForNavigation<MainView, MainViewModel>(RegionViews.MainView);
+            containerRegistry.RegisterForNavigation<WelcomeView, MainViewModel>(RegionViews.WelcomeView);
+            containerRegistry.RegisterForNavigation<UsersView, UsersViewModel>(RegionViews.UsersView);
+            containerRegistry.RegisterForNavigation<GroupsView, GroupsViewModel>(RegionViews.GroupsView);
+            containerRegistry.RegisterForNavigation<StaffView, StaffViewModel>(RegionViews.StaffView);
+            containerRegistry.RegisterForNavigation<StudentsView, StudentsViewModel>(RegionViews.StudentsView);
             containerRegistry.RegisterForNavigation<ConnectingView>(RegionViews.ConnectingView);
 
             //dialogs
