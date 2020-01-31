@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
@@ -50,30 +50,31 @@ namespace Kursach.ViewModels
             this.client.HubConfigurator.Connected += NotifyClient_Connected;
             this.client.HubConfigurator.Disconnected += NotifyClient_Disconnected;
             this.client.HubConfigurator.Reconnected += NotifyClient_Reconnected;
+            this.client.HubConfigurator.Reconnecting += HubConfigurator_Reconnecting;
 
             this.client.HubConfigurator.ConnectAsync();
         }
 
+        private void HubConfigurator_Reconnecting()
+        {
+            DialogHelper.CloseAll();
+            regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
+        }
+
         private void NotifyClient_Reconnected()
         {
-            System.Console.WriteLine("Reconnected!");
-            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
-            //configurator.SetStatus(Consts.LoginStatus);
+            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
 
         private async void NotifyClient_Disconnected()
         {
-            System.Console.WriteLine("Disconnected!");
-            regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
             await Task.Delay(2000);
             await client.HubConfigurator.ConnectAsync();
         }
 
         private void NotifyClient_Connected()
         {
-            System.Console.WriteLine("Connected!");
-            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
-            //configurator.SetStatus(Consts.LoginStatus);
+            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
     }
 }

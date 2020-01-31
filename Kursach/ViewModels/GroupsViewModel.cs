@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
@@ -78,6 +78,15 @@ namespace Kursach.ViewModels
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
 
             client.Groups.OnChanged += Groups_OnChanged;
+            client.Groups.Imported += Groups_Imported;
+        }
+
+        /// <summary>
+        /// Группы были импортированы.
+        /// </summary>
+        private void Groups_Imported()
+        {
+            Load();
         }
 
         /// <summary>

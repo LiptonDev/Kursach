@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Properties;
@@ -113,6 +113,15 @@ namespace Kursach.ViewModels
                 NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
                 regionManager.ReqeustNavigateInMainRegion(RegionViews.WelcomeView);
+            }
+        }
+
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (navigationContext.Parameters.ContainsKey("fromConnecting"))
+            {
+                if (Consts.LoginStatus)
+                    TryLoginCommand.Execute(null);
             }
         }
     }

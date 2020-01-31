@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
@@ -139,6 +139,10 @@ namespace Kursach.ViewModels
                     break;
 
                 case DbChangeStatus.Remove:
+                    if (selectedGroup != null && selectedGroup.Id == student.GroupId && Students.Contains(student))
+                    {
+                        Students.Remove(student);
+                    }
                     break;
             }
         }

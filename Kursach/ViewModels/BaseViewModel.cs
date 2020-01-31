@@ -1,6 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client;
+using Kursach.Client.Interfaces;
 using Kursach.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
