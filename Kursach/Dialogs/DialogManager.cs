@@ -45,7 +45,7 @@ namespace Kursach.Dialogs
             OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Выберите файл группы для импорта",
-                Filter = "xlsx files (*.xlsx)|*.xlsx"
+                Filter = "Excel files|*.xlsx;*xls"
             };
 
             if (ofd.ShowDialog() == true)
@@ -63,7 +63,7 @@ namespace Kursach.Dialogs
             SaveFileDialog sfd = new SaveFileDialog
             {
                 Title = "Введите имя файла для сохранения",
-                Filter = "xlsx files (*.xlsx)|*.xlsx",
+                Filter = "Excel files|*.xlsx;*xls",
                 FileName = defName
             };
 
