@@ -56,7 +56,7 @@ namespace Server.Hubs
             var res = await dataBase.AddGroupsAsync(groups);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).GroupsImport(groups);
+                Clients.Group(Consts.AuthorizedGroup).GroupsImport();
 
             return res;
         }
