@@ -105,12 +105,12 @@ namespace Kursach.Excel
                 try
                 {
                     excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о группе: {{{Logger.GetParamsNamesValues(() => group.Name, () => students.Count(), () => FileName)}}}");
+                    Logger.Log.Info($"Экспорт информации о группе: {{fileName: {FileName}}}");
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Экспорт информации о группе: {{{Logger.GetParamsNamesValues(() => group.Name, () => FileName)}}}", ex);
+                    Logger.Log.Error($"Экспорт информации о группе: {{fileName: {FileName}}}", ex);
                     return false;
                 }
             }

@@ -49,7 +49,7 @@ namespace Kursach.Excel
                 int i = 0;
                 foreach (var item in staff)
                 {
-                    worksheet.Cells[2 + i, 1].SetValue(item);
+                    worksheet.Cells[2 + i, 1].SetValue(item.FullName);
                     worksheet.Cells[2 + i, 2].SetValue(item.Position);
 
                     i++;
@@ -63,12 +63,12 @@ namespace Kursach.Excel
                 try
                 {
                     excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о сотрудниках: {{{Logger.GetParamsNamesValues(() => staff.Count(), () => FileName)}}}");
+                    Logger.Log.Info($"Экспорт информации о сотрудниках: {{fileName: {FileName}}}");
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Экспорт информации о сотрудниках: {{{Logger.GetParamsNamesValues(() => FileName)}}}", ex);
+                    Logger.Log.Error($"Экспорт информации о сотрудниках: {{fileName: {FileName}}}", ex);
                     return false;
                 }
             }
