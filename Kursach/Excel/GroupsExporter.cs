@@ -78,7 +78,7 @@ namespace Kursach.Excel
                     //Заголовки таблицы
                     SetTableHeader(worksheet, i6, max);
 
-                    var count = await client.Students.GetStudentsCountAsync(divisions[i].Select(x => x.Division)); //кол-во студентов в группах определенного подразделения
+                    var count = await client.Students.GetStudentsCountAsync(divisions[i].Select(x => x.Id)); //кол-во студентов в группах определенного подразделения
                     var studentsCount = divisions[i].ToDictionary(x => x, x => count.Response[x.Id]);
                     int row = 0; //текущая строка
                     int intraSabbatical = 0; //очное в академ. отпуске
