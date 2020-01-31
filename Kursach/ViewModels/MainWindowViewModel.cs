@@ -4,6 +4,7 @@ using Kursach.Client.Interfaces;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Kursach.ViewModels
@@ -57,23 +58,27 @@ namespace Kursach.ViewModels
 
         private void HubConfigurator_Reconnecting()
         {
+            Debug.WriteLine("Reconnecting");
             DialogHelper.CloseAll();
             regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
         }
 
         private void NotifyClient_Reconnected()
         {
+            Debug.WriteLine("Reconnected");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
 
         private async void NotifyClient_Disconnected()
         {
+            Debug.WriteLine("Disconnected");
             await Task.Delay(2000);
             await client.HubConfigurator.ConnectAsync();
         }
 
         private void NotifyClient_Connected()
         {
+            Debug.WriteLine("Connected");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
     }
