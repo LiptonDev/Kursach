@@ -174,6 +174,8 @@ namespace Kursach.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            LeftMenuOpened = false;
+
             if (!navigationContext.Parameters.ContainsKey("fromLogin"))
                 return;
 
