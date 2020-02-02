@@ -91,6 +91,19 @@ namespace Server.DataBase
 
         #region CUD region
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async void AddSignInLogAsync(User user)
+        {
+            await QueryAsync<long>(async con =>
+            {
+                return await con.InsertAsync(new SignInLog { UserId = user.Id });
+            });
+        }
+
+        /// <summary>
         /// Регистрация нового пользователя.
         /// </summary>
         /// <param name="user">Пользователь.</param>
@@ -225,11 +238,14 @@ namespace Server.DataBase
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync()
+        public async Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            return QueryAsync(async con =>
+            KursachResponse<Staff, bool> response = null;
+            bool added = false;
+
+            var query = await QueryAsync(async con =>
             {
-                var staff = await con.QueryFirstOrDefaultAsync<Staff>("SELECT id FROM staff");
+                var staff = await con.QueryFirstOrDefaultAsync<Staff>("SELECT id FROM staff LIMIT 1");
                 if (staff == null)
                 {
                     staff = new Staff
@@ -240,12 +256,16 @@ namespace Server.DataBase
                         Position = "Должность"
                     };
 
-                    var insert = await AddStaffAsync(staff);
+                    added = await AddStaffAsync(staff);
 
-                    return insert.Response ? staff.Id : -1;
+                    return added ? staff : null;
                 }
-                else return staff.Id;
+                else return staff;
             });
+
+            response = new KursachResponse<Staff, bool>(query.Code, added, query.Response);
+
+            return response;
         }
         #endregion
 
@@ -297,13 +317,15 @@ namespace Server.DataBase
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
-        /// <param name="groupId">ИД группы.</param>
+        /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId = -1)
         {
-            return QueryAsync(async con =>
+            return QueryAsync(con =>
             {
-                return await con.QueryAsync<Student>("SELECT * FROM students WHERE groupId = @groupId", new { groupId });
+                if (groupId > -1)
+                    return con.QueryAsync<Student>("SELECT * FROM students WHERE groupId = @groupId", new { groupId });
+                else return con.QueryAsync<Student>("SELECT * FROM students");
             }, Enumerable.Empty<Student>());
         }
 
