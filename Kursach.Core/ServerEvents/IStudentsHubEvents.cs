@@ -5,15 +5,8 @@ namespace Kursach.Core.ServerEvents
     /// <summary>
     /// Список событий в хабе студентов.
     /// </summary>
-    public interface StudentsEvents
+    public interface IStudentsHubEvents : IChangedEvent<Student>
     {
-        /// <summary>
-        /// Изменение студента.
-        /// </summary>
-        /// <param name="status">Статус.</param>
-        /// <param name="student">Студент.</param>
-        void StudentChanged(DbChangeStatus status, Student student);
-
         /// <summary>
         /// Пользователь импортировал список студентов в группу.
         /// </summary>
