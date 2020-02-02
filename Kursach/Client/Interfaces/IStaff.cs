@@ -7,7 +7,7 @@ namespace Kursach.Client.Interfaces
     /// <summary>
     /// Управление сотрудниками.
     /// </summary>
-    interface IStaff : StaffMethods
+    interface IStaff : IStaffHub
     {
         /// <summary>
         /// Сотрудник изменен.

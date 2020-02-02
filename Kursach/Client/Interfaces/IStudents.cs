@@ -7,7 +7,7 @@ namespace Kursach.Client.Interfaces
     /// <summary>
     /// Управление студентами.
     /// </summary>
-    interface IStudents : StudentsMethods
+    interface IStudents : IStudentsHub
     {
         /// <summary>
         /// Студент изменен.

@@ -3,9 +3,9 @@
 namespace Kursach.Client.Interfaces
 {
     /// <summary>
-    /// Авторизация.
+    /// Управление авторизацией.
     /// </summary>
-    interface ILogin : LoginMethods
+    interface ILogin : ILoginHub
     {
 
     }

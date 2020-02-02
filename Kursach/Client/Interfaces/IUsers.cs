@@ -7,7 +7,7 @@ namespace Kursach.Client.Interfaces
     /// <summary>
     /// Управление пользователями.
     /// </summary>
-    interface IUsers : UsersMethods
+    interface IUsers : IUsersHub
     {
         /// <summary>
         /// Пользователь изменен.
