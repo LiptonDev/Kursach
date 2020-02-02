@@ -90,6 +90,7 @@
     <Compile Include="Consts.cs" />
     <Compile Include="DataBase\DataBase.cs" />
     <Compile Include="DataBase\IDataBase.cs" />
+    <Compile Include="Hubs\AdminHubAttribute.cs" />
     <Compile Include="Hubs\AuthorizeUserAttribute.cs" />
     <Compile Include="Hubs\GroupsHub.cs" />
     <Compile Include="Hubs\HubHelper.cs" />

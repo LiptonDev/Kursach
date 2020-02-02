@@ -18,17 +18,23 @@ namespace Server
             string url = "http://localhost:8080";
             if (args.Length == 0)
                 args = new[] { url };
-
-            using (WebApp.Start(args[0]))
+            try
             {
-                Console.WriteLine("Server running on {0}", args[0]);
-
-                Logger.Log.Info("Server started");
-
-                while (true)
+                using (WebApp.Start(args[0]))
                 {
-                    Console.ReadLine();
+                    Console.WriteLine("Server running on {0}", args[0]);
+
+                    Logger.Log.Info("Server started");
+
+                    while (true)
+                    {
+                        Console.ReadLine();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Global exception", ex);
             }
         }
     }
