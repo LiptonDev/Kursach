@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Server.Hubs
 {
-    /// <summary>
+    /// <summary>C:\Users\Alexandr\source\repos\Kursach\Server\Hubs\StudentsHub.cs
     /// Хаб студентов.
     /// </summary>
     [AuthorizeUser]
     [HubName(HubNames.StudentsHub)]
-    public class StudentsHub : Hub<StudentsEvents>, StudentsMethods
+    public class StudentsHub : Hub<IStudentsHubEvents>, IStudentsHub
     {
         /// <summary>
         /// База данных.
@@ -67,7 +67,7 @@ namespace Server.Hubs
             var res = await dataBase.AddStudentAsync(student);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StudentChanged(DbChangeStatus.Add, student);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, student);
 
             return res;
         }
@@ -102,7 +102,7 @@ namespace Server.Hubs
             var res = await dataBase.SaveStudentAsync(student);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StudentChanged(DbChangeStatus.Update, student);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, student);
 
             return res;
         }
@@ -119,7 +119,7 @@ namespace Server.Hubs
             var res = await dataBase.RemoveStudentAsync(student);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StudentChanged(DbChangeStatus.Remove, student);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, student);
 
             return res;
         }

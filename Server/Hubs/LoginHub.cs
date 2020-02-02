@@ -14,12 +14,12 @@ namespace Server.Hubs
     /// Хаб авторизации.
     /// </summary>
     [HubName(HubNames.LoginHub)]
-    public class LoginHub : Hub, LoginMethods
+    public class LoginHub : Hub, ILoginHub
     {
         /// <summary>
         /// Пользователи.
         /// </summary>
-        public static ConcurrentDictionary<string, bool> Users { get; } = new ConcurrentDictionary<string, bool>();
+        public static ConcurrentDictionary<string, UserMode> Users { get; } = new ConcurrentDictionary<string, UserMode>();
 
         /// <summary>
         /// База данных.
@@ -42,22 +42,41 @@ namespace Server.Hubs
         /// <returns></returns>
         public async Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
+            var id = Context.ConnectionId;
             var res = await dataBase.GetUserAsync(login, password, true);
 
             LoginResponse loginResponse = LoginResponse.Invalid;
-            Users[Context.ConnectionId] = res && res.Response != null;
             if (res && res.Response != null)
             {
                 loginResponse = LoginResponse.Ok;
-                await HubHelper.GetHubContext<UsersHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
-                await HubHelper.GetHubContext<StaffHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
-                await HubHelper.GetHubContext<GroupsHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
-                await HubHelper.GetHubContext<StudentsHub>().Groups.Add(Context.ConnectionId, Consts.AuthorizedGroup);
+
+                if (res.Response.Mode == UserMode.Admin)
+                    await HubHelper.AddToAdminGroup<UsersHub>(id);
+
+                await HubHelper.AddToAuthorizedGroup<UsersHub>(id);
+                await HubHelper.AddToAuthorizedGroup<StaffHub>(id);
+                await HubHelper.AddToAuthorizedGroup<StudentsHub>(id);
+                await HubHelper.AddToAuthorizedGroup<GroupsHub>(id);
+
+                dataBase.AddSignInLogAsync(res.Response);
+
+                Users[id] = res.Response.Mode;
             }
 
-            Console.WriteLine($"Set status: {Context.ConnectionId} => {Users[Context.ConnectionId]}");
+            Console.WriteLine($"{Context.ConnectionId} logged in");
 
             return new KursachResponse<User, LoginResponse>(res.Code, loginResponse, res.Response);
+        }
+
+        /// <summary>
+        /// Пользователь подключен.
+        /// </summary>
+        /// <returns></returns>
+        public override Task OnConnected()
+        {
+            Console.WriteLine($"{Context.ConnectionId} connected");
+
+            return base.OnConnected();
         }
 
         /// <summary>
@@ -66,7 +85,11 @@ namespace Server.Hubs
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
-            Users.TryRemove(Context.ConnectionId, out _);
+            var id = Context.ConnectionId;
+
+            Users.TryRemove(id, out _);
+
+            Console.WriteLine($"{id} disconnected");
 
             return base.OnDisconnected(stopCalled);
         }
@@ -74,16 +97,19 @@ namespace Server.Hubs
         /// <summary>
         /// Выход.
         /// </summary>
-        public void Logout()
+        public async void Logout()
         {
-            Users.TryRemove(Context.ConnectionId, out _);
+            var id = Context.ConnectionId;
 
-            Console.WriteLine($"Set status: {Context.ConnectionId} => False");
+            Users.TryRemove(id, out _);
 
-            HubHelper.GetHubContext<UsersHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
-            HubHelper.GetHubContext<StaffHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
-            HubHelper.GetHubContext<GroupsHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
-            HubHelper.GetHubContext<StudentsHub>().Groups.Remove(Context.ConnectionId, Consts.AuthorizedGroup);
+            Console.WriteLine($"{id} logged out");
+
+            await HubHelper.RemoveFromAdminGroup<UsersHub>(id);
+            await HubHelper.RemoveFromAuthorizedGroup<UsersHub>(id);
+            await HubHelper.RemoveFromAuthorizedGroup<StaffHub>(id);
+            await HubHelper.RemoveFromAuthorizedGroup<StudentsHub>(id);
+            await HubHelper.RemoveFromAuthorizedGroup<GroupsHub>(id);
         }
     }
 }

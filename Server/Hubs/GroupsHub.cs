@@ -16,7 +16,7 @@ namespace Server.Hubs
     /// </summary>
     [AuthorizeUser]
     [HubName(HubNames.GroupsHub)]
-    public class GroupsHub : Hub<GroupsEvents>, GroupsMethods
+    public class GroupsHub : Hub<IGroupsHubEvents>, IGroupsHub
     {
         /// <summary>
         /// База данных.
@@ -73,7 +73,7 @@ namespace Server.Hubs
             var res = await dataBase.AddGroupAsync(group);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).GroupChanged(DbChangeStatus.Add, group);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, group);
 
             return res;
         }
@@ -90,7 +90,7 @@ namespace Server.Hubs
             var res = await dataBase.SaveGroupAsync(group);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).GroupChanged(DbChangeStatus.Update, group);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, group);
 
             return res;
         }
@@ -107,7 +107,7 @@ namespace Server.Hubs
             var res = await dataBase.RemoveGroupAsync(group);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).GroupChanged(DbChangeStatus.Remove, group);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, group);
 
             return res;
         }

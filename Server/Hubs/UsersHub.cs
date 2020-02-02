@@ -14,8 +14,9 @@ namespace Server.Hubs
     /// Хаб пользователей.
     /// </summary>
     [AuthorizeUser]
+    [AdminHub]
     [HubName(HubNames.UsersHub)]
-    public class UsersHub : Hub<UsersEvents>, UsersMethods
+    public class UsersHub : Hub<IUsersHubEvents>, IUsersHub
     {
         /// <summary>
         /// База данных.
@@ -78,7 +79,7 @@ namespace Server.Hubs
             var res = await dataBase.AddUserAsync(user);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).UserChanged(DbChangeStatus.Add, user);
+                Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Add, user);
 
             return res;
         }
@@ -95,7 +96,7 @@ namespace Server.Hubs
             var res = await dataBase.SaveUserAsync(user);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).UserChanged(DbChangeStatus.Update, user);
+                Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Update, user);
 
             return res;
         }
@@ -112,7 +113,7 @@ namespace Server.Hubs
             var res = await dataBase.RemoveUserAsync(user);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).UserChanged(DbChangeStatus.Remove, user);
+                Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Remove, user);
 
             return res;
         }

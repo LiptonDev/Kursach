@@ -15,7 +15,7 @@ namespace Server.Hubs
     /// </summary>
     [AuthorizeUser]
     [HubName(HubNames.StaffHub)]
-    public class StaffHub : Hub<StaffEvents>, StaffMethods
+    public class StaffHub : Hub<IStaffHubEvents>, IStaffHub
     {
         /// <summary>
         /// База данных.
@@ -44,9 +44,16 @@ namespace Server.Hubs
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync()
+        public async Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            return dataBase.GetOrCreateFirstStaffIdAsync();
+            var res = await dataBase.GetOrCreateFirstStaffAsync();
+
+            if (res && res.Arg) //Сотрудник был добавлен
+            {
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, res.Response);
+            }
+
+            return res;
         }
         #endregion
 
@@ -63,7 +70,7 @@ namespace Server.Hubs
             var res = await dataBase.AddStaffAsync(staff);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StaffChange(DbChangeStatus.Add, staff);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, staff);
 
             return res;
         }
@@ -80,7 +87,7 @@ namespace Server.Hubs
             var res = await dataBase.SaveStaffAsync(staff);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StaffChange(DbChangeStatus.Update, staff);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, staff);
 
             return res;
         }
@@ -97,7 +104,7 @@ namespace Server.Hubs
             var res = await dataBase.RemoveStaffAsync(staff);
 
             if (res)
-                Clients.Group(Consts.AuthorizedGroup).StaffChange(DbChangeStatus.Remove, staff);
+                Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, staff);
 
             return res;
         }
