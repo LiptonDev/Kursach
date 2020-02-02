@@ -1,7 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using Kursach.Client.Interfaces;
 using MaterialDesignXaml.DialogsHelper;
-using System.Collections.ObjectModel;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Kursach.Dialogs
@@ -14,7 +14,7 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Все данные.
         /// </summary>
-        public ObservableCollection<T> Items { get; }
+        public ListCollectionView Items { get; protected set; }
 
         /// <summary>
         /// Выбранные данные.
@@ -42,16 +42,12 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public BaseSelectorViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client)
+        public BaseSelectorViewModel(IDialogIdentifier dialogIdentifier, IClient client)
         {
             OwnerIdentifier = dialogIdentifier;
             this.client = client;
 
-            Items = new ObservableCollection<T>();
-
             CloseDialogCommand = new DelegateCommand(CloseDialog);
-
-            Load(currentId);
         }
 
         /// <summary>
@@ -69,10 +65,5 @@ namespace Kursach.Dialogs
 
             this.Close(SelectedItem);
         }
-
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        public abstract void Load(int currentId);
     }
 }

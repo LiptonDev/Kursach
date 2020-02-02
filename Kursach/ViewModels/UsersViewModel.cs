@@ -2,13 +2,12 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
+using Kursach.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kursach.ViewModels
@@ -37,36 +36,13 @@ namespace Kursach.ViewModels
         public UsersViewModel(IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
                               IClient client,
+                              IDataProvider dataProvider,
                               IContainer container)
-            : base(dialogManager, snackbarMessageQueue, client, container)
+            : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
-            Users = new ObservableCollection<User>();
+            Users = dataProvider.Users;
 
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
-
-            client.Users.OnChanged += Users_OnChanged;
-        }
-
-        /// <summary>
-        /// Изменения пользователей.
-        /// </summary>
-        private void Users_OnChanged(DbChangeStatus status, User user)
-        {
-            switch (status)
-            {
-                case DbChangeStatus.Add:
-                    Users.Add(user);
-                    break;
-
-                case DbChangeStatus.Update:
-                    var current = Users.FirstOrDefault(x => x.Id == user.Id);
-                    current?.SetAllFields(user);
-                    break;
-
-                case DbChangeStatus.Remove:
-                    Users.Remove(user);
-                    break;
-            }
         }
 
         /// <summary>
@@ -129,17 +105,6 @@ namespace Kursach.ViewModels
         private void ShowLogs(User user)
         {
             dialogManager.ShowLogs(user);
-        }
-
-        /// <summary>
-        /// Загрузка всех пользователей.
-        /// </summary>
-        protected override async void Load()
-        {
-            Users.Clear();
-            var res = await client.Users.GetUsersAsync();
-            if (res)
-                Users.AddRange(res.Response);
         }
 
         void Log(string msg, User user)

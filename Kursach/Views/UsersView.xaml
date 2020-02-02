@@ -35,9 +35,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
-                        <StackPanel Margin="5"
-                                    Style="{StaticResource MarginTextBoxesStackPanel}">
-
+                        <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"/>
 
                             <TextBlock Text="{Binding Mode, Converter={StaticResource EnumDescriptionConverter}, StringFormat='Права пользователя: {0}'}"/>

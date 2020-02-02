@@ -1,9 +1,9 @@
-﻿using DevExpress.Mvvm;
-using Kursach.Client.Interfaces;
+﻿using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
+using Kursach.Providers;
 using MaterialDesignXaml.DialogsHelper;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Data;
 
 namespace Kursach.Dialogs
 {
@@ -24,23 +24,13 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client)
-            : base(currentId, dialogIdentifier, client)
+        public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client, IDataProvider dataProvider)
+            : base(dialogIdentifier, client)
         {
-        }
+            var staff = dataProvider.Staff;
+            Items = new ListCollectionView(staff);
 
-
-        /// <summary>
-        /// Загрузка всех сотрудников.
-        /// </summary>
-        public override async void Load(int currentId)
-        {
-            var res = await client.Staff.GetStaffsAsync();
-            if (res)
-            {
-                Items.AddRange(res.Response);
-                SelectedItem = Items.FirstOrDefault(x => x.Id == currentId);
-            }
+            SelectedItem = staff.FirstOrDefault(x => x.Id == currentId);
         }
     }
 }

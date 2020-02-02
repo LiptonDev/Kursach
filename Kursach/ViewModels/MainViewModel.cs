@@ -2,6 +2,7 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
+using Kursach.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -38,6 +39,11 @@ namespace Kursach.ViewModels
         readonly IClient client;
 
         /// <summary>
+        /// Поставщик данных.
+        /// </summary>
+        readonly IDataProvider dataProvider;
+
+        /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public MainViewModel()
@@ -52,11 +58,12 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IClient client, IContainer container)
+        public MainViewModel(IRegionManager regionManager, IClient client, IDataProvider dataProvider, IContainer container)
         {
             this.regionManager = regionManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.client = client;
+            this.dataProvider = dataProvider;
 
             OpenUsersCommand = new DelegateCommand(OpenUsers);
             ExitCommand = new DelegateCommand(Exit);
@@ -180,6 +187,8 @@ namespace Kursach.ViewModels
                 return;
 
             base.OnNavigatedTo(navigationContext);
+
+            dataProvider.Load(User.Mode);
         }
     }
 }

@@ -12,7 +12,7 @@
     Style="{StaticResource MaxSizeUserControl}">
 
     <material:DialogHost Identifier="{Binding Identifier}">
-        <StackPanel Margin="5">
+        <StackPanel>
             <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
 
             <TextBox Text="{Binding EditableObject.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"

@@ -1,8 +1,7 @@
-﻿using DevExpress.Mvvm;
-using DryIoc;
+﻿using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
-using System.Collections.ObjectModel;
+using Kursach.Providers;
 using System.Linq;
 using System.Windows.Data;
 
@@ -18,11 +17,6 @@ namespace Kursach.Dialogs
         /// Группы.
         /// </summary>
         public ListCollectionView Groups { get; }
-
-        /// <summary>
-        /// Группы.
-        /// </summary>
-        ObservableCollection<Group> groups { get; }
 
         Group selectedGroup;
         /// <summary>
@@ -68,6 +62,7 @@ namespace Kursach.Dialogs
                                       bool isEditMode,
                                       int groupId,
                                       IClient client,
+                                      IDataProvider dataProvider,
                                       IDialogManager dialogManager,
                                       IContainer container)
             : base(student, isEditMode, container)
@@ -75,25 +70,10 @@ namespace Kursach.Dialogs
             this.dialogManager = dialogManager;
             this.client = client;
 
-            groups = new ObservableCollection<Group>();
-
-            Groups = new ListCollectionView(groups);
+            Groups = new ListCollectionView(dataProvider.Groups);
             Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 
-            Load(groupId);
-        }
-
-        /// <summary>
-        /// Загрузка групп.
-        /// </summary>
-        private async void Load(int groupId)
-        {
-            var res = await client.Groups.GetGroupsAsync();
-            if (res)
-            {
-                groups.AddRange(res.Response);
-                SelectedGroup = groups.FirstOrDefault(x => x.Id == groupId);
-            }
+            SelectedGroup = dataProvider.Groups.FirstOrDefault(x => x.Id == groupId);
         }
     }
 }

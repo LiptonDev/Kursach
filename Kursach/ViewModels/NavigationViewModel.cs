@@ -11,14 +11,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public User User { get; set; }
 
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        protected virtual void Load()
-        {
-
-        }
-
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
@@ -33,11 +25,11 @@ namespace Kursach.ViewModels
             if (navigationContext.Parameters.ContainsKey("user"))
             {
                 var user = navigationContext.Parameters["user"] as User;
-                User = user;
-                User.Mode = user.Mode;
-            }
+                if (User == null)
+                    User = new User();
 
-            Load();
+                User.SetAllFields(user);
+            }
         }
     }
 }

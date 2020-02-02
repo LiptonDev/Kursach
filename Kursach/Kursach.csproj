@@ -164,7 +164,6 @@
     <Compile Include="Client\Design\DesignUsers.cs" />
     <Compile Include="Client\Classes\Staffs.cs" />
     <Compile Include="Client\Classes\Groups.cs" />
-    <Compile Include="Client\Delegates\GroupsImportDelegate.cs" />
     <Compile Include="Client\Classes\HubConfigurator.cs" />
     <Compile Include="Client\Interfaces\IClient.cs" />
     <Compile Include="Client\Interfaces\IGroups.cs" />
@@ -201,10 +200,9 @@
       <DependentUpon>SelectorButtons.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ActualSizeConverter.cs" />
+    <Compile Include="Converters\BoolToValueConverter.cs" />
     <Compile Include="Converters\DivisionConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
-    <Compile Include="Converters\ExpelledConverter.cs" />
-    <Compile Include="Converters\IsBudgetConverter.cs" />
     <Compile Include="Converters\UserModeToVisibility.cs" />
     <Compile Include="Excel\GroupsImporter.cs" />
     <Compile Include="Dialogs\IDialogsFactoryView.cs" />
@@ -225,6 +223,9 @@
     <Compile Include="Dialogs\BaseEditModeViewModel.cs" />
     <Compile Include="Dialogs\BaseSelectorViewModel.cs" />
     <Compile Include="Helpers\ChangeAllFields.cs" />
+    <Compile Include="Helpers\ObservableCollectionRelationship.cs" />
+    <Compile Include="Providers\DataProvider.cs" />
+    <Compile Include="Providers\IDataProvider.cs" />
     <Compile Include="UI\BoundPasswordBox.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Dialogs\GroupEditorViewModel.cs" />

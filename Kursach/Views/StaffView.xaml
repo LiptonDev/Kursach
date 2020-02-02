@@ -29,11 +29,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <material:Card Margin="5">
-                        <StackPanel Margin="5">
-                            <StackPanel.Resources>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
-                            </StackPanel.Resources>
-
+                        <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"/>
 
                             <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"/>

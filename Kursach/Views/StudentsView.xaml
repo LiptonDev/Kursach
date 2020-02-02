@@ -9,12 +9,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Kursach.ViewModels"
+    xmlns:models="clr-namespace:Kursach.Core.Models;assembly=Kursach.Core"
+    xmlns:win="clr-namespace:System.Windows;assembly=PresentationCore"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:StudentsViewModel, IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
-        <converters:ExpelledConverter x:Key="ExpelledConverter"/>
+        <converters:BoolToValueConverter x:Key="ExpelledConverter" TrueValue="Студент отчислен" FalseValue="Студент не отчислен"/>
+        <converters:BoolToValueConverter x:Key="OnSabbaticalConverter" TrueValue="Студент в академ. отпуске" FalseValue="{x:Null}"/>
     </UserControl.Resources>
 
     <Grid>
@@ -39,17 +42,16 @@
                       Grid.Row="2">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <material:Card Margin="5">
-                        <StackPanel Margin="5">
-                            <StackPanel.Resources>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
-                            </StackPanel.Resources>
-
+                    <material:Card Margin="5"
+                                   d:DataContext="{d:DesignInstance Type=models:Student, IsDesignTimeCreatable=True}">
+                        <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding FullName, StringFormat='ФИО: {0}'}"/>
 
                             <TextBlock Text="{Binding Birthdate, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}"/>
 
                             <TextBlock Text="{Binding Expelled, Converter={StaticResource ExpelledConverter}}"/>
+
+                            <TextBlock Text="{Binding OnSabbatical, Converter={StaticResource OnSabbaticalConverter}}"/>
 
                             <controls:EditDeleteButtons/>
                         </StackPanel>

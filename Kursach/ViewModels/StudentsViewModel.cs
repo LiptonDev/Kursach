@@ -5,9 +5,11 @@ using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using Kursach.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -28,14 +30,9 @@ namespace Kursach.ViewModels
         public ListCollectionView Groups { get; }
 
         /// <summary>
-        /// Группы.
-        /// </summary>
-        ObservableCollection<Group> groups;
-
-        /// <summary>
         /// Студенты выбранной группы.
         /// </summary>
-        public ObservableCollection<Student> Students { get; }
+        public ListCollectionView Students { get; }
 
         Group selectedGroup;
         /// <summary>
@@ -47,7 +44,7 @@ namespace Kursach.ViewModels
             set
             {
                 selectedGroup = value;
-                LoadStudents();
+                Students.Refresh();
             }
         }
 
@@ -77,74 +74,35 @@ namespace Kursach.ViewModels
                                  IAsyncImporter<IEnumerable<Student>, Group> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
                                  IClient client,
+                                 IDataProvider dataProvider,
                                  IContainer container)
-            : base(dialogManager, snackbarMessageQueue, client, container)
+            : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
             this.exporter = exporter;
             this.importer = importer;
 
-            groups = new ObservableCollection<Group>();
-            Students = new ObservableCollection<Student>();
-
-            Groups = new ListCollectionView(groups);
+            Students = new ListCollectionView(dataProvider.Students);
+            Students.Filter += StudentFilter;
+            Groups = new ListCollectionView(dataProvider.Groups);
             Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
-
-            client.Students.OnChanged += Students_OnChanged;
-            client.Students.Imported += Students_Imported;
         }
 
         /// <summary>
-        /// Импортированы студенты.
+        /// Фильтрация студентов.
         /// </summary>
-        /// <param name="groupId">ИД группы, в которую были импортированы студенты.</param>
-        private void Students_Imported(int groupId)
+        /// <param name="student">Студент.</param>
+        /// <returns></returns>
+        private bool StudentFilter(object student)
         {
-            if (SelectedGroup.Id == groupId)
-                LoadStudents();
-        }
+            if (selectedGroup == null)
+                return false;
 
-        /// <summary>
-        /// Изменения в студентах.
-        /// </summary>
-        private void Students_OnChanged(DbChangeStatus status, Student student)
-        {
-            switch (status)
-            {
-                case DbChangeStatus.Add:
-                    if (selectedGroup != null && selectedGroup.Id == student.GroupId)
-                        Students.Add(student);
-                    break;
+            var st = (Student)student;
 
-                case DbChangeStatus.Update:
-                    if (selectedGroup == null)
-                        return;
-
-                    bool contains = Students.Contains(student);
-                    if (student.GroupId != selectedGroup.Id && contains)
-                    {
-                        Students.Remove(student);
-                    }
-                    else if (student.GroupId == selectedGroup.Id && !contains)
-                    {
-                        Students.Add(student);
-                    }
-                    else
-                    {
-                        var current = Students.FirstOrDefault(x => x.Id == student.Id);
-                        current?.SetAllFields(student);
-                    }
-                    break;
-
-                case DbChangeStatus.Remove:
-                    if (selectedGroup != null && selectedGroup.Id == student.GroupId && Students.Contains(student))
-                    {
-                        Students.Remove(student);
-                    }
-                    break;
-            }
+            return st.GroupId == selectedGroup.Id;
         }
 
         /// <summary>
@@ -214,7 +172,7 @@ namespace Kursach.ViewModels
                 return;
             }
 
-            var res = exporter.Export(selectedGroup, Students);
+            var res = exporter.Export(selectedGroup, dataProvider.Students.Where(x => x.GroupId == selectedGroup.Id));
             var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
@@ -243,31 +201,6 @@ namespace Kursach.ViewModels
             {
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
             }
-        }
-
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        protected override async void Load()
-        {
-            groups.Clear();
-            var res = await client.Groups.GetGroupsAsync();
-            if (res)
-                groups.AddRange(res.Response);
-        }
-
-        /// <summary>
-        /// Загрузка студентов группы.
-        /// </summary>
-        private async void LoadStudents()
-        {
-            Students.Clear();
-            if (selectedGroup == null)
-                return;
-
-            var res = await client.Students.GetStudentsAsync(selectedGroup.Id);
-            if (res)
-                Students.AddRange(res.Response);
         }
 
         void Log(string msg, Student student)

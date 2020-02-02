@@ -2,16 +2,16 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using Kursach.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Kursach.ViewModels
@@ -24,7 +24,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<Group> Groups { get; }
+        public ListCollectionView Groups { get; }
 
         int selectedDivision = -1;
         /// <summary>
@@ -36,7 +36,7 @@ namespace Kursach.ViewModels
             set
             {
                 selectedDivision = value;
-                Load();
+                Groups.Refresh();
             }
         }
 
@@ -66,63 +66,30 @@ namespace Kursach.ViewModels
                                IAsyncImporter<IEnumerable<Group>> importer,
                                ISnackbarMessageQueue snackbarMessageQueue,
                                IClient client,
+                               IDataProvider dataProvider,
                                IContainer container)
-            : base(dialogManager, snackbarMessageQueue, client, container)
+            : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
             this.exporter = exporter;
             this.importer = importer;
 
-            Groups = new ObservableCollection<Group>();
+            Groups = new ListCollectionView(dataProvider.Groups);
+            Groups.Filter += FilerGroup;
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
-
-            client.Groups.OnChanged += Groups_OnChanged;
-            client.Groups.Imported += Groups_Imported;
         }
 
         /// <summary>
-        /// Группы были импортированы.
+        /// Фильтрация группы.
         /// </summary>
-        private void Groups_Imported()
+        /// <param name="group">Группа.</param>
+        /// <returns></returns>
+        private bool FilerGroup(object group)
         {
-            Load();
-        }
+            var gr = (Group)group;
 
-        /// <summary>
-        /// Изменения групп.
-        /// </summary>
-        private void Groups_OnChanged(DbChangeStatus status, Group group)
-        {
-            switch (status)
-            {
-                case DbChangeStatus.Add:
-                    if (group.Division == selectedDivision)
-                        Groups.Add(group);
-                    break;
-
-                case DbChangeStatus.Update:
-                    bool contains = Groups.Contains(group);
-                    if (group.Division != selectedDivision && contains)
-                    {
-                        Groups.Remove(group);
-                    }
-                    else if (group.Division == selectedDivision && !contains)
-                    {
-                        Groups.Add(group);
-                    }
-                    else
-                    {
-                        var current = Groups.FirstOrDefault(x => x.Division == selectedDivision);
-                        current?.SetAllFields(group);
-                    }
-                    break;
-
-                case DbChangeStatus.Remove:
-                    if (group.Division == selectedDivision)
-                        Groups.Remove(group);
-                    break;
-            }
+            return gr.Division == selectedDivision;
         }
 
         /// <summary>
@@ -213,20 +180,6 @@ namespace Kursach.ViewModels
 
             if (res)
                 snackbarMessageQueue.Enqueue($"Добавлено групп: {groups.Count()}");
-        }
-
-        /// <summary>
-        /// Загрузка групп.
-        /// </summary>
-        protected override async void Load()
-        {
-            if (SelectedDivision == -1)
-                return;
-
-            Groups.Clear();
-            var res = await client.Groups.GetGroupsAsync(SelectedDivision);
-            if (res)
-                Groups.AddRange(res.Response);
         }
 
         void Log(string msg, Group group)

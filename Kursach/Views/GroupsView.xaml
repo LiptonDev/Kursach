@@ -10,11 +10,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Kursach.ViewModels"
+    xmlns:models="clr-namespace:Kursach.Core.Models;assembly=Kursach.Core"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:GroupsViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
-        <converters:IsBudgetConverter x:Key="IsBudgetConverter"/>
+        <converters:BoolToValueConverter x:Key="IsBudgetConverter" TrueValue="Бюджетная группа" FalseValue="Коммерческая группа"/>
+        <converters:BoolToValueConverter x:Key="IsIntramuralConverter" TrueValue="Очная группа" FalseValue="Заочная группа"/>
     </UserControl.Resources>
 
     <Grid>
@@ -52,13 +54,14 @@
                       Grid.Row="2">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <material:Card Margin="5">
-                        <StackPanel Margin="5" 
-                                    Style="{StaticResource MarginTextBoxesStackPanel}">
-
+                    <material:Card Margin="5"
+                                   d:DataContext="{d:DesignInstance Type=models:Group, IsDesignTimeCreatable=True}">
+                        <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
 
                             <TextBlock Text="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
+
+                            <TextBlock Text="{Binding IsIntramural, Converter={StaticResource IsIntramuralConverter}}"/>
 
                             <controls:EditDeleteButtons/>
                         </StackPanel>

@@ -5,6 +5,7 @@ using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using Kursach.Providers;
 using Kursach.ViewModels;
 using Kursach.Views;
 using MaterialDesignThemes.Wpf;
@@ -63,7 +64,6 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IStudents, Students>();
             containerRegistry.RegisterSingleton<ILogin, Login>();
             containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
-            containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
 #else
             containerRegistry.RegisterSingleton<IUsers, DesignUsers>();
             containerRegistry.RegisterSingleton<IStaff, DesignStaff>();
@@ -71,8 +71,11 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IStudents, DesignStudents>();
             containerRegistry.RegisterSingleton<ILogin, DesignLogin>();
             containerRegistry.RegisterSingleton<IHubConfigurator, DesignConfigurator>();
-            containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
 #endif
+            containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
+
+            //data provider
+            containerRegistry.RegisterSingleton<IDataProvider, DataProvider>();
 
             //sync taskfactory
             containerRegistry.RegisterDelegate<TaskFactory>(x => new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext()), Reuse.Singleton);

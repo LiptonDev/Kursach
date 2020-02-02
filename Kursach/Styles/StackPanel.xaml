@@ -6,10 +6,11 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
-    <Style TargetType="StackPanel" x:Key="MarginTextBoxesStackPanel">
+    <Style TargetType="StackPanel" x:Key="MarginStackPanel">
+        <Setter Property="Margin" Value="5"/>
         <Style.Resources>
             <Style TargetType="TextBlock" BasedOn="{StaticResource MarginBlock}"/>
         </Style.Resources>
     </Style>
-    
+
 </ResourceDictionary>

@@ -26,11 +26,9 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding FullName, StringFormat='ФИО: {0}'}"
-                                   Style="{StaticResource MarginBlock}"/>
+                        <TextBlock Text="{Binding FullName, StringFormat='ФИО: {0}'}"/>
 
-                        <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"
-                                   Style="{StaticResource MarginBlock}"/>
+                        <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"/>
 
                         <Separator/>
                     </StackPanel>

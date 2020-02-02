@@ -3,6 +3,7 @@ using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core;
 using Kursach.Core.Models;
+using Kursach.Providers;
 using Kursach.Properties;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
@@ -33,15 +34,22 @@ namespace Kursach.ViewModels
         readonly IClient client;
 
         /// <summary>
+        /// Поставщик данных.
+        /// </summary>
+        readonly IDataProvider dataProvider;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public LoginViewModel(IRegionManager regionManager,
                               IClient client,
+                              IDataProvider dataProvider,
                               IContainer container)
         {
             this.regionManager = regionManager;
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.client = client;
+            this.dataProvider = dataProvider;
 
             TryLoginCommand = new AsyncCommand(TryLogin);
 
@@ -73,12 +81,12 @@ namespace Kursach.ViewModels
 
             var res = await client.Login.LoginAsync(User.Login, User.Password);
             User user;
-            if (res && res.Error == LoginResponse.Ok)
+            if (res && res.Arg == LoginResponse.Ok)
                 user = res.Response;
             else
             {
                 string msg;
-                switch (res.Error)
+                switch (res.Arg)
                 {
                     case LoginResponse.Ok:
                         msg = "Очень странно, что вы видите это";
@@ -104,7 +112,7 @@ namespace Kursach.ViewModels
                 return;
             }
 
-            if (res && res.Error == LoginResponse.Ok)
+            if (res && res.Arg == LoginResponse.Ok)
             {
                 Consts.LoginStatus = true;
 
@@ -118,6 +126,8 @@ namespace Kursach.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            dataProvider.Clear();
+
             if (navigationContext.Parameters.ContainsKey("fromConnecting"))
             {
                 if (Consts.LoginStatus)

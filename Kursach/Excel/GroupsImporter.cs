@@ -5,6 +5,7 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kursach.Excel
@@ -45,8 +46,12 @@ namespace Kursach.Excel
                     var groups = new List<Group>();
 
                     //первый сотрудник из базы, если нет - создается новый "Иванов Иван Иванович"
-                    var res = await client.Staff.GetOrCreateFirstStaffIdAsync();
-                    int curator = res ? res.Response : -1;
+                    var res = await client.Staff.GetOrCreateFirstStaffAsync();
+                    if (!res)
+                    {
+                        return Enumerable.Empty<Group>();
+                    }
+                    int curator = res.Response.Id;
 
                     for (int i = 0; i < 3; i++)
                     {

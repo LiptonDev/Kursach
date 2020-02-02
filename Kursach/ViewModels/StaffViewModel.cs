@@ -2,15 +2,14 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
+using Kursach.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -46,38 +45,15 @@ namespace Kursach.ViewModels
                               IDialogManager dialogManager,
                               ISnackbarMessageQueue snackbarMessageQueue,
                               IClient client,
+                              IDataProvider dataProvider,
                               IContainer container)
-            : base(dialogManager, snackbarMessageQueue, client, container)
+            : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
             this.exporter = exporter;
 
-            Staff = new ObservableCollection<Staff>();
+            Staff = dataProvider.Staff;
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
-
-            client.Staff.OnChanged += Staff_OnChanged;
-        }
-
-        /// <summary>
-        /// Изменения в сотрудниках.
-        /// </summary>
-        private void Staff_OnChanged(DbChangeStatus status, Staff staff)
-        {
-            switch (status)
-            {
-                case DbChangeStatus.Add:
-                    Staff.Add(staff);
-                    break;
-
-                case DbChangeStatus.Update:
-                    var current = Staff.FirstOrDefault(x => x.Id == staff.Id);
-                    current?.SetAllFields(staff);
-                    break;
-
-                case DbChangeStatus.Remove:
-                    Staff.Remove(staff);
-                    break;
-            }
         }
 
         /// <summary>
@@ -139,17 +115,6 @@ namespace Kursach.ViewModels
             var msg = res ? "Сотрудник удален" : res;
 
             Log(msg, staff);
-        }
-
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        protected override async void Load()
-        {
-            Staff.Clear();
-            var res = await client.Staff.GetStaffsAsync();
-            if (res)
-                Staff.AddRange(res.Response);
         }
 
         void Log(string msg, Staff staff)

@@ -23,7 +23,7 @@
     </UserControl.Resources>
 
     <material:DialogHost Identifier="{Binding Identifier}">
-        <StackPanel Margin="5">
+        <StackPanel>
             <TextBlock Style="{StaticResource IsEditModeTextBlock}"/>
 
             <TextBox Text="{Binding EditableObject.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"

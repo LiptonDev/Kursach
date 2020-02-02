@@ -1,4 +1,6 @@
-﻿namespace Kursach
+﻿using System;
+
+namespace Kursach
 {
     /// <summary>
     /// Магия рефлексии.
@@ -21,7 +23,7 @@
                 var currentProp = props[i];
                 var newProp = newProps[i];
 
-                if (currentProp.GetCustomAttributes(typeof(ChangeIgnoreAttribute), true).Length == 1)
+                if (Attribute.IsDefined(currentProp, typeof(ChangeIgnoreAttribute)))
                     continue;
 
                 currentProp.SetValue(source, newProp.GetValue(newObject));

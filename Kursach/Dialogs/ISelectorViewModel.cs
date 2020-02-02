@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Windows.Data;
 
 namespace Kursach.Dialogs
 {
@@ -10,16 +10,11 @@ namespace Kursach.Dialogs
         /// <summary>
         /// Все данные.
         /// </summary>
-        ObservableCollection<T> Items { get; }
+        ListCollectionView Items { get; }
 
         /// <summary>
         /// Выбранные данные.
         /// </summary>
         T SelectedItem { get; set; }
-
-        /// <summary>
-        /// Загрузка данных.
-        /// </summary>
-        void Load(int currentId);
     }
 }
