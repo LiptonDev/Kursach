@@ -18,7 +18,7 @@ namespace Kursach.Client.Design
         }
 
         public event OnChanged<Group> OnChanged;
-        public event GroupsImported Imported;
+        public event Action Imported;
 
         public Task<KursachResponse<bool>> AddGroupAsync(Group group)
         {

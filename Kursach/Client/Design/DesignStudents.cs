@@ -28,13 +28,13 @@ namespace Kursach.Client.Design
 
         public Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
         {
-            Imported?.Invoke(0);
+            Imported?.Invoke(groupId);
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
 
         public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
-            var students = Enumerable.Range(0, 10).Select(x => new Student
+            var students = Enumerable.Range(0, 15).Select(x => new Student
             {
                 LastName = "Фамилия",
                 FirstName = "Имя",
@@ -42,7 +42,7 @@ namespace Kursach.Client.Design
                 Birthdate = DateTime.Now,
                 DecreeOfEnrollment = "ДА!",
                 Expelled = x % 2 == 0,
-                GroupId = groupId,
+                GroupId = x,
                 Notice = "NOTICE?!",
                 OnSabbatical = x % 5 == 0,
                 PoPkNumber = 1337,

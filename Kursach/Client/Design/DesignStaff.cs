@@ -24,9 +24,9 @@ namespace Kursach.Client.Design
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync()
+        public Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            return Task.FromResult(new KursachResponse<int>(KursachResponseCode.Ok, 0));
+            return Task.FromResult(new KursachResponse<Staff, bool>(KursachResponseCode.Ok, true, GetStaffsAsync().Result.Response.First()));
         }
 
         public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
