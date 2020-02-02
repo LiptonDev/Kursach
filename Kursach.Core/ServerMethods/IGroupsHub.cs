@@ -7,7 +7,7 @@ namespace Kursach.Core.ServerMethods
     /// <summary>
     /// Список методов хаба групп.
     /// </summary>
-    public interface GroupsMethods
+    public interface IGroupsHub
     {
         #region Get region
         /// <summary>

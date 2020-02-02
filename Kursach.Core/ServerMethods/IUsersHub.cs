@@ -7,7 +7,7 @@ namespace Kursach.Core.ServerMethods
     /// <summary>
     /// Список методов хаба пользователей.
     /// </summary>
-    public interface UsersMethods
+    public interface IUsersHub
     {
         #region Get region
         /// <summary>

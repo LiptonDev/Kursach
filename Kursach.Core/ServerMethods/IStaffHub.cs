@@ -7,7 +7,7 @@ namespace Kursach.Core.ServerMethods
     /// <summary>
     /// Список методов хаба сотрудников.
     /// </summary>
-    public interface StaffMethods
+    public interface IStaffHub
     {
         #region Get region
         /// <summary>
@@ -18,9 +18,10 @@ namespace Kursach.Core.ServerMethods
 
         /// <summary>
         /// Получить первого (создать если нет) сотрудника.
+        /// bool = true - сотрудник создан.
         /// </summary>
         /// <returns></returns>
-        Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync();
+        Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync();
         #endregion
 
         #region CUD region

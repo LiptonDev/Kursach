@@ -7,15 +7,15 @@ namespace Kursach.Core.ServerMethods
     /// <summary>
     /// Список методов хаба студентов.
     /// </summary>
-    public interface StudentsMethods
+    public interface IStudentsHub
     {
         #region Get region
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
-        /// <param name="groupId">ИД группы.</param>
+        /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId);
+        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId = -1);
 
         /// <summary>
         /// Получение количества студентов в группах.

@@ -6,7 +6,7 @@ namespace Kursach.Core.ServerMethods
     /// <summary>
     /// Список методов хаба авторизации.
     /// </summary>
-    public interface LoginMethods
+    public interface ILoginHub
     {
         /// <summary>
         /// Авторизация на сервере.
