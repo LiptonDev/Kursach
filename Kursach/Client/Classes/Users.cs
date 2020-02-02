@@ -19,7 +19,7 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Users(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.UsersHub)
         {
-            Proxy.On<DbChangeStatus, User>(nameof(UsersEvents.UserChanged),
+            Proxy.On<DbChangeStatus, User>(nameof(IUsersHubEvents.OnChanged),
                 (status, user) => sync.StartNew(() => OnChanged?.Invoke(status, user)));
         }
 

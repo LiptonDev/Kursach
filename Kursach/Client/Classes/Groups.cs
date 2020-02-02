@@ -4,6 +4,7 @@ using Kursach.Core;
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Groups(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.GroupsHub)
         {
-            Proxy.On<DbChangeStatus, Group>(nameof(GroupsEvents.GroupChanged),
+            Proxy.On<DbChangeStatus, Group>(nameof(IGroupsHubEvents.OnChanged),
                 (status, group) => sync.StartNew(() => OnChanged?.Invoke(status, group)));
 
-            Proxy.On(nameof(GroupsEvents.GroupsImport), () => sync.StartNew(() => Imported?.Invoke()));
+            Proxy.On(nameof(IGroupsHubEvents.GroupsImport), () => sync.StartNew(() => Imported?.Invoke()));
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Группы импортированы.
         /// </summary>
-        public event GroupsImported Imported;
+        public event Action Imported;
 
         #region Get region
         /// <summary>

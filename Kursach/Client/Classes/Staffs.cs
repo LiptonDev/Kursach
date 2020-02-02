@@ -19,7 +19,7 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Staffs(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StaffHub)
         {
-            Proxy.On<DbChangeStatus, Staff>(nameof(StaffEvents.StaffChange),
+            Proxy.On<DbChangeStatus, Staff>(nameof(IStaffHubEvents.OnChanged),
                 (status, staff) => sync.StartNew(() => OnChanged?.Invoke(status, staff)));
         }
 
@@ -42,9 +42,9 @@ namespace Kursach.Client.Classes
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<int>> GetOrCreateFirstStaffIdAsync()
+        public Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            return TryInvokeAsync<int>();
+            return TryInvokeAsync<Staff, bool>();
         }
         #endregion
 

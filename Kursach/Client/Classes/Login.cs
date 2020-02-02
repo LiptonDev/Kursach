@@ -1,6 +1,8 @@
 ﻿using Kursach.Client.Interfaces;
 using Kursach.Core;
 using Kursach.Core.Models;
+using Kursach.Core.ServerEvents;
+using Microsoft.AspNet.SignalR.Client;
 using System.Threading.Tasks;
 
 namespace Kursach.Client.Classes
@@ -13,7 +15,7 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Login(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.LoginHub)
+        public Login(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.LoginHub)
         {
         }
 

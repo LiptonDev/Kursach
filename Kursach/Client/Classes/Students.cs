@@ -19,10 +19,10 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Students(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StudentsHub)
         {
-            Proxy.On<DbChangeStatus, Student>(nameof(StudentsEvents.StudentChanged),
+            Proxy.On<DbChangeStatus, Student>(nameof(IStudentsHubEvents.OnChanged),
                 (status, student) => sync.StartNew(() => OnChanged?.Invoke(status, student)));
 
-            Proxy.On<int>(nameof(StudentsEvents.StudentsImportTo),
+            Proxy.On<int>(nameof(IStudentsHubEvents.StudentsImportTo),
                 (groupId) => sync.StartNew(() => Imported?.Invoke(groupId)));
         }
 
