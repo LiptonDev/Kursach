@@ -6,6 +6,9 @@ using System.Windows.Data;
 
 namespace Kursach.Converters
 {
+    /// <summary>
+    /// Конвертер для получения DescriptionAttribute у Enum'a.
+    /// </summary>
     [ValueConversion(typeof(Enum), typeof(string))]
     class EnumDescriptionConverter : IValueConverter
     {

@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace Kursach.Converters
 {
+    /// <summary>
+    /// Конвертер подразделения.
+    /// </summary>
     class DivisionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

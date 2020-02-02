@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace Kursach.Converters
 {
+    /// <summary>
+    /// Конвертер актуального размера.
+    /// </summary>
 
     [ValueConversion(typeof(double), typeof(double))]
     class ActualSizeConverter : IValueConverter
