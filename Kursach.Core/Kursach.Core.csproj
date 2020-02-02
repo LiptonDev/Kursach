@@ -48,16 +48,17 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserMode.cs" />
     <Compile Include="ServerEvents\DbChangeStatus.cs" />
-    <Compile Include="ServerEvents\GroupsEvents.cs" />
-    <Compile Include="ServerEvents\StaffEvents.cs" />
-    <Compile Include="ServerEvents\StudentsEvents.cs" />
-    <Compile Include="ServerEvents\UsersEvents.cs" />
-    <Compile Include="ServerMethods\GroupsMethods.cs" />
-    <Compile Include="ServerMethods\LoginMethods.cs" />
+    <Compile Include="ServerEvents\IGroupsHubEvents.cs" />
+    <Compile Include="ServerEvents\IChangedEvent.cs" />
+    <Compile Include="ServerEvents\IStaffHubEvents.cs" />
+    <Compile Include="ServerEvents\IStudentsHubEvents.cs" />
+    <Compile Include="ServerEvents\IUsersHubEvents.cs" />
+    <Compile Include="ServerMethods\IGroupsHub.cs" />
+    <Compile Include="ServerMethods\ILoginHub.cs" />
     <Compile Include="ServerMethods\RegisterResponse.cs" />
-    <Compile Include="ServerMethods\StaffMethods.cs" />
-    <Compile Include="ServerMethods\StudentsMethods.cs" />
-    <Compile Include="ServerMethods\UsersMethods.cs" />
+    <Compile Include="ServerMethods\IStaffHub.cs" />
+    <Compile Include="ServerMethods\IStudentsHub.cs" />
+    <Compile Include="ServerMethods\IUsersHub.cs" />
     <Compile Include="ViewModels\ValidateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

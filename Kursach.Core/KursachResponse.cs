@@ -4,20 +4,20 @@
     /// Ответ от сервера.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TError"></typeparam>
-    public class KursachResponse<T, TError> : KursachResponse<T>
+    /// <typeparam name="TArg"></typeparam>
+    public class KursachResponse<T, TArg> : KursachResponse<T>
     {
         /// <summary>
-        /// Ошибка.
+        /// Аргумент.
         /// </summary>
-        public TError Error { get; }
+        public TArg Arg { get; }
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public KursachResponse(KursachResponseCode code, TError error, T response) : base(code, response)
+        public KursachResponse(KursachResponseCode code, TArg arg, T response) : base(code, response)
         {
-            Error = error;
+            Arg = arg;
         }
     }
 
