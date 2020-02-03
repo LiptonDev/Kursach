@@ -1,7 +1,6 @@
 ﻿using Kursach.Client.Delegates;
 using Kursach.Client.Interfaces;
 using Kursach.Core;
-using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 
@@ -17,8 +16,8 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Chat(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.ChatHub)
         {
-            Proxy.On<User, string>(nameof(IChatHubEvents.NewMessage), 
-                (sender, text) => NewMessage?.Invoke(sender, text));
+            Proxy.On<string, string>(nameof(IChatHubEvents.NewMessage), 
+                (senderName, text) => NewMessage?.Invoke(senderName, text));
         }
 
         /// <summary>

@@ -40,7 +40,7 @@
                             HorizontalAlignment="Left"
                             Background="{DynamicResource MaterialDesignTextAreaInactiveBorder}">
                         <StackPanel Style="{StaticResource MarginStackPanel}">
-                            <TextBlock Text="{Binding User.Name, StringFormat='Пользователь: {0}'}"/>
+                            <TextBlock Text="{Binding SenderName, StringFormat='Пользователь: {0}'}"/>
 
                             <TextBlock Text="{Binding Text}"
                                        TextWrapping="Wrap"/>

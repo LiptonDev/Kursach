@@ -11,7 +11,7 @@ namespace Kursach.Models
         /// <summary>
         /// Отправитель.
         /// </summary>
-        public User User { get; }
+        public string SenderName { get; }
 
         /// <summary>
         /// Текст сообщения.
@@ -26,9 +26,9 @@ namespace Kursach.Models
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public ChatMessage(User user, string text)
+        public ChatMessage(string senderName, string text)
         {
-            User = user;
+            SenderName = senderName;
             Text = text;
             Time = DateTime.Now.ToShortTimeString();
         }

@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
 using Kursach.Client.Interfaces;
+using Kursach.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
@@ -35,11 +36,17 @@ namespace Kursach.ViewModels
         readonly IRegionManager regionManager;
 
         /// <summary>
+        /// Менеджер диалогов.
+        /// </summary>
+        readonly IDialogManager dialogManager;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public MainWindowViewModel(IRegionManager regionManager,
                                    ISnackbarMessageQueue messageQueue,
                                    IClient client,
+                                   IDialogManager dialogManager,
                                    IContainer container)
         {
             DialogIdentifier = container.ResolveRootDialogIdentifier();
@@ -47,36 +54,38 @@ namespace Kursach.ViewModels
 
             this.client = client;
             this.regionManager = regionManager;
+            this.dialogManager = dialogManager;
 
-            this.client.HubConfigurator.Connected += NotifyClient_Connected;
-            this.client.HubConfigurator.Disconnected += NotifyClient_Disconnected;
-            this.client.HubConfigurator.Reconnected += NotifyClient_Reconnected;
-            this.client.HubConfigurator.Reconnecting += HubConfigurator_Reconnecting;
+            this.client.HubConfigurator.Connected += Client_Connected;
+            this.client.HubConfigurator.Disconnected += Client_Disconnected;
+            this.client.HubConfigurator.Reconnected += Client_Reconnected;
+            this.client.HubConfigurator.Reconnecting += Client_Reconnecting;
 
             this.client.HubConfigurator.ConnectAsync();
         }
 
-        private void HubConfigurator_Reconnecting()
+        private void Client_Reconnecting()
         {
             Debug.WriteLine("Reconnecting");
+            dialogManager.CloseChatWindow();
             DialogHelper.CloseAll();
             regionManager.RequestNavigateInRootRegion(RegionViews.ConnectingView);
         }
 
-        private void NotifyClient_Reconnected()
+        private void Client_Reconnected()
         {
             Debug.WriteLine("Reconnected");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
 
-        private async void NotifyClient_Disconnected()
+        private async void Client_Disconnected()
         {
             Debug.WriteLine("Disconnected");
             await Task.Delay(2000);
             await client.HubConfigurator.ConnectAsync();
         }
 
-        private void NotifyClient_Connected()
+        private void Client_Connected()
         {
             Debug.WriteLine("Connected");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));

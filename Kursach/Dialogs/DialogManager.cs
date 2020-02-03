@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using Kursach.Core.Models;
+using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
 using Microsoft.Win32;
 using System.Threading.Tasks;
@@ -34,6 +35,43 @@ namespace Kursach.Dialogs
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.container = container;
             this.viewFactory = viewFactory;
+        }
+
+        bool chatWindowOpened = false;
+        ChatWindow currentChatWindow;
+
+        /// <summary>
+        /// Закрыть окно чата.
+        /// </summary>
+        public void CloseChatWindow()
+        {
+            if (!chatWindowOpened)
+                return;
+
+            currentChatWindow.Close();
+        }
+
+        /// <summary>
+        /// Открыть окно чата.
+        /// </summary>
+        public void ShowChatWindow()
+        {
+            if (chatWindowOpened)
+                return;
+
+            currentChatWindow = container.Resolve<ChatWindow>();
+            currentChatWindow.Closed += WindowClosed;
+            currentChatWindow.Show();
+            chatWindowOpened = true;
+        }
+
+        /// <summary>
+        /// Окно чата закрыто.
+        /// </summary>
+        void WindowClosed(object sender, object e)
+        {
+            chatWindowOpened = false;
+            currentChatWindow.Closed -= WindowClosed;
         }
 
         /// <summary>

@@ -38,6 +38,8 @@ namespace Kursach.Client.Classes
         /// <returns></returns>
         public Task TryInvokeAsync([CallerMemberName]string method = null, object[] args = null)
         {
+            args = args ?? new object[0];
+
             if (HubConfigurator.Hub.State != ConnectionState.Connected)
                 return Task.CompletedTask;
 

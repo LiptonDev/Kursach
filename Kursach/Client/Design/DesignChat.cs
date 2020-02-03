@@ -1,6 +1,5 @@
 ﻿using Kursach.Client.Delegates;
 using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
 
 namespace Kursach.Client.Design
 {
@@ -10,7 +9,7 @@ namespace Kursach.Client.Design
 
         public void SendMessage(string text)
         {
-            NewMessage?.Invoke(new User { Name = "DESIGN LOGIN" }, text);
+            NewMessage?.Invoke("DESIGN NAME", text);
         }
     }
 }

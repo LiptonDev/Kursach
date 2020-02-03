@@ -33,10 +33,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public ChatViewModel()
         {
-            Messages = new ObservableCollection<ChatMessage>
-            {
-                new ChatMessage(new Core.Models.User{ Login = "DESIGN NAME"}, "TEXT")
-            };
         }
 
         /// <summary>

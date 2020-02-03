@@ -2,6 +2,7 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
+using Kursach.Dialogs;
 using Kursach.Providers;
 using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
@@ -46,9 +47,9 @@ namespace Kursach.ViewModels
         readonly IDataProvider dataProvider;
 
         /// <summary>
-        /// Контейнер.
+        /// Управление диалогами.
         /// </summary>
-        readonly IContainer container;
+        readonly IDialogManager dialogManager;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -65,13 +66,13 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IClient client, IDataProvider dataProvider, IContainer container)
+        public MainViewModel(IRegionManager regionManager, IClient client, IDataProvider dataProvider, IDialogManager dialogManager, IContainer container)
         {
             this.regionManager = regionManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.client = client;
             this.dataProvider = dataProvider;
-            this.container = container;
+            this.dialogManager = dialogManager;
 
             OpenUsersCommand = new DelegateCommand<string>(Navigate);
             GroupsCommand = new DelegateCommand<string>(Navigate);
@@ -136,7 +137,7 @@ namespace Kursach.ViewModels
         /// </summary>
         private void OpenChatWindow()
         {
-            container.Resolve<ChatWindow>().Show();
+            dialogManager.ShowChatWindow();
             LeftMenuOpened = false;
         }
 
@@ -152,9 +153,10 @@ namespace Kursach.ViewModels
             LeftMenuOpened = false;
             SlideNumber = 0;
             Logger.Log.Info("Выход из приложения");
-            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
             client.Login.Logout();
             Consts.LoginStatus = false;
+            dialogManager.CloseChatWindow();
+            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView);
         }
 
         /// <summary>

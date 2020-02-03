@@ -82,11 +82,11 @@ namespace Kursach.Providers
         /// <summary>
         /// Сообщение в чате.
         /// </summary>
-        /// <param name="sender">Отправитель.</param>
+        /// <param name="senderName">Отправитель.</param>
         /// <param name="text">Текст сообщения.</param>
-        private void Chat_NewMessage(User sender, string text)
+        private void Chat_NewMessage(string senderName, string text)
         {
-            sync.StartNew(() => ChatMessages.Add(new ChatMessage(sender, text)));
+            sync.StartNew(() => ChatMessages.Add(new ChatMessage(senderName, text)));
         }
 
         /// <summary>

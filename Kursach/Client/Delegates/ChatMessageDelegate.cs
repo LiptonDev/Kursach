@@ -1,11 +1,9 @@
-﻿using Kursach.Core.Models;
-
-namespace Kursach.Client.Delegates
+﻿namespace Kursach.Client.Delegates
 {
     /// <summary>
     /// Делегат нового сообщения в чате.
     /// </summary>
-    /// <param name="sender">Отправитель.</param>
+    /// <param name="senderName">Отправитель.</param>
     /// <param name="text">Текст сообщения.</param>
-    delegate void OnChatMessage(User sender, string text);
+    delegate void OnChatMessage(string senderName, string text);
 }

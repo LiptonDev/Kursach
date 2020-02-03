@@ -10,6 +10,16 @@ namespace Kursach.Dialogs
     interface IDialogManager
     {
         /// <summary>
+        /// Открыть окно чата.
+        /// </summary>
+        void ShowChatWindow();
+
+        /// <summary>
+        /// Закрыть окно чата.
+        /// </summary>
+        void CloseChatWindow();
+
+        /// <summary>
         /// Выбор файла для экспорта данных.
         /// </summary>
         /// <param name="defName">Изначальное название файла.</param>
