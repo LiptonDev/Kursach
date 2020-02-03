@@ -1,6 +1,4 @@
-﻿using Kursach.Core.Models;
-
-namespace Kursach.Core.ServerEvents
+﻿namespace Kursach.Core.ServerEvents
 {
     /// <summary>
     /// Список событий в хабе чата.
@@ -10,8 +8,8 @@ namespace Kursach.Core.ServerEvents
         /// <summary>
         /// Новое сообщение в чате.
         /// </summary>
-        /// <param name="sender">Отправитель.</param>
+        /// <param name="senderName">Отправитель.</param>
         /// <param name="text">Текст сообщения.</param>
-        void NewMessage(User sender, string text);
+        void NewMessage(string senderName, string text);
     }
 }
