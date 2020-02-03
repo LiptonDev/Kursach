@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Regx = System.Text.RegularExpressions;
 
 namespace Kursach.Excel
 {
@@ -52,20 +51,6 @@ namespace Kursach.Excel
                             return null;
                     }
 
-                    //старт обучения
-                    group.Start = GetDate(worksheet.Cells["A3"]) ?? group.Start;
-
-                    //окончание обучения
-                    group.End = GetDate(worksheet.Cells["E3"]) ?? group.End;
-
-                    //специальность
-                    var spec = worksheet.Cells["A5"].GetValue<string>() ?? "";
-                    var specMatch = Regx.Regex.Match(spec, "[0-9]{1,2}.{1,255}");
-                    if (specMatch.Success)
-                    {
-                        group.Specialty = specMatch.Value;
-                    }
-
                     //список студентов
                     var students = new List<Student>();
 
@@ -87,13 +72,9 @@ namespace Kursach.Excel
                             Birthdate = DateTime.Parse(worksheet.Cells[8 + i, 4].GetValue<string>()),
                             DecreeOfEnrollment = worksheet.Cells[8 + i, 5].GetValue<string>(),
                             Notice = worksheet.Cells[8 + i, 6].GetValue<string>(),
+                            Expelled = fio.Style.Font.Strike,
                             GroupId = group.Id
                         };
-
-                        if (fio.Style.Font.Strike) //Студент отчислен
-                        {
-                            student.Expelled = true;
-                        }
 
                         students.Add(student);
 
@@ -111,16 +92,6 @@ namespace Kursach.Excel
 
                 return null;
             }
-        }
-
-        const string dateRegex = "[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}";
-        DateTime? GetDate(ExcelRange excelRange)
-        {
-            var date = excelRange.GetValue<string>() ?? "";
-            var dateMatch = date.Match(dateRegex);
-            if (dateMatch.Success)
-                return DateTime.Parse(dateMatch.Value);
-            else return null;
         }
     }
 }
