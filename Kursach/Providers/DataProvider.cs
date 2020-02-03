@@ -2,6 +2,7 @@
 using Kursach.Core.Models;
 using Kursach.Core.ServerEvents;
 using Kursach.Helpers;
+using Kursach.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,9 +35,19 @@ namespace Kursach.Providers
         public ObservableCollection<Student> Students { get; }
 
         /// <summary>
+        /// Сообщения в чате.
+        /// </summary>
+        public ObservableCollection<ChatMessage> ChatMessages { get; }
+
+        /// <summary>
         /// Клиент сервера.
         /// </summary>
         readonly IClient client;
+
+        /// <summary>
+        /// Поток синхронизации.
+        /// </summary>
+        readonly TaskFactory sync;
 
         /// <summary>
         /// Конструктор.
@@ -44,6 +55,7 @@ namespace Kursach.Providers
         public DataProvider(IClient client, TaskFactory sync)
         {
             this.client = client;
+            this.sync = sync;
 
             client.Users.OnChanged += Users_OnChanged;
 
@@ -55,13 +67,26 @@ namespace Kursach.Providers
             client.Students.OnChanged += Students_OnChanged;
             client.Students.Imported += Students_Imported;
 
+            client.Chat.NewMessage += Chat_NewMessage;
+
             Users = new ObservableCollection<User>();
             Staff = new ObservableCollection<Staff>();
             Groups = new ObservableCollection<Group>();
             Students = new ObservableCollection<Student>();
+            ChatMessages = new ObservableCollection<ChatMessage>();
 
             Staff.SetRelationship(Groups, (staff, group) => group.CuratorId == staff.Id, sync);
             Groups.SetRelationship(Students, (group, student) => student.GroupId == group.Id, sync);
+        }
+
+        /// <summary>
+        /// Сообщение в чате.
+        /// </summary>
+        /// <param name="sender">Отправитель.</param>
+        /// <param name="text">Текст сообщения.</param>
+        private void Chat_NewMessage(User sender, string text)
+        {
+            sync.StartNew(() => ChatMessages.Add(new ChatMessage(sender, text)));
         }
 
         /// <summary>
@@ -78,10 +103,10 @@ namespace Kursach.Providers
                 {
                     var forRemove = Students.Where(x => x.GroupId == groupId).ToList();
                     foreach (var item in forRemove)
-                        Students.Remove(item);
+                        await sync.StartNew(() => Students.Remove(item));
                 }
 
-                Students.AddRange(res.Response);
+                await sync.StartNew(() => Students.AddRange(res.Response));
             }
         }
 
@@ -94,8 +119,11 @@ namespace Kursach.Providers
 
             if (group)
             {
-                Groups.Clear();
-                Groups.AddRange(group.Response);
+                await sync.StartNew(() =>
+                {
+                    Groups.Clear();
+                    Groups.AddRange(group.Response);
+                });
             }
         }
 
@@ -108,13 +136,13 @@ namespace Kursach.Providers
             {
                 var users = await client.Users.GetUsersAsync();
                 if (users)
-                    Users.AddRange(users.Response);
+                    await sync.StartNew(() => Users.AddRange(users.Response));
             }
 
             var staff = await client.Staff.GetStaffsAsync();
 
             if (staff)
-                Staff.AddRange(staff.Response);
+                await sync.StartNew(() => Staff.AddRange(staff.Response));
 
             Groups_Imported();
             Students_Imported(-1);
@@ -129,6 +157,7 @@ namespace Kursach.Providers
             Staff.Clear();
             Groups.Clear();
             Students.Clear();
+            ChatMessages.Clear();
         }
 
         /// <summary>
@@ -172,18 +201,21 @@ namespace Kursach.Providers
             {
                 case DbChangeStatus.Add:
                     if (!collection.Contains(arg))
-                        collection.Add(arg);
+                        sync.StartNew(() => collection.Add(arg));
                     break;
 
                 case DbChangeStatus.Update:
                     var item = collection.FirstOrDefault(x => x.Equals(arg));
                     int index = collection.IndexOf(item);
-                    collection.RemoveAt(index);
-                    collection.Insert(index, arg);
+                    sync.StartNew(() =>
+                    {
+                        collection.RemoveAt(index);
+                        collection.Insert(index, arg);
+                    });
                     break;
 
                 case DbChangeStatus.Remove:
-                    collection.Remove(arg);
+                    sync.StartNew(() => collection.Remove(arg));
                     break;
 
                 default:

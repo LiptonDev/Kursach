@@ -1,4 +1,5 @@
 ﻿using Kursach.Core.Models;
+using Kursach.Models;
 using System.Collections.ObjectModel;
 
 namespace Kursach.Providers
@@ -27,6 +28,11 @@ namespace Kursach.Providers
         /// Студенты.
         /// </summary>
         ObservableCollection<Student> Students { get; }
+
+        /// <summary>
+        /// Сообщения в чате.
+        /// </summary>
+        ObservableCollection<ChatMessage> ChatMessages { get; }
 
         /// <summary>
         /// Загрузка данных.
