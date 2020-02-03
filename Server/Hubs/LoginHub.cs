@@ -19,7 +19,7 @@ namespace Server.Hubs
         /// <summary>
         /// Пользователи.
         /// </summary>
-        public static ConcurrentDictionary<string, UserMode> Users { get; } = new ConcurrentDictionary<string, UserMode>();
+        public static ConcurrentDictionary<string, User> Users { get; } = new ConcurrentDictionary<string, User>();
 
         /// <summary>
         /// База данных.
@@ -57,13 +57,14 @@ namespace Server.Hubs
                 await HubHelper.AddToAuthorizedGroup<StaffHub>(id);
                 await HubHelper.AddToAuthorizedGroup<StudentsHub>(id);
                 await HubHelper.AddToAuthorizedGroup<GroupsHub>(id);
+                await HubHelper.AddToAuthorizedGroup<ChatHub>(id);
 
                 dataBase.AddSignInLogAsync(res.Response);
 
-                Users[id] = res.Response.Mode;
-            }
+                Users[id] = res.Response;
 
-            Console.WriteLine($"{Context.ConnectionId} logged in");
+                Console.WriteLine($"{Context.ConnectionId} logged in");
+            }
 
             return new KursachResponse<User, LoginResponse>(res.Code, loginResponse, res.Response);
         }
@@ -110,6 +111,7 @@ namespace Server.Hubs
             await HubHelper.RemoveFromAuthorizedGroup<StaffHub>(id);
             await HubHelper.RemoveFromAuthorizedGroup<StudentsHub>(id);
             await HubHelper.RemoveFromAuthorizedGroup<GroupsHub>(id);
+            await HubHelper.RemoveFromAuthorizedGroup<ChatHub>(id);
         }
     }
 }
