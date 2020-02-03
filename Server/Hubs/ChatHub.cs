@@ -4,7 +4,6 @@ using Kursach.Core.ServerEvents;
 using Kursach.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using System.Threading.Tasks;
 
 namespace Server.Hubs
 {
@@ -23,7 +22,7 @@ namespace Server.Hubs
         {
             User sender = LoginHub.Users[Context.ConnectionId];
 
-            Clients.Group(Consts.AuthorizedGroup).NewMessage(sender, text);
+            Clients.Group(Consts.AuthorizedGroup).NewMessage(sender.Name, text);
         }
     }
 }
