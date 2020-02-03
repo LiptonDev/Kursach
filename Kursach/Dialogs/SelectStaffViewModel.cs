@@ -18,7 +18,6 @@ namespace Kursach.Dialogs
         /// </summary>
         public SelectStaffViewModel()
         {
-
         }
 
         /// <summary>

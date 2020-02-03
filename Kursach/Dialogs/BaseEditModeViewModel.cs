@@ -2,7 +2,6 @@
 using DryIoc;
 using Kursach.Core.ViewModels;
 using MaterialDesignXaml.DialogsHelper;
-using MaterialDesignXaml.DialogsHelper.Enums;
 using System;
 using System.Windows.Input;
 
@@ -52,8 +51,14 @@ namespace Kursach.Dialogs
                 EditableObject = (T)obj.Clone();
             else EditableObject = container.Resolve<T>();
 
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
+            CloseDialogCommand = new DelegateCommand(CloseDialog, IsObjectValid);
         }
+
+        /// <summary>
+        /// Указывает, прошел ли редактируемый объект валидацию.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsObjectValid() => EditableObject.IsValid;
 
         /// <summary>
         /// Команда закрытия диалога.
@@ -65,12 +70,6 @@ namespace Kursach.Dialogs
         /// </summary>
         private async void CloseDialog()
         {
-            if (!EditableObject.IsValid)
-            {
-                await this.ShowMessageBoxAsync(EditableObject.Error, MaterialMessageBoxButtons.Ok);
-                return;
-            }
-
             OwnerIdentifier.Close(EditableObject);
         }
     }

@@ -47,8 +47,10 @@ namespace Kursach.Dialogs
             OwnerIdentifier = dialogIdentifier;
             this.client = client;
 
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
+            CloseDialogCommand = new DelegateCommand(CloseDialog, IsSelected);
         }
+
+        private bool IsSelected() => SelectedItem != null;
 
         /// <summary>
         /// Команда закрытия диалога.
@@ -60,9 +62,6 @@ namespace Kursach.Dialogs
         /// </summary>
         private void CloseDialog()
         {
-            if (SelectedItem == null)
-                return;
-
             this.Close(SelectedItem);
         }
     }

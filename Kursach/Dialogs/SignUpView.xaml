@@ -29,6 +29,9 @@
             <TextBox Text="{Binding EditableObject.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      material:HintAssist.Hint="Логин"/>
 
+            <TextBox Text="{Binding EditableObject.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     material:HintAssist.Hint="Имя пользователя"/>
+
             <PasswordBox Style="{StaticResource MaterialPasswordBox}"
                          ui:BoundPasswordBox.Password="{Binding EditableObject.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 

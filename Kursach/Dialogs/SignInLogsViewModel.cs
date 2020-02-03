@@ -26,7 +26,6 @@ namespace Kursach.Dialogs
         /// </summary>
         public SignInLogsViewModel()
         {
-            Load(null);
         }
 
         /// <summary>
