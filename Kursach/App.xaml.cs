@@ -52,6 +52,7 @@ namespace Kursach
             base.ConfigureViewModelLocator();
 
             ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
+            ViewModelLocationProvider.Register<ChatWindow, ChatViewModel>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -63,6 +64,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IGroups, Groups>();
             containerRegistry.RegisterSingleton<IStudents, Students>();
             containerRegistry.RegisterSingleton<ILogin, Login>();
+            containerRegistry.RegisterSingleton<IChat, Chat>();
             containerRegistry.RegisterSingleton<IHubConfigurator, HubConfigurator>();
 #else
             containerRegistry.RegisterSingleton<IUsers, DesignUsers>();
@@ -70,6 +72,7 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IGroups, DesignGroups>();
             containerRegistry.RegisterSingleton<IStudents, DesignStudents>();
             containerRegistry.RegisterSingleton<ILogin, DesignLogin>();
+            containerRegistry.RegisterSingleton<IChat, DesignChat>();
             containerRegistry.RegisterSingleton<IHubConfigurator, DesignConfigurator>();
 #endif
             containerRegistry.RegisterSingleton<IClient, Client.Classes.Client>();
@@ -95,6 +98,7 @@ namespace Kursach
 
             //vm's
             containerRegistry.RegisterSingleton<MainViewModel>();
+            containerRegistry.RegisterSingleton<ChatViewModel>();
 
             //navigation
             containerRegistry.RegisterForNavigation<LoginView, LoginViewModel>(RegionViews.LoginView);
@@ -115,6 +119,9 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<Group>>, GroupsExporter>();
             containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>, Group>, StudentsImporter>();
             containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Group>>, GroupsImporter>();
+
+            //windows
+            containerRegistry.Register<ChatWindow>();
         }
     }
 

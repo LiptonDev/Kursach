@@ -154,8 +154,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviors\BringNewItemIntoViewBehavior.cs" />
+    <Compile Include="Client\Classes\Chat.cs" />
     <Compile Include="Client\Delegates\ChangedDelegate.cs" />
     <Compile Include="Client\Classes\Client.cs" />
+    <Compile Include="Client\Delegates\ChatMessageDelegate.cs" />
+    <Compile Include="Client\Design\DesignChat.cs" />
     <Compile Include="Client\Design\DesignConfigurator.cs" />
     <Compile Include="Client\Design\DesignGroups.cs" />
     <Compile Include="Client\Design\DesignLogin.cs" />
@@ -165,6 +169,7 @@
     <Compile Include="Client\Classes\Staffs.cs" />
     <Compile Include="Client\Classes\Groups.cs" />
     <Compile Include="Client\Classes\HubConfigurator.cs" />
+    <Compile Include="Client\Interfaces\IChat.cs" />
     <Compile Include="Client\Interfaces\IClient.cs" />
     <Compile Include="Client\Interfaces\IGroups.cs" />
     <Compile Include="Client\Interfaces\IHubConfigurator.cs" />
@@ -224,11 +229,13 @@
     <Compile Include="Dialogs\BaseSelectorViewModel.cs" />
     <Compile Include="Helpers\ChangeAllFields.cs" />
     <Compile Include="Helpers\ObservableCollectionRelationship.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Providers\DataProvider.cs" />
     <Compile Include="Providers\IDataProvider.cs" />
     <Compile Include="UI\BoundPasswordBox.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Dialogs\GroupEditorViewModel.cs" />
+    <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\GroupsViewModel.cs" />
     <Compile Include="ViewModels\IBaseViewModel.cs" />
     <Compile Include="ViewModels\IExcelExporterViewModel.cs" />
@@ -245,6 +252,9 @@
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="Dialogs\GroupEditorView.xaml.cs">
       <DependentUpon>GroupEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ConnectingView.xaml.cs">
       <DependentUpon>ConnectingView.xaml</DependentUpon>
@@ -371,6 +381,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\UserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
