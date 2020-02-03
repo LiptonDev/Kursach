@@ -2,16 +2,13 @@
 using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
 using Kursach.Dialogs;
 using Kursach.Excel;
 using Kursach.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -86,9 +83,15 @@ namespace Kursach.ViewModels
             Groups = new ListCollectionView(dataProvider.Groups);
             Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 
-            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
-            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel, GroupIsSelected);
+            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel, GroupIsSelected);
         }
+
+        /// <summary>
+        /// Определяет, выбрана группа или нет.
+        /// </summary>
+        /// <returns></returns>
+        private bool GroupIsSelected() => SelectedGroup != null;
 
         /// <summary>
         /// Фильтрация студентов.
@@ -166,12 +169,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public void ExportToExcel()
         {
-            if (selectedGroup == null)
-            {
-                snackbarMessageQueue.Enqueue("Вы не выбрали группу");
-                return;
-            }
-
             var res = exporter.Export(selectedGroup, dataProvider.Students.Where(x => x.GroupId == selectedGroup.Id));
             var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
 
@@ -183,24 +180,15 @@ namespace Kursach.ViewModels
         /// </summary>
         public async void ImportFromExcel()
         {
-            if (selectedGroup == null)
-            {
-                snackbarMessageQueue.Enqueue("Вы не выбрали группу");
-                return;
-            }
-
             var students = await importer.Import(selectedGroup);
 
-            if (students == null)
+            if (students == null || students.Count() == 0)
                 return;
 
             var res = await client.Students.AddStudentsAsync(students, selectedGroup.Id);
-            var updateGroup = await client.Groups.SaveGroupAsync(selectedGroup);
 
-            if (res && updateGroup)
-            {
+            if (res)
                 snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
-            }
         }
 
         void Log(string msg, Student student)

@@ -3,9 +3,11 @@ using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Providers;
+using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
+using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -44,6 +46,11 @@ namespace Kursach.ViewModels
         readonly IDataProvider dataProvider;
 
         /// <summary>
+        /// Контейнер.
+        /// </summary>
+        readonly IContainer container;
+
+        /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public MainViewModel()
@@ -64,13 +71,15 @@ namespace Kursach.ViewModels
             dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.client = client;
             this.dataProvider = dataProvider;
+            this.container = container;
 
-            OpenUsersCommand = new DelegateCommand(OpenUsers);
+            OpenUsersCommand = new DelegateCommand<string>(Navigate);
+            GroupsCommand = new DelegateCommand<string>(Navigate);
+            StaffCommand = new DelegateCommand<string>(Navigate);
+            StudentsCommand = new DelegateCommand<string>(Navigate);
+            HomeCommand = new DelegateCommand<string>(Navigate);
+            OpenChatWindowCommand = new DelegateCommand(OpenChatWindow);
             ExitCommand = new DelegateCommand(Exit);
-            GroupsCommand = new DelegateCommand(Groups);
-            StaffCommand = new DelegateCommand(GoToStaff);
-            StudentsCommand = new DelegateCommand(Students);
-            HomeCommand = new DelegateCommand(Home);
             OpenVkCommand = new DelegateCommand(OpenVk);
         }
 
@@ -100,6 +109,11 @@ namespace Kursach.ViewModels
         public ICommand OpenUsersCommand { get; }
 
         /// <summary>
+        /// Команда открытия окна чата.
+        /// </summary>
+        public ICommand OpenChatWindowCommand { get; }
+
+        /// <summary>
         /// Команда выхода.
         /// </summary>
         public ICommand ExitCommand { get; }
@@ -115,6 +129,15 @@ namespace Kursach.ViewModels
         private void OpenVk()
         {
             Process.Start("https://vk.com/id99551920");
+        }
+
+        /// <summary>
+        /// Открыть окно чата.
+        /// </summary>
+        private void OpenChatWindow()
+        {
+            container.Resolve<ChatWindow>().Show();
+            LeftMenuOpened = false;
         }
 
         /// <summary>
@@ -135,47 +158,12 @@ namespace Kursach.ViewModels
         }
 
         /// <summary>
-        /// Открыть базу пользователей.
+        /// Переход на другую страницу.
         /// </summary>
-        private void OpenUsers()
+        /// <param name="view">Страница.</param>
+        private void Navigate(string view)
         {
-            regionManager.ReqeustNavigateInMainRegion(RegionViews.UsersView);
-            LeftMenuOpened = false;
-        }
-
-        /// <summary>
-        /// Переход на страницу групп.
-        /// </summary>
-        private void Groups()
-        {
-            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.GroupsView, User);
-            LeftMenuOpened = false;
-        }
-
-        /// <summary>
-        /// Переход на страницу сотрудников.
-        /// </summary>
-        private void GoToStaff()
-        {
-            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.StaffView, User);
-            LeftMenuOpened = false;
-        }
-
-        /// <summary>
-        /// Переход на страницу студентов.
-        /// </summary>
-        private void Students()
-        {
-            regionManager.RequstNavigateInMainRegionWithUser(RegionViews.StudentsView, User);
-            LeftMenuOpened = false;
-        }
-
-        /// <summary>
-        /// Переход на стартовую страницу.
-        /// </summary>
-        private void Home()
-        {
-            regionManager.ReqeustNavigateInMainRegion(RegionViews.WelcomeView);
+            regionManager.ReqeustNavigateInMainRegion(view);
             LeftMenuOpened = false;
         }
 

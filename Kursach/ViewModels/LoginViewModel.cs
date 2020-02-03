@@ -3,8 +3,8 @@ using DryIoc;
 using Kursach.Client.Interfaces;
 using Kursach.Core;
 using Kursach.Core.Models;
-using Kursach.Providers;
 using Kursach.Properties;
+using Kursach.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -18,6 +18,11 @@ namespace Kursach.ViewModels
     /// </summary>
     class LoginViewModel : NavigationViewModel
     {
+        /// <summary>
+        /// Пользователь для авторизации.
+        /// </summary>
+        public LoginUser LoginUser { get; }
+
         /// <summary>
         /// Менеджер регионов.
         /// </summary>
@@ -51,14 +56,20 @@ namespace Kursach.ViewModels
             this.client = client;
             this.dataProvider = dataProvider;
 
-            TryLoginCommand = new AsyncCommand(TryLogin);
+            TryLoginCommand = new AsyncCommand(TryLogin, IsUserValid);
 
-            User = new User
+            LoginUser = new LoginUser
             {
                 Login = Settings.Default.lastLogin,
                 Password = Settings.Default.lastPassword
             };
         }
+
+        /// <summary>
+        /// Указывает, прошел ли валидацию пользователь.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsUserValid() => LoginUser.IsValid;
 
         /// <summary>
         /// Команда попытки входа в систему.
@@ -70,16 +81,16 @@ namespace Kursach.ViewModels
         /// </summary>
         private async Task TryLogin()
         {
-            if (!User.IsValid)
+            if (!LoginUser.IsValid)
             {
-                await dialogIdentifier.ShowMessageBoxAsync(User.Error, MaterialMessageBoxButtons.Ok);
+                await dialogIdentifier.ShowMessageBoxAsync(LoginUser.Error, MaterialMessageBoxButtons.Ok);
                 return;
             }
 
-            Settings.Default.lastLogin = User.Login;
-            Settings.Default.lastPassword = User.Password;
+            Settings.Default.lastLogin = LoginUser.Login;
+            Settings.Default.lastPassword = LoginUser.Password;
 
-            var res = await client.Login.LoginAsync(User.Login, User.Password);
+            var res = await client.Login.LoginAsync(LoginUser.Login, LoginUser.Password);
             User user;
             if (res && res.Arg == LoginResponse.Ok)
                 user = res.Response;

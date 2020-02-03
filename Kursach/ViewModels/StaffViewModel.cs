@@ -35,7 +35,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public StaffViewModel()
         {
-
         }
 
         /// <summary>

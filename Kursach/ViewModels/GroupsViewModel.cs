@@ -55,7 +55,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public GroupsViewModel()
         {
-
         }
 
         /// <summary>

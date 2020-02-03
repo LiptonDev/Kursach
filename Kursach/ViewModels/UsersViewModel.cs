@@ -27,7 +27,6 @@ namespace Kursach.ViewModels
         /// </summary>
         public UsersViewModel()
         {
-
         }
 
         /// <summary>
