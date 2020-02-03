@@ -84,16 +84,14 @@ namespace Server.DataBase
         {
             return QueryAsync(con =>
             {
-                return con.QueryAsync<SignInLog>("SELECT * FROM signinlogs WHERE userId = @Id", new { userId });
+                return con.QueryAsync<SignInLog>("SELECT * FROM signinlogs WHERE userId = @userId", new { userId });
             }, Enumerable.Empty<SignInLog>());
         }
-        #endregion
 
-        #region CUD region
         /// <summary>
-        /// 
+        /// Добавить лог авторизации пользователя.
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">Пользователь.</param>
         /// <returns></returns>
         public async void AddSignInLogAsync(User user)
         {
@@ -102,7 +100,9 @@ namespace Server.DataBase
                 return await con.InsertAsync(new SignInLog { UserId = user.Id });
             });
         }
+        #endregion
 
+        #region CUD region
         /// <summary>
         /// Регистрация нового пользователя.
         /// </summary>
