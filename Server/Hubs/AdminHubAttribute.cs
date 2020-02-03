@@ -11,9 +11,9 @@ namespace Server.Hubs
     {
         public override bool AuthorizeHubMethodInvocation(IHubIncomingInvokerContext context, bool appliesToMethod)
         {
-            LoginHub.Users.TryGetValue(context.Hub.Context.ConnectionId, out var mode);
+            LoginHub.Users.TryGetValue(context.Hub.Context.ConnectionId, out var user);
 
-            return mode == UserMode.Admin;
+            return user.Mode == UserMode.Admin;
         }
 
         public override bool AuthorizeHubConnection(HubDescriptor hubDescriptor, IRequest request)
