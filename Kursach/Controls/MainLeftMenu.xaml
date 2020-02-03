@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Kursach.ViewModels"
+    xmlns:local="clr-namespace:Kursach"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}">
 
@@ -17,26 +18,34 @@
 
     <StackPanel Width="250">
         <materialDesign:ColorZone Mode="PrimaryDark">
-            <TextBlock Text="{Binding User.Login, StringFormat='Добро пожаловать, {0}!'}"
+            <TextBlock Text="{Binding User.Name, StringFormat='Добро пожаловать, {0}!'}"
                        TextWrapping="Wrap"
                        Margin="5"/>
         </materialDesign:ColorZone>
 
         <Button Content="Домашняя"
-                Command="{Binding HomeCommand}"/>
+                Command="{Binding HomeCommand}"
+                CommandParameter="{x:Static local:RegionViews.WelcomeView}"/>
 
         <Button Content="Студенты"
-                Command="{Binding StudentsCommand}"/>
+                Command="{Binding StudentsCommand}"
+                CommandParameter="{x:Static local:RegionViews.StudentsView}"/>
 
         <Button Content="Сотрудники"
-                Command="{Binding StaffCommand}"/>
+                Command="{Binding StaffCommand}"
+                CommandParameter="{x:Static local:RegionViews.StaffView}"/>
 
         <Button Content="Группы"
-                Command="{Binding GroupsCommand}"/>
+                Command="{Binding GroupsCommand}"
+                CommandParameter="{x:Static local:RegionViews.GroupsView}"/>
 
         <Button Content="База пользователей"
                 Command="{Binding OpenUsersCommand}"
+                CommandParameter="{x:Static local:RegionViews.UsersView}"
                 Visibility="{Binding User.Mode, Converter={StaticResource AdminUserModeToVisibility}}"/>
+
+        <Button Content="Открыть окно чата"
+                Command="{Binding OpenChatWindowCommand}"/>
 
         <Button Content="Выйти"
                 Command="{Binding ExitCommand}"/>
