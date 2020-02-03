@@ -1,5 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using Kursach.Core.ViewModels;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System;
@@ -11,7 +10,7 @@ namespace Kursach.Core.Models
     /// Пользователь.
     /// </summary>
     [Table("users")]
-    public class User : ValidateViewModel, ICloneable
+    public class User : LoginUser, ICloneable
     {
         /// <summary>
         /// ID.
@@ -21,24 +20,13 @@ namespace Kursach.Core.Models
         public int Id { get; set; }
 
         /// <summary>
-        /// User login.
+        /// Имя пользователя.
         /// </summary>
-        [Display(Name = "Логин")]
+        [Display(Name = "Имя пользователя")]
         [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "{0} не должен быть больше {1} и не меньше {2} символов")]
-        [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "{0} должен состоять из латинских букв и цифр")]
-        [JsonProperty("l")]
-        public string Login { get; set; }
-
-        /// <summary>
-        /// User password.
-        /// </summary>
-        [Display(Name = "Пароль")]
-        [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "{0} не должен быть больше {1} и не меньше {2} символов")]
-        [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "{0} должен состоять из латинских букв и цифр")]
-        [JsonProperty("p")]
-        public string Password { get; set; }
+        [RegularExpression("^[а-яА-Я]+$", ErrorMessage = "{0} должно состоять из кириллицы")]
+        [JsonProperty("n")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Права пользователя.

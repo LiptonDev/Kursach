@@ -39,7 +39,7 @@ namespace Kursach.Core.Models
         /// Приказ о зачислении.
         /// </summary>
         [Display(Name = "Приказ о зачислении")]
-        [Required(ErrorMessage = "{0} не может быть пустой", AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
         [JsonProperty("decr")]
         public string DecreeOfEnrollment { get; set; }
 
