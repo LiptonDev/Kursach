@@ -40,6 +40,7 @@
     <Compile Include="KursachResponseCode.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\SignInLog.cs" />
     <Compile Include="Models\Staff.cs" />
@@ -48,11 +49,13 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserMode.cs" />
     <Compile Include="ServerEvents\DbChangeStatus.cs" />
+    <Compile Include="ServerEvents\IChatHubEvents.cs" />
     <Compile Include="ServerEvents\IGroupsHubEvents.cs" />
     <Compile Include="ServerEvents\IChangedEvent.cs" />
     <Compile Include="ServerEvents\IStaffHubEvents.cs" />
     <Compile Include="ServerEvents\IStudentsHubEvents.cs" />
     <Compile Include="ServerEvents\IUsersHubEvents.cs" />
+    <Compile Include="ServerMethods\IChatHub.cs" />
     <Compile Include="ServerMethods\IGroupsHub.cs" />
     <Compile Include="ServerMethods\ILoginHub.cs" />
     <Compile Include="ServerMethods\RegisterResponse.cs" />

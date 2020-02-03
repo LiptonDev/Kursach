@@ -10,5 +10,6 @@
         public const string GroupsHub = nameof(GroupsHub);
         public const string StaffHub = nameof(StaffHub);
         public const string LoginHub = nameof(LoginHub);
+        public const string ChatHub = nameof(ChatHub);
     }
 }
