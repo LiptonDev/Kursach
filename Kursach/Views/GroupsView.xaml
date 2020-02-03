@@ -26,7 +26,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ComboBox SelectedIndex="{Binding SelectedDivision, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+        <ComboBox SelectedIndex="{Binding SelectedDivision}"
                   material:HintAssist.Hint="Подразделение">
             <ComboBoxItem>
                 1 подразделение
@@ -58,7 +58,7 @@
                                    d:DataContext="{d:DesignInstance Type=models:Group, IsDesignTimeCreatable=True}">
                         <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
-
+                            
                             <TextBlock Text="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
 
                             <TextBlock Text="{Binding IsIntramural, Converter={StaticResource IsIntramuralConverter}}"/>

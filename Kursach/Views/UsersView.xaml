@@ -38,6 +38,8 @@
                         <StackPanel Style="{StaticResource MarginStackPanel}">
                             <TextBlock Text="{Binding Login, StringFormat='Логин: {0}'}"/>
 
+                            <TextBlock Text="{Binding Name, StringFormat='Имя: {0}'}"/>
+
                             <TextBlock Text="{Binding Mode, Converter={StaticResource EnumDescriptionConverter}, StringFormat='Права пользователя: {0}'}"/>
 
                             <controls:EditDeleteButtons/>
