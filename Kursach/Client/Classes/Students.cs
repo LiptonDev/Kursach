@@ -17,13 +17,13 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Students(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StudentsHub)
+        public Students(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.StudentsHub)
         {
             Proxy.On<DbChangeStatus, Student>(nameof(IStudentsHubEvents.OnChanged),
-                (status, student) => sync.StartNew(() => OnChanged?.Invoke(status, student)));
+                (status, student) => OnChanged?.Invoke(status, student));
 
             Proxy.On<int>(nameof(IStudentsHubEvents.StudentsImportTo),
-                (groupId) => sync.StartNew(() => Imported?.Invoke(groupId)));
+                (groupId) => Imported?.Invoke(groupId));
         }
 
         /// <summary>

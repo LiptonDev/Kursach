@@ -3,7 +3,6 @@ using Kursach.Properties;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Diagnostics;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Kursach.Client.Classes

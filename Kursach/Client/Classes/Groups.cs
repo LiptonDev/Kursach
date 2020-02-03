@@ -18,12 +18,12 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Groups(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.GroupsHub)
+        public Groups(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.GroupsHub)
         {
             Proxy.On<DbChangeStatus, Group>(nameof(IGroupsHubEvents.OnChanged),
-                (status, group) => sync.StartNew(() => OnChanged?.Invoke(status, group)));
+                (status, group) => OnChanged?.Invoke(status, group));
 
-            Proxy.On(nameof(IGroupsHubEvents.GroupsImport), () => sync.StartNew(() => Imported?.Invoke()));
+            Proxy.On(nameof(IGroupsHubEvents.GroupsImport), () => Imported?.Invoke());
         }
 
         /// <summary>

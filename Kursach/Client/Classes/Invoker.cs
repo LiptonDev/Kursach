@@ -36,14 +36,14 @@ namespace Kursach.Client.Classes
         /// Отправить запрос.
         /// </summary>
         /// <returns></returns>
-        public Task TryInvokeAsync([CallerMemberName]string method = null)
+        public Task TryInvokeAsync([CallerMemberName]string method = null, object[] args = null)
         {
             if (HubConfigurator.Hub.State != ConnectionState.Connected)
                 return Task.CompletedTask;
 
             try
             {
-                return Proxy.Invoke(method);
+                return Proxy.Invoke(method, args);
             }
             catch (Exception ex)
             {

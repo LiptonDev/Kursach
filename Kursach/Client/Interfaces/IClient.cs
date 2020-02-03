@@ -34,5 +34,10 @@
         /// Управление авторизацией.
         /// </summary>
         ILogin Login { get; }
+
+        /// <summary>
+        /// Управление чатом.
+        /// </summary>
+        IChat Chat { get; }
     }
 }

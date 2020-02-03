@@ -17,10 +17,10 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Staffs(IHubConfigurator hubConfigurator, TaskFactory sync) : base(hubConfigurator, HubNames.StaffHub)
+        public Staffs(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.StaffHub)
         {
             Proxy.On<DbChangeStatus, Staff>(nameof(IStaffHubEvents.OnChanged),
-                (status, staff) => sync.StartNew(() => OnChanged?.Invoke(status, staff)));
+                (status, staff) => OnChanged?.Invoke(status, staff));
         }
 
         /// <summary>

@@ -10,13 +10,14 @@ namespace Kursach.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Client(IUsers users, IStaff staff, IStudents students, IGroups groups, ILogin login, IHubConfigurator hubConfigurator)
+        public Client(IUsers users, IStaff staff, IStudents students, IGroups groups, ILogin login, IChat chat, IHubConfigurator hubConfigurator)
         {
             Users = users;
             Staff = staff;
             Students = students;
             Groups = groups;
             Login = login;
+            Chat = chat;
             HubConfigurator = hubConfigurator;
         }
 
@@ -44,6 +45,11 @@ namespace Kursach.Client.Classes
         /// Управление авторизацией.
         /// </summary>
         public ILogin Login { get; }
+
+        /// <summary>
+        /// Управление чатом.
+        /// </summary>
+        public IChat Chat { get; }
 
         /// <summary>
         /// Конфигуратор хаба.
