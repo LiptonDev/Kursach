@@ -54,7 +54,12 @@ namespace Server
 
         void ConfigureContainer(IContainer container)
         {
-            container.RegisterHubs(typeof(LoginHub), typeof(UsersHub), typeof(StaffHub), typeof(GroupsHub), typeof(StudentsHub));
+            container.RegisterHubs(typeof(LoginHub),
+                                   typeof(UsersHub),
+                                   typeof(StaffHub),
+                                   typeof(GroupsHub),
+                                   typeof(StudentsHub),
+                                   typeof(ChatHub));
 
             container.RegisterSingleton<IDataBase, DataBase.DataBase>();
         }
