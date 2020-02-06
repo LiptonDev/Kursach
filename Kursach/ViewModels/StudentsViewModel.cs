@@ -48,12 +48,12 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        readonly IExporter<Group, IEnumerable<Student>> exporter;
+        readonly IExporter<IEnumerable<IGrouping<Group, Student>>> exporter;
 
         /// <summary>
         /// Импорт данных.
         /// </summary>
-        readonly IAsyncImporter<IEnumerable<Student>, Group> importer;
+        readonly IAsyncImporter<IEnumerable<Student>> importer;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -67,8 +67,8 @@ namespace Kursach.ViewModels
         /// Конструктор.
         /// </summary>
         public StudentsViewModel(IDialogManager dialogManager,
-                                 IExporter<Group, IEnumerable<Student>> exporter,
-                                 IAsyncImporter<IEnumerable<Student>, Group> importer,
+                                 IExporter<IEnumerable<IGrouping<Group, Student>>> exporter,
+                                 IAsyncImporter<IEnumerable<Student>> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
                                  IClient client,
                                  IDataProvider dataProvider,
@@ -83,15 +83,9 @@ namespace Kursach.ViewModels
             Groups = new ListCollectionView(dataProvider.Groups);
             Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 
-            ExportToExcelCommand = new DelegateCommand(ExportToExcel, GroupIsSelected);
-            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel, GroupIsSelected);
+            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
+            ImportFromExcelCommand = new AsyncCommand(ImportFromExcel);
         }
-
-        /// <summary>
-        /// Определяет, выбрана группа или нет.
-        /// </summary>
-        /// <returns></returns>
-        private bool GroupIsSelected() => SelectedGroup != null;
 
         /// <summary>
         /// Фильтрация студентов.
@@ -169,26 +163,34 @@ namespace Kursach.ViewModels
         /// </summary>
         public void ExportToExcel()
         {
-            var res = exporter.Export(selectedGroup, dataProvider.Students.Where(x => x.GroupId == selectedGroup.Id));
+
+            var res = exporter.Export(dataProvider.Students.GroupBy(x => dataProvider.Groups.FirstOrDefault(g => g.Id == x.GroupId)));
             var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
         }
 
         /// <summary>
-        /// Импорт данных о группе.
+        /// Импорт данных о студентах.
         /// </summary>
-        public async void ImportFromExcel()
+        public async Task ImportFromExcel()
         {
-            var students = await importer.Import(selectedGroup);
+            var students = await importer.Import();
 
             if (students == null || students.Count() == 0)
                 return;
 
-            var res = await client.Students.AddStudentsAsync(students, selectedGroup.Id);
+            foreach (var item in students.Chunk(10)) //отправка данных по 10 студентов
+            {
+                var res = await client.Students.ImportStudentsAsync(item);
 
-            if (res)
-                snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
+                if (!res)
+                    return;
+            }
+
+            await client.Students.RaiseStudentsImported();
+
+            snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
         }
 
         void Log(string msg, Student student)

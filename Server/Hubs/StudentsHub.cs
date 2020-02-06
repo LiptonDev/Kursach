@@ -31,15 +31,27 @@ namespace Server.Hubs
             this.dataBase = dataBase;
         }
 
+        #region Other region
+        /// <summary>
+        /// Вызвать событие, что студенты импортированы.
+        /// </summary>
+        /// <returns></returns>
+        public Task RaiseStudentsImported()
+        {
+            Clients.Group(Consts.AuthorizedGroup).StudentsImported();
+            return Task.CompletedTask;
+        }
+        #endregion
+
         #region Get region
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
         {
-            return dataBase.GetStudentsAsync(groupId);
+            return dataBase.GetStudentsAsync();
         }
 
         /// <summary>
@@ -78,14 +90,11 @@ namespace Server.Hubs
         /// <param name="students">Студенты.</param>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
+        public async Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
-            Logger.Log.Info($"Import students: {students.Count()}, group: {groupId}");
+            Logger.Log.Info($"Import students: {students.Count()}");
 
-            var res = await dataBase.AddStudentsAsync(students, groupId);
-
-            if (res)
-                Clients.Group(Consts.AuthorizedGroup).StudentsImportTo(groupId);
+            var res = await dataBase.ImportStudentsAsync(students);
 
             return res;
         }

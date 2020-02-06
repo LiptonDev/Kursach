@@ -25,7 +25,7 @@ namespace Kursach.Core.Models
         /// </summary>
         [Display(Name = "Название группы")]
         [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
-        [RegularExpression("^[а-яА-Я]{1,3}-[0-9]{2}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
+        [RegularExpression("^[а-яА-Я]{1,3}-[0-9]{1,3}$", ErrorMessage = "{0} должно быть записано в виде 'АА-11'")]
         [JsonProperty("n")]
         public string Name { get; set; }
 

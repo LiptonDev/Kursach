@@ -1,6 +1,5 @@
 ﻿using DryIoc;
 using Kursach.Client.Classes;
-using Kursach.Client.Design;
 using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
@@ -16,6 +15,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -114,10 +114,10 @@ namespace Kursach
             containerRegistry.RegisterSingleton<IDialogManager, DialogManager>();
 
             //excel
-            containerRegistry.RegisterSingleton<IExporter<Group, IEnumerable<Student>>, StudentsExporter>();
+            containerRegistry.RegisterSingleton<IExporter<IEnumerable<IGrouping<Group, Student>>>, StudentsExporter>();
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
             containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<Group>>, GroupsExporter>();
-            containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>, Group>, StudentsImporter>();
+            containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>>, StudentsImporter>();
             containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Group>>, GroupsImporter>();
 
             //windows

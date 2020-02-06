@@ -4,11 +4,9 @@ using Kursach.Client.Interfaces;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
 using Kursach.Providers;
-using Kursach.Views;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
-using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -66,7 +64,11 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public MainViewModel(IRegionManager regionManager, IClient client, IDataProvider dataProvider, IDialogManager dialogManager, IContainer container)
+        public MainViewModel(IRegionManager regionManager,
+                             IClient client,
+                             IDataProvider dataProvider,
+                             IDialogManager dialogManager,
+                             IContainer container)
         {
             this.regionManager = regionManager;
             dialogIdentifier = container.ResolveRootDialogIdentifier();
@@ -74,40 +76,16 @@ namespace Kursach.ViewModels
             this.dataProvider = dataProvider;
             this.dialogManager = dialogManager;
 
-            OpenUsersCommand = new DelegateCommand<string>(Navigate);
-            GroupsCommand = new DelegateCommand<string>(Navigate);
-            StaffCommand = new DelegateCommand<string>(Navigate);
-            StudentsCommand = new DelegateCommand<string>(Navigate);
-            HomeCommand = new DelegateCommand<string>(Navigate);
+            NavigateCommand = new DelegateCommand<string>(Navigate);
             OpenChatWindowCommand = new DelegateCommand(OpenChatWindow);
             ExitCommand = new DelegateCommand(Exit);
             OpenVkCommand = new DelegateCommand(OpenVk);
         }
 
         /// <summary>
-        /// Команда перехода на стартовую страницу.
+        /// Команда навигации.
         /// </summary>
-        public ICommand HomeCommand { get; }
-
-        /// <summary>
-        /// Команда перехода на страницу студентов.
-        /// </summary>
-        public ICommand StudentsCommand { get; }
-
-        /// <summary>
-        /// Команда перехода на страницу сотрудников.
-        /// </summary>
-        public ICommand StaffCommand { get; }
-
-        /// <summary>
-        /// Команда перехода на страницу групп.
-        /// </summary>
-        public ICommand GroupsCommand { get; }
-
-        /// <summary>
-        /// Команда открытия базы данных пользователей.
-        /// </summary>
-        public ICommand OpenUsersCommand { get; }
+        public ICommand<string> NavigateCommand { get; }
 
         /// <summary>
         /// Команда открытия окна чата.
@@ -165,7 +143,7 @@ namespace Kursach.ViewModels
         /// <param name="view">Страница.</param>
         private void Navigate(string view)
         {
-            regionManager.ReqeustNavigateInMainRegion(view);
+            regionManager.ReqeustNavigateInMainRegion(view, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
             LeftMenuOpened = false;
         }
 

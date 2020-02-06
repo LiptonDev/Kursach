@@ -1,10 +1,11 @@
-﻿<StackPanel
+﻿<UniformGrid
     x:Class="Kursach.Controls.EditDeleteButtons"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Rows="1">
 
     <Button Style="{StaticResource EditButton}"/>
 
     <Button Style="{StaticResource DeleteButton}"/>
 
-</StackPanel>
+</UniformGrid>

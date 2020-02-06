@@ -8,9 +8,8 @@ namespace Kursach.Core.ServerEvents
     public interface IStudentsHubEvents : IChangedEvent<Student>
     {
         /// <summary>
-        /// Пользователь импортировал список студентов в группу.
+        /// Пользователь импортировал список студентов.
         /// </summary>
-        /// <param name="groupId">ИД группы.</param>
-        void StudentsImportTo(int groupId);
+        void StudentsImported();
     }
 }

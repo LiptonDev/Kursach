@@ -16,7 +16,7 @@ namespace Kursach.Client.Classes
         /// </summary>
         public Chat(IHubConfigurator hubConfigurator) : base(hubConfigurator, HubNames.ChatHub)
         {
-            Proxy.On<string, string>(nameof(IChatHubEvents.NewMessage), 
+            Proxy.On<string, string>(nameof(IChatHubEvents.NewMessage),
                 (senderName, text) => NewMessage?.Invoke(senderName, text));
         }
 

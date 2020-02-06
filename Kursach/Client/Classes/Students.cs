@@ -22,8 +22,8 @@ namespace Kursach.Client.Classes
             Proxy.On<DbChangeStatus, Student>(nameof(IStudentsHubEvents.OnChanged),
                 (status, student) => OnChanged?.Invoke(status, student));
 
-            Proxy.On<int>(nameof(IStudentsHubEvents.StudentsImportTo),
-                (groupId) => Imported?.Invoke(groupId));
+            Proxy.On(nameof(IStudentsHubEvents.StudentsImported),
+                () => Imported?.Invoke());
         }
 
         /// <summary>
@@ -36,15 +36,26 @@ namespace Kursach.Client.Classes
         /// </summary>
         public event StudentsImported Imported;
 
+        #region Other region
+        /// <summary>
+        /// Вызвать событие, что студенты импортированы.
+        /// </summary>
+        /// <returns></returns>
+        public Task RaiseStudentsImported()
+        {
+            return TryInvokeAsync();
+        }
+        #endregion
+
         #region Get region
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
         {
-            return TryInvokeAsync<IEnumerable<Student>>(args: groupId);
+            return TryInvokeAsync<IEnumerable<Student>>();
         }
 
         /// <summary>
@@ -74,10 +85,11 @@ namespace Kursach.Client.Classes
         /// Добавить студентов.
         /// </summary>
         /// <param name="students">Студенты.</param>
+        /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
+        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
-            return TryInvokeAsync<bool>(args: new object[] { students, groupId });
+            return TryInvokeAsync<bool>(args: students);
         }
 
         /// <summary>

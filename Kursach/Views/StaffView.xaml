@@ -24,26 +24,25 @@
             <controls:ExportToExcelButton/>
         </UniformGrid>
 
-        <ItemsControl ItemsSource="{Binding Staff}"
-                      Grid.Row="1">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <material:Card Margin="5">
-                        <StackPanel Style="{StaticResource MarginStackPanel}">
-                            <TextBlock Text="{Binding LastName, StringFormat='Фамилия: {0}'}"/>
-
-                            <TextBlock Text="{Binding FirstName, StringFormat='Имя: {0}'}"/>
-
-                            <TextBlock Text="{Binding MiddleName, StringFormat='Отчество: {0}'}"/>
-
-                            <TextBlock Text="{Binding Position, StringFormat='Должность: {0}'}"/>
-
-                            <controls:EditDeleteButtons/>
-                        </StackPanel>
-                    </material:Card>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ListView ItemsSource="{Binding Staff}"
+                  Grid.Row="1"
+                  FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding LastName}"/>
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Отчество" DisplayMemberBinding="{Binding MiddleName}"/>
+                    <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}"/>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <controls:EditDeleteButtons/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 
 </UserControl>

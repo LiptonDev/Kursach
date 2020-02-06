@@ -9,13 +9,21 @@ namespace Kursach.Core.ServerMethods
     /// </summary>
     public interface IStudentsHub
     {
+        #region OtherRegion
+        /// <summary>
+        /// Вызвать событие, что студенты импортированы.
+        /// </summary>
+        /// <returns></returns>
+        Task RaiseStudentsImported();
+        #endregion
+
         #region Get region
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
         /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId = -1);
+        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync();
 
         /// <summary>
         /// Получение количества студентов в группах.
@@ -35,12 +43,11 @@ namespace Kursach.Core.ServerMethods
         Task<KursachResponse<bool>> AddStudentAsync(Student student);
 
         /// <summary>
-        /// Добавить студентов.
+        /// Импорт студентов.
         /// </summary>
         /// <param name="students">Студенты.</param>
-        /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId);
+        Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students);
 
         /// <summary>
         /// Сохранить студента.

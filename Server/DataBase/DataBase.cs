@@ -313,19 +313,26 @@ namespace Server.DataBase
         #endregion
 
         #region Student region
+        /// <summary>
+        /// НЕ ИСПОЛЬЗУЕТСЯ.
+        /// </summary>
+        /// <returns></returns>
+        public Task RaiseStudentsImported()
+        {
+            return Task.CompletedTask;
+        }
+
         #region Get region
         /// <summary>
         /// Получение студентов определенной группы.
         /// </summary>
         /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId = -1)
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
         {
             return QueryAsync(con =>
             {
-                if (groupId > -1)
-                    return con.QueryAsync<Student>("SELECT * FROM students WHERE groupId = @groupId", new { groupId });
-                else return con.QueryAsync<Student>("SELECT * FROM students");
+                return con.QueryAsync<Student>("SELECT * FROM students");
             }, Enumerable.Empty<Student>());
         }
 
@@ -371,9 +378,8 @@ namespace Server.DataBase
         /// Добавить студентов.
         /// </summary>
         /// <param name="students">Студенты.</param>
-        /// <param name="groupId">Not used.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
+        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
             return QueryAsync(async con =>
             {

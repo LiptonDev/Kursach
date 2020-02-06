@@ -1,11 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows.Controls.Primitives;
 
 namespace Kursach.Controls
 {
     /// <summary>
     /// Логика взаимодействия для EditDeleteButtons.xaml
     /// </summary>
-    public partial class EditDeleteButtons : StackPanel
+    public partial class EditDeleteButtons : UniformGrid
     {
         public EditDeleteButtons()
         {

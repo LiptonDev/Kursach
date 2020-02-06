@@ -1,12 +1,14 @@
 ﻿using DryIoc;
 using Kursach.Core.Models;
 using Kursach.Dialogs;
+using Kursach.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kursach.Excel
@@ -14,7 +16,7 @@ namespace Kursach.Excel
     /// <summary>
     /// Импорт данных.
     /// </summary>
-    class StudentsImporter : BaseImporter, IAsyncImporter<IEnumerable<Student>, Group>
+    class StudentsImporter : BaseImporter, IAsyncImporter<IEnumerable<Student>>
     {
         /// <summary>
         /// Identifier.
@@ -22,17 +24,23 @@ namespace Kursach.Excel
         readonly IDialogIdentifier dialogIdentifier;
 
         /// <summary>
+        /// Поставщик данных.
+        /// </summary>
+        readonly IDataProvider dataProvider;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
-        public StudentsImporter(IContainer container, IDialogManager dialogManager) : base(dialogManager)
+        public StudentsImporter(IContainer container, IDialogManager dialogManager, IDataProvider dataProvider) : base(dialogManager)
         {
             this.dialogIdentifier = container.ResolveRootDialogIdentifier();
+            this.dataProvider = dataProvider;
         }
 
         /// <summary>
         /// Импорт данных о студентах.
         /// </summary>
-        public async Task<IEnumerable<Student>> Import(Group group)
+        public async Task<IEnumerable<Student>> Import()
         {
             if (!SelectFile())
                 return null;
@@ -41,44 +49,50 @@ namespace Kursach.Excel
             {
                 using (var excel = new ExcelPackage(new FileInfo(FileName)))
                 {
-                    var worksheet = excel.Workbook.Worksheets[1];
-
-                    //проверка названия группы в файле и в программе
-                    if (group.Name.ToLower() != worksheet.Name.ToLower())
-                    {
-                        var res = await dialogIdentifier.ShowMessageBoxAsync($"Выбранная группа: {group.Name}\nГруппа в файле: {worksheet.Name}\nПродолжить?", MaterialMessageBoxButtons.YesNo);
-                        if (res == MaterialMessageBoxButtons.No)
-                            return null;
-                    }
-
                     //список студентов
                     var students = new List<Student>();
 
-                    var i = 0;
-                    while (true)
+                    for (int i = 1; i < excel.Workbook.Worksheets.Count + 1; i++)
                     {
-                        var fio = worksheet.Cells[8 + i, 2]; //ФИО
-                        var strFio = fio.GetValue<string>();
-                        if (strFio.IsEmpty()) //конец
-                            break;
+                        var worksheet = excel.Workbook.Worksheets[i];
+                        var groupName = worksheet.Name.ToLower();
 
-                        var fioArr = strFio.Split(' ');
-                        var student = new Student
+                        var group = dataProvider.Groups.FirstOrDefault(x => x.Name.ToLower() == groupName);
+                        if (group == null)
                         {
-                            LastName = fioArr[0],
-                            FirstName = fioArr[1],
-                            MiddleName = fioArr[2],
-                            PoPkNumber = worksheet.Cells[8 + i, 3].GetValue<int>(),
-                            Birthdate = DateTime.Parse(worksheet.Cells[8 + i, 4].GetValue<string>()),
-                            DecreeOfEnrollment = worksheet.Cells[8 + i, 5].GetValue<string>(),
-                            Notice = worksheet.Cells[8 + i, 6].GetValue<string>(),
-                            Expelled = fio.Style.Font.Strike,
-                            GroupId = group.Id
-                        };
+                            await dialogIdentifier.ShowMessageBoxAsync($"Группа \"{groupName}\" отсутсвтует!", MaterialMessageBoxButtons.Ok);
+                            continue;
+                        }
 
-                        students.Add(student);
+                        var row = 0;
+                        while (true)
+                        {
+                            var fio = worksheet.Cells[8 + row, 2]; //ФИО
+                            var strFio = fio.GetValue<string>();
+                            if (strFio.IsEmpty()) //конец
+                                break;
 
-                        i++;
+                            var fioArr = strFio.Split(' ');
+                            if (fioArr.Length != 3)
+                                break;
+
+                            var student = new Student
+                            {
+                                LastName = fioArr[0],
+                                FirstName = fioArr[1],
+                                MiddleName = fioArr[2],
+                                PoPkNumber = worksheet.Cells[8 + row, 3].GetValue<string>(),
+                                Birthdate = DateTime.Parse(worksheet.Cells[8 + row, 4].GetValue<string>()),
+                                DecreeOfEnrollment = worksheet.Cells[8 + row, 5].GetValue<string>(),
+                                Notice = worksheet.Cells[8 + row, 6].GetValue<string>(),
+                                Expelled = fio.Style.Font.Strike,
+                                GroupId = group.Id
+                            };
+
+                            students.Add(student);
+
+                            row++;
+                        }
                     }
 
                     Logger.Log.Info($"Импорт данных о студентах: {{fileName: {FileName}}}");

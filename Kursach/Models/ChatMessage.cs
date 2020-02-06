@@ -1,5 +1,4 @@
-﻿using Kursach.Core.Models;
-using System;
+﻿using System;
 
 namespace Kursach.Models
 {

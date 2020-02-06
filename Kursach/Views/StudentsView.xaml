@@ -1,23 +1,20 @@
 ﻿<UserControl 
     x:Class="Kursach.Views.StudentsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:Kursach.Converters"
-    xmlns:controls="clr-namespace:Kursach.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:converters="clr-namespace:Kursach.Converters"
     xmlns:vm="clr-namespace:Kursach.ViewModels"
-    xmlns:models="clr-namespace:Kursach.Core.Models;assembly=Kursach.Core"
-    xmlns:win="clr-namespace:System.Windows;assembly=PresentationCore"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:StudentsViewModel, IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
-        <converters:BoolToValueConverter x:Key="ExpelledConverter" TrueValue="Студент отчислен" FalseValue="Студент не отчислен"/>
-        <converters:BoolToValueConverter x:Key="OnSabbaticalConverter" TrueValue="Студент в академ. отпуске" FalseValue="{x:Null}"/>
+        <converters:BoolToValueConverter x:Key="ExpelledConverter" TrueValue="Отчислен" FalseValue="Не отчислен"/>
+        <converters:BoolToValueConverter x:Key="OnSabbaticalConverter" TrueValue="В академ. отпуске" FalseValue="{x:Null}"/>
     </UserControl.Resources>
 
     <Grid>
@@ -38,27 +35,26 @@
             <controls:ImportFromExcelButton/>
         </UniformGrid>
 
-        <ItemsControl ItemsSource="{Binding Students}"
-                      Grid.Row="2">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <material:Card Margin="5"
-                                   d:DataContext="{d:DesignInstance Type=models:Student, IsDesignTimeCreatable=True}">
-                        <StackPanel Style="{StaticResource MarginStackPanel}">
-                            <TextBlock Text="{Binding FullName, StringFormat='ФИО: {0}'}"/>
-
-                            <TextBlock Text="{Binding Birthdate, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}"/>
-
-                            <TextBlock Text="{Binding Expelled, Converter={StaticResource ExpelledConverter}}"/>
-
-                            <TextBlock Text="{Binding OnSabbatical, Converter={StaticResource OnSabbaticalConverter}}"/>
-
-                            <controls:EditDeleteButtons/>
-                        </StackPanel>
-                    </material:Card>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ListView ItemsSource="{Binding Students}"
+                  Grid.Row="2"
+                  FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding LastName}"/>
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding FirstName}"/>
+                    <GridViewColumn Header="Отчество" DisplayMemberBinding="{Binding MiddleName}"/>
+                    <GridViewColumn Header="Отчислен" DisplayMemberBinding="{Binding Expelled, Converter={StaticResource ExpelledConverter}}"/>
+                    <GridViewColumn Header="В академ. отпуске" DisplayMemberBinding="{Binding OnSabbatical, Converter={StaticResource OnSabbaticalConverter}}"/>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <controls:EditDeleteButtons/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 
 </UserControl>

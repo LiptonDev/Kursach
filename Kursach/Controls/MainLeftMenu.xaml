@@ -24,23 +24,23 @@
         </materialDesign:ColorZone>
 
         <Button Content="Домашняя"
-                Command="{Binding HomeCommand}"
+                Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.WelcomeView}"/>
 
         <Button Content="Студенты"
-                Command="{Binding StudentsCommand}"
+                Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.StudentsView}"/>
 
         <Button Content="Сотрудники"
-                Command="{Binding StaffCommand}"
+                Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.StaffView}"/>
 
         <Button Content="Группы"
-                Command="{Binding GroupsCommand}"
+                Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.GroupsView}"/>
 
         <Button Content="База пользователей"
-                Command="{Binding OpenUsersCommand}"
+                Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.UsersView}"
                 Visibility="{Binding User.Mode, Converter={StaticResource AdminUserModeToVisibility}}"/>
 

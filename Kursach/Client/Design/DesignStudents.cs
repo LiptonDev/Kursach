@@ -12,7 +12,7 @@ namespace Kursach.Client.Design
 {
     class DesignStudents : IStudents
     {
-        public DesignStudents(IHubConfigurator hubConfigurator)
+        public DesignStudents()
         {
 
         }
@@ -20,32 +20,32 @@ namespace Kursach.Client.Design
         public event OnChanged<Student> OnChanged;
         public event StudentsImported Imported;
 
+        public Task RaiseStudentsImported()
+        {
+            Imported?.Invoke();
+            return Task.CompletedTask;
+        }
+
         public Task<KursachResponse<bool>> AddStudentAsync(Student student)
         {
             OnChanged?.Invoke(DbChangeStatus.Add, student);
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> AddStudentsAsync(IEnumerable<Student> students, int groupId)
-        {
-            Imported?.Invoke(groupId);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
-        }
-
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
         {
             var students = Enumerable.Range(0, 15).Select(x => new Student
             {
-                LastName = "Фамилия",
-                FirstName = "Имя",
-                MiddleName = "Отчество",
+                LastName = $"Фамилия {x}",
+                FirstName = $"Имя {x}",
+                MiddleName = $"Отчество {x}",
                 Birthdate = DateTime.Now,
                 DecreeOfEnrollment = "ДА!",
                 Expelled = x % 2 == 0,
                 GroupId = x,
                 Notice = "NOTICE?!",
                 OnSabbatical = x % 5 == 0,
-                PoPkNumber = 1337,
+                PoPkNumber = "1337",
                 Id = x
             });
 
@@ -73,6 +73,12 @@ namespace Kursach.Client.Design
         public Task<KursachResponse<bool>> SaveStudentAsync(Student student)
         {
             OnChanged?.Invoke(DbChangeStatus.Update, student);
+            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+        }
+
+        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
+        {
+            Imported?.Invoke();
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
     }

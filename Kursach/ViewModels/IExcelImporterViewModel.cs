@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Kursach.ViewModels
 {
@@ -15,6 +16,6 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Метод экспорта.
         /// </summary>
-        void ImportFromExcel();
+        Task ImportFromExcel();
     }
 }

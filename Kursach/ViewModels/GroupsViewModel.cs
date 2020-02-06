@@ -76,7 +76,7 @@ namespace Kursach.ViewModels
             Groups.Filter += FilerGroup;
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
-            ImportFromExcelCommand = new DelegateCommand(ImportFromExcel);
+            ImportFromExcelCommand = new AsyncCommand(ImportFromExcel);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Kursach.ViewModels
         /// <summary>
         /// Импорт данных.
         /// </summary>
-        public async void ImportFromExcel()
+        public async Task ImportFromExcel()
         {
             var groups = await importer.Import();
 

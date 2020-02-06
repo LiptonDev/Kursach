@@ -18,7 +18,7 @@
 
     <!-- Кнопка, доступная только для владельцев прав ReadWrite -->
     <Style TargetType="Button" BasedOn="{StaticResource FlatButton}" x:Key="UserModeButton">
-        <Setter Property="Visibility" Value="{Binding Path=DataContext.User.Mode, Converter={StaticResource RWUserModeToVisibility}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+        <Setter Property="Visibility" Value="{Binding Path=DataContext.User.Mode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource RWUserModeToVisibility}}"/>
     </Style>
 
     <!-- Кнопка выбрать для диалогов-селекторов -->

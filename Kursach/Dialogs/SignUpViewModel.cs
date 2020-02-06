@@ -21,8 +21,8 @@ namespace Kursach.Dialogs
         /// Конструктор.
         /// </summary>
         public SignUpViewModel(User user, bool isEditMode, IContainer container)
-            : base(user, isEditMode, container) 
-        { 
+            : base(user, isEditMode, container)
+        {
         }
     }
 }

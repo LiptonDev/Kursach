@@ -23,9 +23,9 @@ namespace Kursach.Core.Models
         /// № по п/к.
         /// </summary>
         [Display(Name = "№ по п/к")]
-        [Range(0, double.MaxValue, ErrorMessage = "{0} должен находиться в диапазоне положительных чисел")]
+        [Required(ErrorMessage = "{0} не может быть пустым", AllowEmptyStrings = false)]
         [JsonProperty("po")]
-        public int PoPkNumber { get; set; }
+        public string PoPkNumber { get; set; }
 
         /// <summary>
         /// Дата рождения.

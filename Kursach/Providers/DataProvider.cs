@@ -93,20 +93,17 @@ namespace Kursach.Providers
         /// Импортированы студенты.
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
-        private async void Students_Imported(int groupId)
+        private async void Students_Imported()
         {
-            var res = await client.Students.GetStudentsAsync(groupId);
+            var res = await client.Students.GetStudentsAsync();
 
             if (res)
             {
-                if (groupId > -1)
+                await sync.StartNew(() =>
                 {
-                    var forRemove = Students.Where(x => x.GroupId == groupId).ToList();
-                    foreach (var item in forRemove)
-                        await sync.StartNew(() => Students.Remove(item));
-                }
-
-                await sync.StartNew(() => Students.AddRange(res.Response));
+                    Students.Clear();
+                    Students.AddRange(res.Response);
+                });
             }
         }
 
@@ -145,7 +142,7 @@ namespace Kursach.Providers
                 await sync.StartNew(() => Staff.AddRange(staff.Response));
 
             Groups_Imported();
-            Students_Imported(-1);
+            Students_Imported();
         }
 
         /// <summary>

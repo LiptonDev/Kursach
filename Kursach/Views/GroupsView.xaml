@@ -3,14 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:Kursach.Converters"
-    xmlns:controls="clr-namespace:Kursach.Controls"
-    prism:ViewModelLocator.AutoWireViewModel="True"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:Kursach.Controls"
+    xmlns:converters="clr-namespace:Kursach.Converters"
     xmlns:vm="clr-namespace:Kursach.ViewModels"
-    xmlns:models="clr-namespace:Kursach.Core.Models;assembly=Kursach.Core"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:GroupsViewModel, IsDesignTimeCreatable=True}">
 
@@ -50,25 +49,24 @@
             <controls:ImportFromExcelButton/>
         </UniformGrid>
 
-        <ItemsControl ItemsSource="{Binding Groups}"
-                      Grid.Row="2">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <material:Card Margin="5"
-                                   d:DataContext="{d:DesignInstance Type=models:Group, IsDesignTimeCreatable=True}">
-                        <StackPanel Style="{StaticResource MarginStackPanel}">
-                            <TextBlock Text="{Binding Name, StringFormat='Группа: {0}'}"/>
-                            
-                            <TextBlock Text="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
-
-                            <TextBlock Text="{Binding IsIntramural, Converter={StaticResource IsIntramuralConverter}}"/>
-
-                            <controls:EditDeleteButtons/>
-                        </StackPanel>
-                    </material:Card>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ListView ItemsSource="{Binding Groups}"
+                  Grid.Row="2"
+                  FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Группа" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Б/К" DisplayMemberBinding="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
+                    <GridViewColumn Header="Очная/Заочная" DisplayMemberBinding="{Binding IsIntramural, Converter={StaticResource IsIntramuralConverter}}"/>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <controls:EditDeleteButtons/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 
 </UserControl>
