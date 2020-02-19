@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kursach
+namespace ISTraining_Part
 {
     /// <summary>
     /// Магия рефлексии.

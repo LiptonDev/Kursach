@@ -1,4 +1,4 @@
-﻿namespace Kursach.Core
+﻿namespace ISTraining_Part.Core
 {
     /// <summary>
     /// Ответ от сервера.

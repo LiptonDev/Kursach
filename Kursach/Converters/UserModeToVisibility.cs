@@ -1,10 +1,10 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Kursach.Converters
+namespace ISTraining_Part.Converters
 {
     [ValueConversion(typeof(UserMode), typeof(Visibility))]
     class UserModeToVisibility : IValueConverter

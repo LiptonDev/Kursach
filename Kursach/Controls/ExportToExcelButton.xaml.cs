@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Kursach.Controls
+namespace ISTraining_Part.Controls
 {
     /// <summary>
     /// Логика взаимодействия для ExportToExcelButton.xaml

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls.Primitives;
 
-namespace Kursach.Controls
+namespace ISTraining_Part.Controls
 {
     /// <summary>
     /// Логика взаимодействия для EditDeleteButtons.xaml

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
-namespace Kursach.Behaviors
+namespace ISTraining_Part.Behaviors
 {
     public class BringNewItemIntoViewBehavior : Behavior<ItemsControl>
     {

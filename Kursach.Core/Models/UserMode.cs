@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Права пользователя.

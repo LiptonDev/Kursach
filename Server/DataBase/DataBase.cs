@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using Kursach.Core;
-using Kursach.Core.Models;
+using ISTraining_Part.Core;
+using ISTraining_Part.Core.Models;
 using MySql.Data.MySqlClient;
 using Server.Properties;
 using System;

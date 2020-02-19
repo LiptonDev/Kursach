@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Kursach.Converters
+namespace ISTraining_Part.Converters
 {
     /// <summary>
     /// Конвертер bool -> object.

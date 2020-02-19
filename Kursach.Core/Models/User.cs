@@ -4,7 +4,7 @@ using PropertyChanged;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Пользователь.

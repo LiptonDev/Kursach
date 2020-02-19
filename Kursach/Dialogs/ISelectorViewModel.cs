@@ -1,6 +1,6 @@
 ﻿using System.Windows.Data;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Указывает, что ViewModel - модель выбора данных.

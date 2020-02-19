@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     /// <summary>
     /// Указывает, что ViewModel можешь экспортировать данные в Excel.

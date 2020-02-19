@@ -1,11 +1,11 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Providers;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Select staff view model.

@@ -1,4 +1,4 @@
-﻿namespace Kursach.Core.ServerEvents
+﻿namespace ISTraining_Part.Core.ServerEvents
 {
     /// <summary>
     /// Событие изменения объекта.

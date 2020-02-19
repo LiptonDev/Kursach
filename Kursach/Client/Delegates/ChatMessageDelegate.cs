@@ -1,4 +1,4 @@
-﻿namespace Kursach.Client.Delegates
+﻿namespace ISTraining_Part.Client.Delegates
 {
     /// <summary>
     /// Делегат нового сообщения в чате.

@@ -1,8 +1,8 @@
 ﻿<Button 
-    x:Class="Kursach.Controls.ExportToExcelButton"
+    x:Class="ISTraining_Part.Controls.ExportToExcelButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="clr-namespace:Kursach.ViewModels"
+    xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
     Style="{StaticResource FlatButton}"
     Content="Экспорт данных"
     Command="{Binding Path=(vm:IExcelExporterViewModel.ExportToExcelCommand)}"/>

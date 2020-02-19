@@ -1,11 +1,11 @@
 ﻿using DryIoc;
-using Kursach.Core.Models;
-using Kursach.Views;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Views;
 using MaterialDesignXaml.DialogsHelper;
 using Microsoft.Win32;
 using System.Threading.Tasks;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Менеджер диалогов.

@@ -1,8 +1,8 @@
-﻿using Kursach.Core.Models;
-using Kursach.Models;
+﻿using ISTraining_Part.Core.Models;
+using ISTraining_Part.Models;
 using System.Collections.ObjectModel;
 
-namespace Kursach.Providers
+namespace ISTraining_Part.Providers
 {
     /// <summary>
     /// Поставщик данных.

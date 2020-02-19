@@ -1,5 +1,5 @@
-﻿using Kursach.Core.Models;
-using Kursach.Core.ServerMethods;
+﻿using ISTraining_Part.Core.Models;
+using ISTraining_Part.Core.ServerMethods;
 using System.Threading.Tasks;
 
 namespace Server.DataBase

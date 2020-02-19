@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Interfaces
+namespace ISTraining_Part.Client.Interfaces
 {
     /// <summary>
     /// Конфигуратор подключения.

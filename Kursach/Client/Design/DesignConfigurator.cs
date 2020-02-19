@@ -1,9 +1,9 @@
-﻿using Kursach.Client.Interfaces;
+﻿using ISTraining_Part.Client.Interfaces;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Design
+namespace ISTraining_Part.Client.Design
 {
     class DesignConfigurator : IHubConfigurator
     {

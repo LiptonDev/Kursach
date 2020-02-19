@@ -1,13 +1,13 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
-using Kursach.Helpers;
-using Kursach.Models;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Core.ServerEvents;
+using ISTraining_Part.Helpers;
+using ISTraining_Part.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kursach.Providers
+namespace ISTraining_Part.Providers
 {
     /// <summary>
     /// Поставщик данных.

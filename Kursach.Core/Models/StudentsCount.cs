@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Кол-во студентов в группе.

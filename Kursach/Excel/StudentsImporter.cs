@@ -1,7 +1,7 @@
 ﻿using DryIoc;
-using Kursach.Core.Models;
-using Kursach.Dialogs;
-using Kursach.Providers;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
+using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using OfficeOpenXml;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Импорт данных.
@@ -60,7 +60,6 @@ namespace Kursach.Excel
                         var group = dataProvider.Groups.FirstOrDefault(x => x.Name.ToLower() == groupName);
                         if (group == null)
                         {
-                            await dialogIdentifier.ShowMessageBoxAsync($"Группа \"{groupName}\" отсутсвтует!", MaterialMessageBoxButtons.Ok);
                             continue;
                         }
 

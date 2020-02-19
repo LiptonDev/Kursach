@@ -1,6 +1,6 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 
-namespace Kursach.Core.ServerEvents
+namespace ISTraining_Part.Core.ServerEvents
 {
     /// <summary>
     /// Список событий в хабе групп.

@@ -1,16 +1,16 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Dialogs;
-using Kursach.Providers;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
+using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     class MainViewModel : NavigationViewModel
     {

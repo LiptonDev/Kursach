@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Kursach.Properties {
+namespace ISTraining_Part.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

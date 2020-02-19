@@ -1,10 +1,10 @@
-﻿using Kursach.Client.Delegates;
-using Kursach.Client.Interfaces;
-using Kursach.Core;
-using Kursach.Core.ServerEvents;
+﻿using ISTraining_Part.Client.Delegates;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core;
+using ISTraining_Part.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 
-namespace Kursach.Client.Classes
+namespace ISTraining_Part.Client.Classes
 {
     /// <summary>
     /// Управление чатом.

@@ -1,14 +1,14 @@
 ﻿<UserControl 
-    x:Class="Kursach.Views.WelcomeView"
+    x:Class="ISTraining_Part.Views.WelcomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:welcomeslides="clr-namespace:Kursach.Views.WelcomeSlides"
+    xmlns:welcomeslides="clr-namespace:ISTraining_Part.Views.WelcomeSlides"
     prism:ViewModelLocator.AutoWireViewModel="True"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:Kursach.ViewModels"
+    xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}">
 

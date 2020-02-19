@@ -1,5 +1,5 @@
 ﻿<UserControl 
-    x:Class="Kursach.Views.WelcomeSlides.Slide1"
+    x:Class="ISTraining_Part.Views.WelcomeSlides.Slide1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 

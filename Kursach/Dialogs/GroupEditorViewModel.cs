@@ -1,9 +1,9 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Core.Models;
+using ISTraining_Part.Core.Models;
 using System.Windows.Input;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Group editor view model.

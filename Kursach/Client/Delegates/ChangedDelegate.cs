@@ -1,6 +1,6 @@
-﻿using Kursach.Core.ServerEvents;
+﻿using ISTraining_Part.Core.ServerEvents;
 
-namespace Kursach.Client.Delegates
+namespace ISTraining_Part.Client.Delegates
 {
     /// <summary>
     /// Делегат изменения объекта в базе.

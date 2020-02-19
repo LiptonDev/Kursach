@@ -1,8 +1,8 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kursach.Core.ServerMethods
+namespace ISTraining_Part.Core.ServerMethods
 {
     /// <summary>
     /// Список методов хаба студентов.

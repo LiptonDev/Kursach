@@ -6,11 +6,11 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Kursach")]
-[assembly: AssemblyDescription("Курсовая работа")]
+[assembly: AssemblyTitle("ISTraining_Part")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alexandr Smirnov")]
-[assembly: AssemblyProduct("Kursach")]
+[assembly: AssemblyProduct("ISTraining_Part")]
 [assembly: AssemblyCopyright("Copyright © Alexandr Smirnov 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

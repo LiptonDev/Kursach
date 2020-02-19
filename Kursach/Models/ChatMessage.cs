@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kursach.Models
+namespace ISTraining_Part.Models
 {
     /// <summary>
     /// Сообщение в чате.

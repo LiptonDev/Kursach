@@ -1,11 +1,11 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Core.ViewModels;
+using ISTraining_Part.Core.ViewModels;
 using MaterialDesignXaml.DialogsHelper;
 using System;
 using System.Windows.Input;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Base edit mode view model.

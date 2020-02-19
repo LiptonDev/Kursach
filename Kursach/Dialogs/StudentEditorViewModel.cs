@@ -1,11 +1,11 @@
 ﻿using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Providers;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Providers;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Student editor view model.

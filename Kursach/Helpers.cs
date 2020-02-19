@@ -1,7 +1,7 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using Prism.Regions;
 
-namespace Kursach
+namespace ISTraining_Part
 {
     static class NavigationParametersFluent
     {

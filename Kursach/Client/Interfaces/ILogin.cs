@@ -1,6 +1,6 @@
-﻿using Kursach.Core.ServerMethods;
+﻿using ISTraining_Part.Core.ServerMethods;
 
-namespace Kursach.Client.Interfaces
+namespace ISTraining_Part.Client.Interfaces
 {
     /// <summary>
     /// Управление авторизацией.

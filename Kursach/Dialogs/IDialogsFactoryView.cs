@@ -1,4 +1,4 @@
-﻿namespace Kursach.Dialogs
+﻿namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Dialogs view factory.

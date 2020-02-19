@@ -1,8 +1,8 @@
-﻿using Kursach.Client.Delegates;
-using Kursach.Core.Models;
-using Kursach.Core.ServerMethods;
+﻿using ISTraining_Part.Client.Delegates;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Core.ServerMethods;
 
-namespace Kursach.Client.Interfaces
+namespace ISTraining_Part.Client.Interfaces
 {
     /// <summary>
     /// Управление студентами.

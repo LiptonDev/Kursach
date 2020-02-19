@@ -1,17 +1,17 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Core;
-using Kursach.Core.Models;
-using Kursach.Properties;
-using Kursach.Providers;
+using ISTraining_Part.Properties;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     /// <summary>
     /// Login view model.

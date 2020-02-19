@@ -1,8 +1,8 @@
-﻿using Kursach.Core.ViewModels;
+﻿using ISTraining_Part.Core.ViewModels;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Пользователь для авторизации.

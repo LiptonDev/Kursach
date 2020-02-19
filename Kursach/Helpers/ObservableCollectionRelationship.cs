@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kursach.Helpers
+namespace ISTraining_Part.Helpers
 {
     /// <summary>
     /// Установка связи одной ObservableCollection с другой.

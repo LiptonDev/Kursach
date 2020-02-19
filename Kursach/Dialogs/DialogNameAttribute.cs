@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Атрибут для диалоговых окон.

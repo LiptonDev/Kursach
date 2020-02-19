@@ -1,7 +1,7 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     static class BudgetHelper
     {

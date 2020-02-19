@@ -1,6 +1,6 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Dialogs;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Импорт данных.

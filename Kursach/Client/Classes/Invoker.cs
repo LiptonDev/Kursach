@@ -1,12 +1,12 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Classes
+namespace ISTraining_Part.Client.Classes
 {
     /// <summary>
     /// Отправка запросов на сервер.

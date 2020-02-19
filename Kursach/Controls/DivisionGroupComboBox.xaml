@@ -1,5 +1,5 @@
 ﻿<ComboBox 
-    x:Class="Kursach.Controls.DivisionGroupComboBox"
+    x:Class="ISTraining_Part.Controls.DivisionGroupComboBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"

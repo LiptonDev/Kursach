@@ -1,8 +1,8 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.Core.Models;
+using ISTraining_Part.Core.Models;
 using Prism.Regions;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     abstract class NavigationViewModel : ViewModelBase, INavigationAware
     {

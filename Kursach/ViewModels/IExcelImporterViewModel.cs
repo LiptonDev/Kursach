@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     /// <summary>
     /// Указывает, что ViewModel можешь импортировать данные из Excel.

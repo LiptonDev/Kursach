@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kursach
+namespace ISTraining_Part
 {
     /// <summary>
     /// Указывает, что св-во нужно пропустить при работе метода ChangeAllFields.SetAllFields.

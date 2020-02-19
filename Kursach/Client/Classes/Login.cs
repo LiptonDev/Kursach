@@ -1,9 +1,9 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core;
-using Kursach.Core.Models;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core;
+using ISTraining_Part.Core.Models;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Classes
+namespace ISTraining_Part.Client.Classes
 {
     /// <summary>
     /// Управление авторизацией.

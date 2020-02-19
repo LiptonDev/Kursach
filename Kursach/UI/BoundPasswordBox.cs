@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Kursach.UI
+namespace ISTraining_Part.UI
 {
     public class BoundPasswordBox
     {

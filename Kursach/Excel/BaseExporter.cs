@@ -1,7 +1,7 @@
-﻿using Kursach.Dialogs;
+﻿using ISTraining_Part.Dialogs;
 using System;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     class BaseExporter
     {

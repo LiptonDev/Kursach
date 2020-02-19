@@ -118,9 +118,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kursach.Core\Kursach.Core.csproj">
+    <ProjectReference Include="..\Kursach.Core\ISTraining_Part.Core.csproj">
       <Project>{094074FC-47CD-4FF8-8F9D-9610429FC04B}</Project>
-      <Name>Kursach.Core</Name>
+      <Name>ISTraining_Part.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

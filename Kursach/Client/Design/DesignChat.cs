@@ -1,7 +1,7 @@
-﻿using Kursach.Client.Delegates;
-using Kursach.Client.Interfaces;
+﻿using ISTraining_Part.Client.Delegates;
+using ISTraining_Part.Client.Interfaces;
 
-namespace Kursach.Client.Design
+namespace ISTraining_Part.Client.Design
 {
     class DesignChat : IChat
     {

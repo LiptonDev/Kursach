@@ -1,12 +1,13 @@
 ﻿using DryIoc;
-using Kursach.Client.Classes;
-using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Dialogs;
-using Kursach.Excel;
-using Kursach.Providers;
-using Kursach.ViewModels;
-using Kursach.Views;
+using ISTraining_Part.Client.Classes;
+using ISTraining_Part.Client.Design;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
+using ISTraining_Part.Excel;
+using ISTraining_Part.Providers;
+using ISTraining_Part.ViewModels;
+using ISTraining_Part.Views;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.DryIoc;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace Kursach
+namespace ISTraining_Part
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml

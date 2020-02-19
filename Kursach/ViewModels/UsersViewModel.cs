@@ -1,16 +1,16 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
-using Kursach.Dialogs;
-using Kursach.Providers;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
+using ISTraining_Part.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     /// <summary>
     /// Users view model.

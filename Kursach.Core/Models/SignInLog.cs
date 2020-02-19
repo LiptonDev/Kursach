@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using PropertyChanged;
 using System;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Лог входа в программу.

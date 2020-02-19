@@ -1,11 +1,11 @@
-﻿using Kursach.Core.Models;
-using Kursach.Dialogs;
+﻿using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Экспорт данных о сотрудниках.

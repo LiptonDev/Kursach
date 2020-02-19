@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Kursach.Views
+namespace ISTraining_Part.Views
 {
     /// <summary>
     /// Логика взаимодействия для StudentsView.xaml

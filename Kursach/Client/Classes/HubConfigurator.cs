@@ -1,11 +1,11 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Properties;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Properties;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Classes
+namespace ISTraining_Part.Client.Classes
 {
     /// <summary>
     /// Конфигуратор подключения.

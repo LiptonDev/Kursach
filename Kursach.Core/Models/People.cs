@@ -1,10 +1,10 @@
 ﻿using Dapper.Contrib.Extensions;
-using Kursach.Core.ViewModels;
+using ISTraining_Part.Core.ViewModels;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Человек.

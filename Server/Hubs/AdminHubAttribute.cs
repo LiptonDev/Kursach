@@ -1,4 +1,4 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 

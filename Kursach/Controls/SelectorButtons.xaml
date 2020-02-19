@@ -1,5 +1,5 @@
 ﻿<UniformGrid 
-    x:Class="Kursach.Controls.SelectorButtons"
+    x:Class="ISTraining_Part.Controls.SelectorButtons"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Rows="1">

@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Kursach.Core.ViewModels
+namespace ISTraining_Part.Core.ViewModels
 {
     /// <summary>
     /// ViewModel для проверки полей на ошибки.

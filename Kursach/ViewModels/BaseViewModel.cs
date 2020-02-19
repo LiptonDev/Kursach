@@ -1,14 +1,14 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Dialogs;
-using Kursach.Providers;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Dialogs;
+using ISTraining_Part.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     abstract class BaseViewModel<T> : NavigationViewModel, IBaseViewModel<T>
     {

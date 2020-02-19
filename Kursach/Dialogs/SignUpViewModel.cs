@@ -1,7 +1,7 @@
 ﻿using DryIoc;
-using Kursach.Core.Models;
+using ISTraining_Part.Core.Models;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Signup view model.

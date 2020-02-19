@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Импорт данных.

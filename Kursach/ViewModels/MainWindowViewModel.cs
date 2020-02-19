@@ -1,14 +1,14 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using Kursach.Client.Interfaces;
-using Kursach.Dialogs;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Kursach.ViewModels
+namespace ISTraining_Part.ViewModels
 {
     /// <summary>
     /// MainWindow view model.

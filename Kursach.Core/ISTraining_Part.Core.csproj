@@ -8,8 +8,8 @@
     <ProjectGuid>{094074FC-47CD-4FF8-8F9D-9610429FC04B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kursach.Core</RootNamespace>
-    <AssemblyName>Kursach.Core</AssemblyName>
+    <RootNamespace>ISTraining_Part.Core</RootNamespace>
+    <AssemblyName>ISTraining_Part.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

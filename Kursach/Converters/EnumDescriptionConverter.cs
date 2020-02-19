@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
 
-namespace Kursach.Converters
+namespace ISTraining_Part.Converters
 {
     /// <summary>
     /// Конвертер для получения DescriptionAttribute у Enum'a.

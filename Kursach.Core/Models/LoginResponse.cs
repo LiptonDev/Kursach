@@ -1,4 +1,4 @@
-﻿namespace Kursach.Core.Models
+﻿namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Результат авторизации.

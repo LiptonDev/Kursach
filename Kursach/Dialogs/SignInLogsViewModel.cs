@@ -1,9 +1,9 @@
-﻿using Kursach.Client.Interfaces;
-using Kursach.Core.Models;
+﻿using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Signin logs view model.

@@ -1,5 +1,5 @@
-﻿using Kursach.Core.Models;
-using Kursach.Dialogs;
+﻿using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace Kursach.Excel
+namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Экспорт данных о группе и студентах.

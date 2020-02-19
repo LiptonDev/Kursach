@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialHelper="clr-namespace:MaterialDesignXaml.DialogsHelper.Controls;assembly=MaterialDesignXaml.DialogsHelper"
     xmlns:materialHelperCommand="clr-namespace:MaterialDesignXaml.DialogsHelper;assembly=MaterialDesignXaml.DialogsHelper"
-    xmlns:converters="clr-namespace:Kursach.Converters">
+    xmlns:converters="clr-namespace:ISTraining_Part.Converters">
 
     <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
 

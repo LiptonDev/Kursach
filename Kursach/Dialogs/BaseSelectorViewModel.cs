@@ -1,10 +1,10 @@
 ﻿using DevExpress.Mvvm;
-using Kursach.Client.Interfaces;
+using ISTraining_Part.Client.Interfaces;
 using MaterialDesignXaml.DialogsHelper;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Base selector view model.

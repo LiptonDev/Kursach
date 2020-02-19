@@ -1,6 +1,6 @@
-﻿using Kursach.Core.ViewModels;
+﻿using ISTraining_Part.Core.ViewModels;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Указывает, что ViewModel - модель редактирования объекта.

@@ -1,14 +1,14 @@
-﻿using Kursach.Client.Delegates;
-using Kursach.Client.Interfaces;
-using Kursach.Core;
-using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
+﻿using ISTraining_Part.Client.Delegates;
+using ISTraining_Part.Client.Interfaces;
+using ISTraining_Part.Core;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Core.ServerEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kursach.Client.Design
+namespace ISTraining_Part.Client.Design
 {
     class DesignStudents : IStudents
     {

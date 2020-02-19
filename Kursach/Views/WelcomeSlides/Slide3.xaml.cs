@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Kursach.Views.WelcomeSlides
+namespace ISTraining_Part.Views.WelcomeSlides
 {
     /// <summary>
     /// Логика взаимодействия для Slide3.xaml

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Kursach.Views
+namespace ISTraining_Part.Views
 {
     /// <summary>
     /// Логика взаимодействия для ChatWindow.xaml

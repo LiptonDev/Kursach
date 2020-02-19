@@ -1,8 +1,8 @@
-﻿using Kursach.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using MaterialDesignXaml.DialogsHelper;
 using System.Threading.Tasks;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Менеджер диалогов.

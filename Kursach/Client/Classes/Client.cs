@@ -1,6 +1,6 @@
-﻿using Kursach.Client.Interfaces;
+﻿using ISTraining_Part.Client.Interfaces;
 
-namespace Kursach.Client.Classes
+namespace ISTraining_Part.Client.Classes
 {
     /// <summary>
     /// Клиент сервера.

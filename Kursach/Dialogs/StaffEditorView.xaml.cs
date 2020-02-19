@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Kursach.Dialogs
+namespace ISTraining_Part.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для StaffEditorView.xaml

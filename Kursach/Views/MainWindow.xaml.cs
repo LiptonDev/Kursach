@@ -1,8 +1,8 @@
-﻿using Kursach.Properties;
+﻿using ISTraining_Part.Properties;
 using Prism.Regions;
 using System.Windows;
 
-namespace Kursach
+namespace ISTraining_Part
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

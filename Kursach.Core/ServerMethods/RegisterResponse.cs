@@ -1,4 +1,4 @@
-﻿namespace Kursach.Core.ServerMethods
+﻿namespace ISTraining_Part.Core.ServerMethods
 {
     /// <summary>
     /// Результат регистрации.

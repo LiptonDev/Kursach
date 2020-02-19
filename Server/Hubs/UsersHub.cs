@@ -1,7 +1,7 @@
-﻿using Kursach.Core;
-using Kursach.Core.Models;
-using Kursach.Core.ServerEvents;
-using Kursach.Core.ServerMethods;
+﻿using ISTraining_Part.Core;
+using ISTraining_Part.Core.Models;
+using ISTraining_Part.Core.ServerEvents;
+using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Server.DataBase;

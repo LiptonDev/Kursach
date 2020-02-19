@@ -1,4 +1,4 @@
-﻿namespace Kursach
+﻿namespace ISTraining_Part
 {
     static class Consts
     {

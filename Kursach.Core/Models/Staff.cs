@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kursach.Core.Models
+namespace ISTraining_Part.Core.Models
 {
     /// <summary>
     /// Сотрудник.
