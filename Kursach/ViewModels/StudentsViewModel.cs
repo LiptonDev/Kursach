@@ -8,6 +8,7 @@ using ISTraining_Part.Providers;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,6 +52,11 @@ namespace ISTraining_Part.ViewModels
         readonly IExporter<IEnumerable<IGrouping<Group, Student>>> exporter;
 
         /// <summary>
+        /// Экспорт несовершеннолетних.
+        /// </summary>
+        readonly IExporter<IEnumerable<IGrouping<Group, Student>>> minorExporter;
+
+        /// <summary>
         /// Импорт данных.
         /// </summary>
         readonly IAsyncImporter<IEnumerable<Student>> importer;
@@ -67,7 +73,6 @@ namespace ISTraining_Part.ViewModels
         /// Конструктор.
         /// </summary>
         public StudentsViewModel(IDialogManager dialogManager,
-                                 IExporter<IEnumerable<IGrouping<Group, Student>>> exporter,
                                  IAsyncImporter<IEnumerable<Student>> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
                                  IClient client,
@@ -75,7 +80,8 @@ namespace ISTraining_Part.ViewModels
                                  IContainer container)
             : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
-            this.exporter = exporter;
+            this.exporter = container.Resolve<IExporter<IEnumerable<IGrouping<Group, Student>>>>();
+            this.minorExporter = container.Resolve<IExporter<IEnumerable<IGrouping<Group, Student>>>>("minor");
             this.importer = importer;
 
             Students = new ListCollectionView(dataProvider.Students);
@@ -85,6 +91,7 @@ namespace ISTraining_Part.ViewModels
 
             ExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ImportFromExcelCommand = new AsyncCommand(ImportFromExcel);
+            ExportMinorsCommand = new DelegateCommand(ExportMinors);
         }
 
         /// <summary>
@@ -106,6 +113,11 @@ namespace ISTraining_Part.ViewModels
         /// Команда экспорта данных в Excel.
         /// </summary>
         public ICommand ExportToExcelCommand { get; }
+
+        /// <summary>
+        /// Команда экспорта несовершеннолетних в Excel.
+        /// </summary>
+        public ICommand ExportMinorsCommand { get; }
 
         /// <summary>
         /// Команда импорта данных из Excel.
@@ -163,9 +175,19 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         public void ExportToExcel()
         {
-
             var res = exporter.Export(dataProvider.Students.GroupBy(x => dataProvider.Groups.FirstOrDefault(g => g.Id == x.GroupId)));
             var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
+
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Экспорт несовершеннолетних.
+        /// </summary>
+        private void ExportMinors()
+        {
+            var res = minorExporter.Export(dataProvider.Students.GroupBy(x => dataProvider.Groups.FirstOrDefault(g => g.Id == x.GroupId)));
+            var msg = res ? "Несовершеннолетние экспортированы" : "Несовершеннолетние не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
         }

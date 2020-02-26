@@ -17,6 +17,7 @@
     Title="IS Training Part" 
     MinHeight="600"
     MinWidth="600"
+    Icon="pack://application:,,,/icon.ico"
     ResizeMode="CanResizeWithGrip">
 
     <Grid>

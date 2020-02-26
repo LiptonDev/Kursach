@@ -116,6 +116,7 @@ namespace ISTraining_Part
 
             //excel
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<IGrouping<Group, Student>>>, StudentsExporter>();
+            containerRegistry.RegisterSingleton<IExporter<IEnumerable<IGrouping<Group, Student>>>, MinorStudentsExporter>("minor");
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
             containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<Group>>, GroupsExporter>();
             containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>>, StudentsImporter>();

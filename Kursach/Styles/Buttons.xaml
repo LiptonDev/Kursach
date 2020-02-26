@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ISTraining_Part.Converters"
     xmlns:materialHelper="clr-namespace:MaterialDesignXaml.DialogsHelper.Controls;assembly=MaterialDesignXaml.DialogsHelper"
-    xmlns:materialHelperCommand="clr-namespace:MaterialDesignXaml.DialogsHelper;assembly=MaterialDesignXaml.DialogsHelper"
-    xmlns:converters="clr-namespace:ISTraining_Part.Converters">
+    xmlns:materialHelperCommand="clr-namespace:MaterialDesignXaml.DialogsHelper;assembly=MaterialDesignXaml.DialogsHelper">
 
     <converters:UserModeToVisibility x:Key="RWUserModeToVisibility" NeedMode="ReadWrite"/>
 

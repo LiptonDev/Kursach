@@ -10,7 +10,7 @@ namespace ISTraining_Part.Core.Models
     /// Пользователь.
     /// </summary>
     [Table("users")]
-    public class User : LoginUser, ICloneable
+    public class User : LoginUser, IId, ICloneable
     {
         /// <summary>
         /// ID.

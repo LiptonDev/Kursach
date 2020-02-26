@@ -155,6 +155,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\BringNewItemIntoViewBehavior.cs" />
+    <Compile Include="Behaviors\ContextMenuLeftClickBehavior.cs" />
     <Compile Include="Client\Classes\Chat.cs" />
     <Compile Include="Client\Delegates\ChangedDelegate.cs" />
     <Compile Include="Client\Classes\Client.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Dialogs\IDialogManager.cs" />
     <Compile Include="Excel\BaseExporter.cs" />
     <Compile Include="Excel\BaseImporter.cs" />
+    <Compile Include="Excel\MinorStudentsExporter.cs" />
     <Compile Include="Excel\StudentsImporter.cs" />
     <Compile Include="Excel\GroupsExporter.cs" />
     <Compile Include="Excel\IImporter.cs" />
@@ -228,7 +230,6 @@
     <Compile Include="Dialogs\BaseEditModeViewModel.cs" />
     <Compile Include="Dialogs\BaseSelectorViewModel.cs" />
     <Compile Include="Helpers\ChangeAllFields.cs" />
-    <Compile Include="Helpers\ObservableCollectionRelationship.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Providers\DataProvider.cs" />
     <Compile Include="Providers\IDataProvider.cs" />
@@ -536,7 +537,9 @@
       <Name>ISTraining_Part.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

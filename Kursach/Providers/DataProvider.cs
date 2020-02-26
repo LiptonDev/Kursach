@@ -1,8 +1,8 @@
 ﻿using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.ServerEvents;
-using ISTraining_Part.Helpers;
 using ISTraining_Part.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -74,9 +74,6 @@ namespace ISTraining_Part.Providers
             Groups = new ObservableCollection<Group>();
             Students = new ObservableCollection<Student>();
             ChatMessages = new ObservableCollection<ChatMessage>();
-
-            Staff.SetRelationship(Groups, (staff, group) => group.CuratorId == staff.Id, sync);
-            Groups.SetRelationship(Students, (group, student) => student.GroupId == group.Id, sync);
         }
 
         /// <summary>
@@ -192,7 +189,7 @@ namespace ISTraining_Part.Providers
         /// <summary>
         /// Обработка изменения.
         /// </summary>
-        void ProcessChanges<T>(DbChangeStatus status, T arg, ObservableCollection<T> collection)
+        void ProcessChanges<T>(DbChangeStatus status, T arg, ObservableCollection<T> collection) where T : IId
         {
             switch (status)
             {
@@ -212,12 +209,35 @@ namespace ISTraining_Part.Providers
                     break;
 
                 case DbChangeStatus.Remove:
-                    sync.StartNew(() => collection.Remove(arg));
+                    sync.StartNew(() =>
+                    {
+                        collection.Remove(arg);
+
+                        if (typeof(T) == typeof(Staff))
+                            Clear(Groups, x => x.CuratorId == arg.Id);
+                        else if (typeof(T) == typeof(Group))
+                            Clear(Students, x => x.GroupId == arg.Id);
+                    });
                     break;
 
                 default:
                     Logger.Log.Warn($"Необработанное событие изменения: {{type: {typeof(T)}, arg: {arg}, status: {status}}}");
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Связь между коллекциями.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection">Коллекция, из которой будут удалены данные.</param>
+        /// <param name="func">Фильтрация.</param>
+        void Clear<T>(ObservableCollection<T> collection, Func<T, bool> func)
+        {
+            var removeList = collection.Where(func).ToList();
+            foreach (var item in removeList)
+            {
+                collection.Remove(item);
             }
         }
     }

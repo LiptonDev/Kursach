@@ -68,7 +68,7 @@ namespace ISTraining_Part.Dialogs
         /// <summary>
         /// Закрытие диалога.
         /// </summary>
-        private async void CloseDialog()
+        private void CloseDialog()
         {
             OwnerIdentifier.Close(EditableObject);
         }

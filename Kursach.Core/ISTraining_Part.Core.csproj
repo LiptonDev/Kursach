@@ -39,6 +39,7 @@
     <Compile Include="KursachResponse.cs" />
     <Compile Include="KursachResponseCode.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\IId.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Models\People.cs" />

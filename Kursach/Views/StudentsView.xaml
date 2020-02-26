@@ -8,6 +8,8 @@
     xmlns:controls="clr-namespace:ISTraining_Part.Controls"
     xmlns:converters="clr-namespace:ISTraining_Part.Converters"
     xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
+    xmlns:behaviors="clr-namespace:ISTraining_Part.Behaviors"
+    x:Name="userControl"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:StudentsViewModel, IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True">
@@ -30,7 +32,18 @@
                      Rows="1">
             <controls:AddButton Content="Добавить студента"/>
 
-            <controls:ExportToExcelButton/>
+            <Button Content="Экспорт данных"
+                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True"
+                    Tag="{Binding DataContext, ElementName=userControl}">
+                <Button.ContextMenu>
+                    <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                        <MenuItem Header="Список групп"
+                                  Command="{Binding ExportToExcelCommand}"/>
+                        <MenuItem Header="Контингент несовершеннолетних"
+                                  Command="{Binding ExportMinorsCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
 
             <controls:ImportFromExcelButton/>
         </UniformGrid>
