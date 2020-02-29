@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ISTraining_Part
+namespace ISTraining_Part.Core
 {
     /// <summary>
     /// Магия рефлексии.
     /// </summary>
-    static class ChangeAllFields
+    public static class ChangeAllFields
     {
         /// <summary>
         /// Установить всё св-ва объекта с другого объекта.
