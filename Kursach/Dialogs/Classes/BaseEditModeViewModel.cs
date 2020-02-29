@@ -38,6 +38,7 @@ namespace ISTraining_Part.Dialogs.Classes
         /// </summary>
         public BaseEditModeViewModel()
         {
+            EditableObject = Activator.CreateInstance<T>();
         }
 
         /// <summary>
