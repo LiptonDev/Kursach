@@ -5,6 +5,7 @@ using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.Client.Classes
@@ -35,7 +36,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
-            return TryInvokeAsync<IEnumerable<Staff>>();
+            Logger.Log.Info("Получение списка сотрудников");
+
+            return TryInvokeAsync(defaultValue: Enumerable.Empty<Staff>());
         }
 
         /// <summary>
@@ -44,6 +47,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
+            Logger.Log.Info("Получение первого сотрудника.");
+
             return TryInvokeAsync<Staff, bool>();
         }
         #endregion
@@ -56,6 +61,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff)
         {
+            Logger.Log.Info($"Добавление сотрудника: {{id: {staff.Id}}}");
+
             return TryInvokeAsync<bool>(args: staff);
         }
 
@@ -66,6 +73,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff)
         {
+            Logger.Log.Info($"Сохранение сотрудника: {{id: {staff.Id}}}");
+
             return TryInvokeAsync<bool>(args: staff);
         }
 
@@ -76,6 +85,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff)
         {
+            Logger.Log.Info($"Удаление сотрудника: {{id: {staff.Id}}}");
+
             return TryInvokeAsync<bool>(args: staff);
         }
         #endregion

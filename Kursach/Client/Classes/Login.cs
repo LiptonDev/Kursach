@@ -25,6 +25,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
+            Logger.Log.Info($"Попытка авторизации: {{login: {login}}}");
+
             return TryInvokeAsync<User, LoginResponse>(argDefault: LoginResponse.ServerError, args: new object[] { login, password });
         }
 

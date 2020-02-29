@@ -5,6 +5,7 @@ using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.Client.Classes
@@ -35,7 +36,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<IEnumerable<User>>> GetUsersAsync()
         {
-            return TryInvokeAsync<IEnumerable<User>>();
+            Logger.Log.Info("Получение списка пользователей");
+
+            return TryInvokeAsync(defaultValue: Enumerable.Empty<User>());
         }
 
         /// <summary>
@@ -47,6 +50,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
+            Logger.Log.Info($"Получение пользователя: {{login: {login}, password: {usePassword}}}");
+
             return TryInvokeAsync<User>(args: new object[] { login, password, usePassword });
         }
         #endregion
@@ -59,7 +64,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
-            return TryInvokeAsync<IEnumerable<SignInLog>>(args: userId);
+            Logger.Log.Info($"Получение логов входа пользователя: {{id: {userId}}}");
+
+            return TryInvokeAsync(args: userId, defaultValue: Enumerable.Empty<SignInLog>());
         }
         #endregion
 
@@ -71,6 +78,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddUserAsync(User user)
         {
+            Logger.Log.Info($"Добавление пользователя: {{id: {user.Id}}}");
+
             return TryInvokeAsync<bool>(args: user);
         }
 
@@ -81,6 +90,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> SaveUserAsync(User user)
         {
+            Logger.Log.Info($"Сохранение пользователя: {{id: {user.Id}}}");
+
             return TryInvokeAsync<bool>(args: user);
         }
 
@@ -91,6 +102,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> RemoveUserAsync(User user)
         {
+            Logger.Log.Info($"Удаление пользователя: {{id: {user.Id}}}");
+
             return TryInvokeAsync<bool>(args: user);
         }
         #endregion

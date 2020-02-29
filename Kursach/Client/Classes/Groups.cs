@@ -6,6 +6,7 @@ using ISTraining_Part.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.Client.Classes
@@ -44,7 +45,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
-            return TryInvokeAsync<IEnumerable<Group>>(args: divisionId);
+            Logger.Log.Info($"Получение списка групп: {{division: {divisionId}}}");
+
+            return TryInvokeAsync(args: divisionId, defaultValue: Enumerable.Empty<Group>());
         }
         #endregion
 
@@ -56,6 +59,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
+            Logger.Log.Info($"Добавление групп: {{name: {string.Join(",", groups)}}}");
+
             return TryInvokeAsync<bool>(args: groups);
         }
 
@@ -66,6 +71,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddGroupAsync(Group group)
         {
+            Logger.Log.Info($"Добавление группы: {{id: {group.Id}}}");
+
             return TryInvokeAsync<bool>(args: group);
         }
 
@@ -76,6 +83,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> SaveGroupAsync(Group group)
         {
+            Logger.Log.Info($"Сохранение группы: {{id: {group.Id}}}");
+
             return TryInvokeAsync<bool>(args: group);
         }
 
@@ -86,6 +95,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> RemoveGroupAsync(Group group)
         {
+            Logger.Log.Info($"Удаление группы: {{id: {group.Id}}}");
+
             return TryInvokeAsync<bool>(args: group);
         }
         #endregion

@@ -26,7 +26,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<Core.Models.DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
         {
-            return TryInvokeAsync<Core.Models.DetailInfo>(args: new object[] { id, type });
+            Logger.Log.Info($"Получение детальной информации: {{people id: {id}, type: {type}}}");
+
+            return TryInvokeAsync(args: new object[] { id, type }, defaultValue: new Core.Models.DetailInfo());
         }
 
         /// <summary>
@@ -36,6 +38,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(Core.Models.DetailInfo detailInfo, DetailInfoType type)
         {
+            Logger.Log.Info($"Сохранение детальной информации: {{id: {detailInfo.Id}, {detailInfo}, type: {type}}}");
+
             return TryInvokeAsync<bool>(args: new object[] { detailInfo, type });
         }
     }

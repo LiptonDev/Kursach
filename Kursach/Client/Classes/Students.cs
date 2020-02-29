@@ -5,6 +5,7 @@ using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.ServerEvents;
 using Microsoft.AspNet.SignalR.Client;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.Client.Classes
@@ -43,6 +44,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task RaiseStudentsImported()
         {
+            Logger.Log.Info("Вызов события импортирования студентов");
+
             return TryInvokeAsync();
         }
         #endregion
@@ -55,7 +58,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
-            return TryInvokeAsync<IEnumerable<Student>>(args: groupId);
+            Logger.Log.Info($"Получение списка студентов: {{group: {groupId}}}");
+
+            return TryInvokeAsync(args: groupId, defaultValue: Enumerable.Empty<Student>());
         }
 
         /// <summary>
@@ -66,7 +71,9 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
-            return TryInvokeAsync<Dictionary<int, StudentsCount>>(args: groupIds);
+            Logger.Log.Info($"Получение количества студентов в группах: {{group ids: {string.Join(",", groupIds)}}}");
+
+            return TryInvokeAsync(args: groupIds, defaultValue: new Dictionary<int, StudentsCount>());
         }
         #endregion
 
@@ -78,6 +85,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student)
         {
+            Logger.Log.Info($"Добавление студента: {{id: {student.Id}}}");
+
             return TryInvokeAsync<bool>(args: student);
         }
 
@@ -89,6 +98,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
+            Logger.Log.Info($"Добавление студентов: {{count: {students.Count()}}}");
+
             return TryInvokeAsync<bool>(args: students);
         }
 
@@ -99,6 +110,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student)
         {
+            Logger.Log.Info($"Сохранение студента: {{id: {student.Id}}}");
+
             return TryInvokeAsync<bool>(args: student);
         }
 
@@ -109,6 +122,8 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student)
         {
+            Logger.Log.Info($"Удаление студента: {{id: {student.Id}}}");
+
             return TryInvokeAsync<bool>(args: student);
         }
         #endregion

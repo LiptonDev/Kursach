@@ -28,9 +28,11 @@ namespace ISTraining_Part.Client.Classes
         /// <summary>
         /// Отправить сообщение.
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">Текст сообщения.</param>
         public void SendMessage(string text)
         {
+            Logger.Log.Info($"Отправка сообщения в чат: {{text: {text}}}");
+
             TryInvokeAsync(args: new[] { text });
         }
     }
