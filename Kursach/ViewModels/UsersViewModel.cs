@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
+using ISTraining_Part.Client.Design;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
@@ -8,6 +9,7 @@ using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.ViewModels
@@ -22,6 +24,9 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         public UsersViewModel()
         {
+            Items = new ObservableCollection<User>();
+            var res = new DesignUsers().GetUsersAsync().Result;
+            Items.AddRange(res.Response);
         }
 
         /// <summary>
@@ -36,7 +41,7 @@ namespace ISTraining_Part.ViewModels
         {
             Items = dataProvider.Users;
 
-            ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
+            ShowLogsCommand = new DelegateCommand<User>(ShowLogs, u => u != null);
         }
 
         /// <summary>
@@ -101,9 +106,12 @@ namespace ISTraining_Part.ViewModels
             dialogManager.ShowLogs(user);
         }
 
+        /// <summary>
+        /// Лог.
+        /// </summary>
         void Log(string msg, User user)
         {
-            Logger.Log.Info($"{msg}: {{login: {user.Login}, mode: {user.Mode}}}");
+            Logger.Log.Info($"{msg}: {{id: {user.Id}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

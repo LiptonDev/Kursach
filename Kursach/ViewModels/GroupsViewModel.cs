@@ -1,9 +1,10 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
+using ISTraining_Part.Client.Design;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
-using ISTraining_Part.Excel;
+using ISTraining_Part.Excel.Interfaces;
 using ISTraining_Part.Providers;
 using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignThemes.Wpf;
@@ -11,6 +12,7 @@ using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -55,7 +57,7 @@ namespace ISTraining_Part.ViewModels
         /// <summary>
         /// Импорт данных "Список групп".
         /// </summary>
-        readonly IAsyncImporter<IEnumerable<Student>> studentsImporter;
+        readonly IImporter<IEnumerable<Student>> studentsImporter;
 
         /// <summary>
         /// Экспорт "Список групп".
@@ -77,6 +79,11 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         public GroupsViewModel()
         {
+            Items = new ObservableCollection<Group>();
+            var res = new DesignGroups().GetGroupsAsync(1).Result;
+            Items.AddRange(res.Response);
+
+            Groups = new ListCollectionView(Items);
         }
 
         /// <summary>
@@ -85,7 +92,7 @@ namespace ISTraining_Part.ViewModels
         public GroupsViewModel(IDialogManager dialogManager,
                                IAsyncExporter<IEnumerable<Group>> divisionsContingentExporter,
                                IAsyncImporter<IEnumerable<Group>> divisionsContingentImporter,
-                               IAsyncImporter<IEnumerable<Student>> studentsImporter,
+                               IImporter<IEnumerable<Student>> studentsImporter,
                                ISnackbarMessageQueue snackbarMessageQueue,
                                IRegionManager regionManager,
                                IClient client,
@@ -105,12 +112,11 @@ namespace ISTraining_Part.ViewModels
             Groups.Filter += FilterGroup;
 
             DivisionsContingentExportCommand = new DelegateCommand(DivisionsContingentExport);
-
-            DivisionsContingentImportCommand = new AsyncCommand(DivisionsContingentImport);
-            StudentsImportCommand = new AsyncCommand(StudentsImport);
-
             StudentsExportCommand = new AsyncCommand(StudentsExport);
             MinorStudentsExportCommand = new AsyncCommand(MinorStudentsExport);
+
+            DivisionsContingentImportCommand = new AsyncCommand(DivisionsContingentImport);
+            StudentsImportCommand = new DelegateCommand(StudentsImport);
 
             ShowStudentsCommand = new DelegateCommand<Group>(ShowStudents, group => group != null);
         }
@@ -207,9 +213,9 @@ namespace ISTraining_Part.ViewModels
         /// Импорт "Список групп".
         /// </summary>
         /// <returns></returns>
-        private async Task StudentsImport()
+        private async void StudentsImport()
         {
-            var students = await studentsImporter.Import();
+            var students = studentsImporter.Import();
 
             if (students == null || students.Count() == 0)
                 return;
@@ -315,9 +321,12 @@ namespace ISTraining_Part.ViewModels
             return students.GroupBy(x => Items.FirstOrDefault(g => g.Id == x.GroupId));
         }
 
+        /// <summary>
+        /// Лог.
+        /// </summary>
         void Log(string msg, Group group)
         {
-            Logger.Log.Info($"{msg}: {{name: {group.Name}, curator: {group.CuratorId}}}");
+            Logger.Log.Info($"{msg}: {{id: {group.Id}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

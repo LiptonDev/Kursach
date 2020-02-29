@@ -1,10 +1,11 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
+using ISTraining_Part.Client.Design;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.Models.Enums;
 using ISTraining_Part.Dialogs.Manager;
-using ISTraining_Part.Excel;
+using ISTraining_Part.Excel.Interfaces;
 using ISTraining_Part.Providers;
 using ISTraining_Part.ViewModels.Classes;
 using ISTraining_Part.ViewModels.Interfaces;
@@ -12,6 +13,7 @@ using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -32,6 +34,9 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         public StaffViewModel()
         {
+            Items = new ObservableCollection<Staff>();
+            var res = new DesignStaff().GetStaffsAsync().Result;
+            Items.AddRange(res.Response);
         }
 
         /// <summary>
@@ -69,40 +74,6 @@ namespace ISTraining_Part.ViewModels
         /// Команда открытия редактирования детальной информации.
         /// </summary>
         public ICommand<People> ShowDetailInfoEditorCommand { get; }
-
-        /// <summary>
-        /// Открыть окно редактирования детальной информации.
-        /// </summary>
-        private async void ShowDetailInfoEditor(People staff)
-        {
-            var editor = await dialogManager.ShowDetailInfoEditor(staff.Id, DetailInfoType.Staff);
-            if (editor == null)
-                return;
-
-            var res = await client.DetailInfo.AddOrUpdateAsync(editor, DetailInfoType.Staff);
-            var msg = res ? "Детальная информация сохранена" : res;
-
-            snackbarMessageQueue.Enqueue(msg);
-        }
-
-        /// <summary>
-        /// Открыть окно детальной информации.
-        /// </summary>
-        private void ShowDetailInfo(People staff)
-        {
-            dialogManager.ShowDetailInfo(staff.Id, DetailInfoType.Staff);
-        }
-
-        /// <summary>
-        /// Экспорт данных в Excel.
-        /// </summary>
-        public void ExportToExcel()
-        {
-            var res = exporter.Export(Items);
-            var msg = res ? "Сотрудники экспортированы" : "Сотрудники не экспортированы";
-
-            snackbarMessageQueue.Enqueue(msg);
-        }
 
         /// <summary>
         /// Добавить сотрудника.
@@ -149,9 +120,47 @@ namespace ISTraining_Part.ViewModels
             Log(msg, staff);
         }
 
+
+        /// <summary>
+        /// Открыть окно редактирования детальной информации.
+        /// </summary>
+        private async void ShowDetailInfoEditor(People staff)
+        {
+            var editor = await dialogManager.ShowDetailInfoEditor(staff.Id, DetailInfoType.Staff);
+            if (editor == null)
+                return;
+
+            var res = await client.DetailInfo.AddOrUpdateAsync(editor, DetailInfoType.Staff);
+            var msg = res ? "Детальная информация сохранена" : res;
+
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Открыть окно детальной информации.
+        /// </summary>
+        private void ShowDetailInfo(People staff)
+        {
+            dialogManager.ShowDetailInfo(staff.Id, DetailInfoType.Staff);
+        }
+
+        /// <summary>
+        /// Экспорт данных в Excel.
+        /// </summary>
+        public void ExportToExcel()
+        {
+            var res = exporter.Export(Items);
+            var msg = res ? "Сотрудники экспортированы" : "Сотрудники не экспортированы";
+
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Лог.
+        /// </summary>
         void Log(string msg, Staff staff)
         {
-            Logger.Log.Info($"{msg}: {{fullName: {staff.FullName}, position: {staff.Position}}}");
+            Logger.Log.Info($"{msg}: {{id: {staff.Id}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
+using ISTraining_Part.Client.Design;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.Models.Enums;
@@ -43,7 +44,9 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         public StudentsViewModel()
         {
-
+            Items = new ObservableCollection<Student>();
+            var res = new DesignStudents().GetStudentsAsync(0).Result;
+            Items.AddRange(res.Response);
         }
 
         /// <summary>
@@ -83,37 +86,6 @@ namespace ISTraining_Part.ViewModels
         /// Команда открытия редактирования детальной информации.
         /// </summary>
         public ICommand<People> ShowDetailInfoEditorCommand { get; }
-
-        /// <summary>
-        /// Открыть окно редактирования детальной информации.
-        /// </summary>
-        private async void ShowDetailInfoEditor(People student)
-        {
-            var editor = await dialogManager.ShowDetailInfoEditor(student.Id, DetailInfoType.Student);
-            if (editor == null)
-                return;
-
-            var res = await client.DetailInfo.AddOrUpdateAsync(editor, DetailInfoType.Student);
-            var msg = res ? "Детальная информация сохранена" : res;
-
-            snackbarMessageQueue.Enqueue(msg);
-        }
-
-        /// <summary>
-        /// Открыть окно детальной информации.
-        /// </summary>
-        private void ShowDetailInfo(People student)
-        {
-            dialogManager.ShowDetailInfo(student.Id, DetailInfoType.Student);
-        }
-
-        /// <summary>
-        /// Вернуться назад.
-        /// </summary>
-        private void GoBack()
-        {
-            journal.GoBack();
-        }
 
         /// <summary>
         /// Добавление студента.
@@ -162,6 +134,37 @@ namespace ISTraining_Part.ViewModels
         }
 
         /// <summary>
+        /// Открыть окно редактирования детальной информации.
+        /// </summary>
+        private async void ShowDetailInfoEditor(People student)
+        {
+            var editor = await dialogManager.ShowDetailInfoEditor(student.Id, DetailInfoType.Student);
+            if (editor == null)
+                return;
+
+            var res = await client.DetailInfo.AddOrUpdateAsync(editor, DetailInfoType.Student);
+            var msg = res ? "Детальная информация сохранена" : res;
+
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Открыть окно детальной информации.
+        /// </summary>
+        private void ShowDetailInfo(People student)
+        {
+            dialogManager.ShowDetailInfo(student.Id, DetailInfoType.Student);
+        }
+
+        /// <summary>
+        /// Вернуться назад.
+        /// </summary>
+        private void GoBack()
+        {
+            journal.GoBack();
+        }
+
+        /// <summary>
         /// Переход на просмотр студентов.
         /// </summary>
         public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -204,7 +207,7 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         void Log(string msg, Student student)
         {
-            Logger.Log.Info($"{msg}: {{fullName: {student.FullName}, groupId: {student.GroupId}}}");
+            Logger.Log.Info($"{msg}: {{id: {student.Id}}}");
             snackbarMessageQueue.Enqueue(msg);
         }
     }
