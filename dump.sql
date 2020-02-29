@@ -11,11 +11,29 @@
  Target Server Version : 50525
  File Encoding         : 65001
 
- Date: 26/02/2020 17:53:29
+ Date: 01/03/2020 02:38:28
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for detailinfo
+-- ----------------------------
+DROP TABLE IF EXISTS `detailinfo`;
+CREATE TABLE `detailinfo`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff` int(11) NULL DEFAULT NULL COMMENT 'ID сотрудника',
+  `student` int(11) NULL DEFAULT NULL COMMENT 'ID студента',
+  `phone` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Телефон',
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Почта',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Адрес проживания',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `detailinfo_ibfk_1`(`student`) USING BTREE,
+  INDEX `detailinfo_ibfk_2`(`staff`) USING BTREE,
+  CONSTRAINT `detailinfo_ibfk_1` FOREIGN KEY (`student`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `detailinfo_ibfk_2` FOREIGN KEY (`staff`) REFERENCES `staff` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for groups
@@ -35,7 +53,7 @@ CREATE TABLE `groups`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `curatorId`(`curatorId`) USING BTREE,
   CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`curatorId`) REFERENCES `staff` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for signinlogs
@@ -48,7 +66,7 @@ CREATE TABLE `signinlogs`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `userId`(`userId`) USING BTREE,
   CONSTRAINT `signinlogs_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 267 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 327 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for staff
@@ -61,7 +79,7 @@ CREATE TABLE `staff`  (
   `lastName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Фамилия',
   `position` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Должность',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for students
@@ -82,7 +100,7 @@ CREATE TABLE `students`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `groupId`(`groupId`) USING BTREE,
   CONSTRAINT `students_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 4178 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 4189 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for users
