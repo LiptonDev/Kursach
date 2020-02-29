@@ -88,11 +88,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consts.cs" />
-    <Compile Include="DataBase\DataBase.cs" />
-    <Compile Include="DataBase\IDataBase.cs" />
+    <Compile Include="DataBase\Classes\DetailInfoRepository.cs" />
+    <Compile Include="DataBase\Classes\GroupsRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IDetailInfoRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IGroupsRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IStaffRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IStudentsRepository.cs" />
+    <Compile Include="DataBase\Interfaces\IUsersRepository.cs" />
+    <Compile Include="DataBase\Classes\Repository.cs" />
+    <Compile Include="DataBase\Classes\StaffRepository.cs" />
+    <Compile Include="DataBase\Classes\StudentsRepository.cs" />
+    <Compile Include="DataBase\Classes\UsersRepository.cs" />
     <Compile Include="Hubs\AdminHubAttribute.cs" />
     <Compile Include="Hubs\AuthorizeUserAttribute.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="Hubs\DetailInfoHub.cs" />
     <Compile Include="Hubs\GroupsHub.cs" />
     <Compile Include="Hubs\HubHelper.cs" />
     <Compile Include="Hubs\LoginHub.cs" />

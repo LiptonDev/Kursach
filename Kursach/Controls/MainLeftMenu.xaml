@@ -23,14 +23,6 @@
                        Margin="5"/>
         </materialDesign:ColorZone>
 
-        <Button Content="Домашняя"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="{x:Static local:RegionViews.WelcomeView}"/>
-
-        <Button Content="Студенты"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="{x:Static local:RegionViews.StudentsView}"/>
-
         <Button Content="Сотрудники"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="{x:Static local:RegionViews.StaffView}"/>
@@ -49,6 +41,13 @@
 
         <Button Content="Выйти"
                 Command="{Binding ExitCommand}"/>
+
+        <Separator/>
+
+        <CheckBox IsChecked="{Binding IsDarkTheme}"
+                  Content="Темная тема"
+                  FontSize="16"
+                  Margin="5"/>
     </StackPanel>
 
 </UserControl>

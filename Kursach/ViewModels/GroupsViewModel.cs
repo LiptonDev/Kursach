@@ -2,12 +2,14 @@
 using DryIoc;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using ISTraining_Part.Excel;
 using ISTraining_Part.Providers;
+using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
+using Prism.Regions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +21,7 @@ namespace ISTraining_Part.ViewModels
     /// <summary>
     /// Groups view model.
     /// </summary>
-    class GroupsViewModel : BaseViewModel<Group>, IExcelExporterViewModel, IExcelImporterViewModel
+    class GroupsViewModel : BaseViewModel<Group>
     {
         /// <summary>
         /// Группы.
@@ -43,12 +45,32 @@ namespace ISTraining_Part.ViewModels
         /// <summary>
         /// Экспорт данных.
         /// </summary>
-        readonly IAsyncExporter<IEnumerable<Group>> exporter;
+        readonly IAsyncExporter<IEnumerable<Group>> divisionsContingentExporter;
 
         /// <summary>
         /// Импорт данных.
         /// </summary>
-        readonly IAsyncImporter<IEnumerable<Group>> importer;
+        readonly IAsyncImporter<IEnumerable<Group>> divisionsContingentImporter;
+
+        /// <summary>
+        /// Импорт данных "Список групп".
+        /// </summary>
+        readonly IAsyncImporter<IEnumerable<Student>> studentsImporter;
+
+        /// <summary>
+        /// Экспорт "Список групп".
+        /// </summary>
+        readonly IAsyncExporter<IEnumerable<IGrouping<Group, Student>>> studentsExporter;
+
+        /// <summary>
+        /// Экспорт несовершеннолетних.
+        /// </summary>
+        readonly IAsyncExporter<IEnumerable<IGrouping<Group, Student>>> minorStudentsExporter;
+
+        /// <summary>
+        /// Менеджер регионов.
+        /// </summary>
+        readonly IRegionManager regionManager;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -61,22 +83,36 @@ namespace ISTraining_Part.ViewModels
         /// Конструктор.
         /// </summary>
         public GroupsViewModel(IDialogManager dialogManager,
-                               IAsyncExporter<IEnumerable<Group>> exporter,
-                               IAsyncImporter<IEnumerable<Group>> importer,
+                               IAsyncExporter<IEnumerable<Group>> divisionsContingentExporter,
+                               IAsyncImporter<IEnumerable<Group>> divisionsContingentImporter,
+                               IAsyncImporter<IEnumerable<Student>> studentsImporter,
                                ISnackbarMessageQueue snackbarMessageQueue,
+                               IRegionManager regionManager,
                                IClient client,
                                IDataProvider dataProvider,
                                IContainer container)
             : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
-            this.exporter = exporter;
-            this.importer = importer;
+            this.divisionsContingentExporter = divisionsContingentExporter;
+            this.divisionsContingentImporter = divisionsContingentImporter;
+            this.studentsImporter = studentsImporter;
+            this.studentsExporter = container.Resolve<IAsyncExporter<IEnumerable<IGrouping<Group, Student>>>>();
+            this.minorStudentsExporter = container.Resolve<IAsyncExporter<IEnumerable<IGrouping<Group, Student>>>>("minor");
+            this.regionManager = regionManager;
 
-            Groups = new ListCollectionView(dataProvider.Groups);
-            Groups.Filter += FilerGroup;
+            Items = dataProvider.Groups;
+            Groups = new ListCollectionView(Items);
+            Groups.Filter += FilterGroup;
 
-            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
-            ImportFromExcelCommand = new AsyncCommand(ImportFromExcel);
+            DivisionsContingentExportCommand = new DelegateCommand(DivisionsContingentExport);
+
+            DivisionsContingentImportCommand = new AsyncCommand(DivisionsContingentImport);
+            StudentsImportCommand = new AsyncCommand(StudentsImport);
+
+            StudentsExportCommand = new AsyncCommand(StudentsExport);
+            MinorStudentsExportCommand = new AsyncCommand(MinorStudentsExport);
+
+            ShowStudentsCommand = new DelegateCommand<Group>(ShowStudents, group => group != null);
         }
 
         /// <summary>
@@ -84,7 +120,7 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        private bool FilerGroup(object group)
+        private bool FilterGroup(object group)
         {
             var gr = (Group)group;
 
@@ -94,12 +130,32 @@ namespace ISTraining_Part.ViewModels
         /// <summary>
         /// Команда экспорта данных в Excel.
         /// </summary>
-        public ICommand ExportToExcelCommand { get; }
+        public ICommand DivisionsContingentExportCommand { get; }
 
         /// <summary>
         /// Команда импорта данных из Excel.
         /// </summary>
-        public ICommand ImportFromExcelCommand { get; }
+        public ICommand DivisionsContingentImportCommand { get; }
+
+        /// <summary>
+        /// Команда импорта "Список групп".
+        /// </summary>
+        public ICommand StudentsImportCommand { get; }
+
+        /// <summary>
+        /// Команда экспорта "Список групп".
+        /// </summary>
+        public ICommand StudentsExportCommand { get; }
+
+        /// <summary>
+        /// Команда экспорта несовершеннолетних.
+        /// </summary>
+        public ICommand MinorStudentsExportCommand { get; }
+
+        /// <summary>
+        /// Команда перехода на просмотр студентов.
+        /// </summary>
+        public ICommand<Group> ShowStudentsCommand { get; }
 
         /// <summary>
         /// Добавление группы.
@@ -148,9 +204,46 @@ namespace ISTraining_Part.ViewModels
         }
 
         /// <summary>
+        /// Импорт "Список групп".
+        /// </summary>
+        /// <returns></returns>
+        private async Task StudentsImport()
+        {
+            var students = await studentsImporter.Import();
+
+            if (students == null || students.Count() == 0)
+                return;
+
+            foreach (var item in students.Chunk(10)) //отправка по 10 студентов.
+            {
+                var res = await client.Students.ImportStudentsAsync(item);
+
+                if (!res)
+                    return;
+            }
+
+            await client.Students.RaiseStudentsImported();
+
+            snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
+        }
+
+        /// <summary>
+        /// Перейти к отображению студентов.
+        /// </summary>
+        /// <param name="group">Выбранная группа.</param>
+        private void ShowStudents(Group group)
+        {
+            var @params = NavigationParametersFluent.GetNavigationParameters()
+                                                    .SetValue("group", group)
+                                                    .SetUser(User);
+
+            regionManager.ReqeustNavigateInMainRegion(RegionViews.StudentsView, @params);
+        }
+
+        /// <summary>
         /// Экспорт данных.
         /// </summary>
-        public async void ExportToExcel()
+        public async void DivisionsContingentExport()
         {
             var groups = await client.Groups.GetGroupsAsync();
             if (!groups)
@@ -159,7 +252,7 @@ namespace ISTraining_Part.ViewModels
                 return;
             }
 
-            var res = await exporter.Export(groups.Response);
+            var res = await divisionsContingentExporter.Export(groups.Response);
             var msg = res ? "Группы экспортированы" : "Группы не экспортированы";
 
             snackbarMessageQueue.Enqueue(msg);
@@ -168,9 +261,9 @@ namespace ISTraining_Part.ViewModels
         /// <summary>
         /// Импорт данных.
         /// </summary>
-        public async Task ImportFromExcel()
+        public async Task DivisionsContingentImport()
         {
-            var groups = await importer.Import();
+            var groups = await divisionsContingentImporter.Import();
 
             if (groups == null)
                 return;
@@ -179,6 +272,47 @@ namespace ISTraining_Part.ViewModels
 
             if (res)
                 snackbarMessageQueue.Enqueue($"Добавлено групп: {groups.Count()}");
+        }
+
+        /// <summary>
+        /// Экспорт несовершеннолетних.
+        /// </summary>
+        private async Task MinorStudentsExport()
+        {
+            var students = await GetStudents();
+            var res = await minorStudentsExporter.Export(students);
+            var msg = res ? "Несовершеннолетние экспортированы" : "Несовершеннолетние не экспортированы";
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Экспорт "Список групп".
+        /// </summary>
+        private async Task StudentsExport()
+        {
+            var students = await GetStudents();
+            var res = await studentsExporter.Export(students);
+            var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
+            snackbarMessageQueue.Enqueue(msg);
+        }
+
+        /// <summary>
+        /// Получить и сгруппировать всех студентов.
+        /// </summary>
+        /// <returns></returns>
+        async Task<IEnumerable<IGrouping<Group, Student>>> GetStudents()
+        {
+            List<Student> students = new List<Student>();
+            foreach (var item in Items)
+            {
+                var res = await client.Students.GetStudentsAsync(item.Id);
+                if (!res)
+                    return Enumerable.Empty<IGrouping<Group, Student>>();
+
+                students.AddRange(res.Response);
+            }
+
+            return students.GroupBy(x => Items.FirstOrDefault(g => g.Id == x.GroupId));
         }
 
         void Log(string msg, Group group)

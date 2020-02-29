@@ -1,5 +1,7 @@
 ﻿using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs.Attributes;
+using ISTraining_Part.Dialogs.Classes;
 using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
 using System.Linq;

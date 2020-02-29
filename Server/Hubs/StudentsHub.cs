@@ -4,7 +4,7 @@ using ISTraining_Part.Core.ServerEvents;
 using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Server.DataBase;
+using Server.DataBase.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +19,16 @@ namespace Server.Hubs
     public class StudentsHub : Hub<IStudentsHubEvents>, IStudentsHub
     {
         /// <summary>
-        /// База данных.
+        /// Репозиторий студентов.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IStudentsRepository repository;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StudentsHub(IDataBase dataBase)
+        public StudentsHub(IStudentsRepository repository)
         {
-            this.dataBase = dataBase;
+            this.repository = repository;
         }
 
         #region Other region
@@ -49,9 +49,9 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
-            return dataBase.GetStudentsAsync();
+            return repository.GetStudentsAsync(groupId);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
-            return dataBase.GetStudentsCountAsync(groupIds);
+            return repository.GetStudentsCountAsync(groupIds);
         }
         #endregion
 
@@ -76,7 +76,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Add student: {student.FullName}");
 
-            var res = await dataBase.AddStudentAsync(student);
+            var res = await repository.AddStudentAsync(student);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, student);
@@ -94,7 +94,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Import students: {students.Count()}");
 
-            var res = await dataBase.ImportStudentsAsync(students);
+            var res = await repository.ImportStudentsAsync(students);
 
             return res;
         }
@@ -108,7 +108,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Save student: {student.FullName}");
 
-            var res = await dataBase.SaveStudentAsync(student);
+            var res = await repository.SaveStudentAsync(student);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, student);
@@ -125,7 +125,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Remove student: {student.FullName}");
 
-            var res = await dataBase.RemoveStudentAsync(student);
+            var res = await repository.RemoveStudentAsync(student);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, student);

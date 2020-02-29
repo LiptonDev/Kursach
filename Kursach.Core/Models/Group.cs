@@ -11,7 +11,7 @@ namespace ISTraining_Part.Core.Models
     /// Группа.
     /// </summary>
     [Table("groups")]
-    public class Group : ValidateViewModel, ICloneable, IId
+    public class Group : ValidateViewModel, ICloneable
     {
         /// <summary>
         /// Id.

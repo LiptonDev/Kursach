@@ -1,7 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
 using ISTraining_Part.Client.Interfaces;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using Prism.Regions;

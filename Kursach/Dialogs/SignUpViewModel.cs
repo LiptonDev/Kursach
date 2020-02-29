@@ -1,5 +1,7 @@
 ﻿using DryIoc;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs.Attributes;
+using ISTraining_Part.Dialogs.Classes;
 
 namespace ISTraining_Part.Dialogs
 {

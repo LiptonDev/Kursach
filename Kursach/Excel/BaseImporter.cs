@@ -1,4 +1,4 @@
-﻿using ISTraining_Part.Dialogs;
+﻿using ISTraining_Part.Dialogs.Manager;
 using System;
 
 namespace ISTraining_Part.Excel

@@ -1,9 +1,8 @@
 ﻿using DryIoc;
 using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
-using MaterialDesignXaml.DialogsHelper.Enums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using ISTraining_Part.Core.Models;
 using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Server.DataBase;
+using Server.DataBase.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -22,16 +22,16 @@ namespace Server.Hubs
         public static ConcurrentDictionary<string, User> Users { get; } = new ConcurrentDictionary<string, User>();
 
         /// <summary>
-        /// База данных.
+        /// Репозиторий пользователей.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IUsersRepository usersRepository;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public LoginHub(IDataBase dataBase)
+        public LoginHub(IUsersRepository usersRepository)
         {
-            this.dataBase = dataBase;
+            this.usersRepository = usersRepository;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Server.Hubs
         public async Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
             var id = Context.ConnectionId;
-            var res = await dataBase.GetUserAsync(login, password, true);
+            var res = await usersRepository.GetUserAsync(login, password, true);
 
             LoginResponse loginResponse = LoginResponse.Invalid;
             if (res && res.Response != null)
@@ -59,7 +59,7 @@ namespace Server.Hubs
                 await HubHelper.AddToAuthorizedGroup<GroupsHub>(id);
                 await HubHelper.AddToAuthorizedGroup<ChatHub>(id);
 
-                dataBase.AddSignInLogAsync(res.Response);
+                usersRepository.AddSignInLogAsync(res.Response);
 
                 Users[id] = res.Response;
 

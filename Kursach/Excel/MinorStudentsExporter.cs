@@ -1,16 +1,17 @@
 ﻿using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Экспорт несовершеннолетних.
     /// </summary>
-    class MinorStudentsExporter : BaseExporter, IExporter<IEnumerable<IGrouping<Group, Student>>>
+    class MinorStudentsExporter : BaseExporter, IAsyncExporter<IEnumerable<IGrouping<Group, Student>>>
     {
         /// <summary>
         /// Конструктор.
@@ -24,13 +25,13 @@ namespace ISTraining_Part.Excel
         /// Экспорт.
         /// </summary>
         /// <param name="students"></param>
-        public bool Export(IEnumerable<IGrouping<Group, Student>> students)
+        public Task<bool> Export(IEnumerable<IGrouping<Group, Student>> students)
         {
             if (students.Count() == 0)
-                return false;
+                return Task.FromResult(false);
 
             if (!SelectFile("контингент несовершеннолетних"))
-                return false;
+                return Task.FromResult(false);
 
             using (var excel = new ExcelPackage())
             {
@@ -71,6 +72,7 @@ namespace ISTraining_Part.Excel
 
                 worksheet.Cells[3, 1, 2 + row, 1].SetMerge()
                                                  .SetValueWithBold("Дневное отделение")
+                                                 .SetVerticalHorizontalAligment()
                                                  .SetTextRotation(90);
 
                 var corresCount = students.Where(x => !x.Key.IsIntramural).Sum(x => x.Count(s => IsMinor(s)));
@@ -88,12 +90,14 @@ namespace ISTraining_Part.Excel
                 worksheet.Cells[5 + row, 1, 5 + row, 2].SetMerge().SetValueWithBold("Итого до 18").SetHorizontalAligment();
                 worksheet.Cells[5 + row, 3].SetValueWithBold(total).SetHorizontalAligment();
 
+                worksheet.Cells[2, 1, 5 + row, 3].SetTable();
+
                 worksheet.Cells.AutoFitColumns(10);
 
                 excel.SaveAs(new System.IO.FileInfo(FileName));
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         bool IsMinor(Student student)

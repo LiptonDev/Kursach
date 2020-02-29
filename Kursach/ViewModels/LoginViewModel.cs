@@ -1,10 +1,11 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
-using ISTraining_Part.Properties;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Properties;
 using ISTraining_Part.Providers;
+using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -129,9 +130,9 @@ namespace ISTraining_Part.ViewModels
 
                 Logger.Log.Info($"Успешный вход в систему: {{login: {user.Login}, mode: {user.Mode}}}");
 
-                NavigationParameters parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
+                var parameters = NavigationParametersFluent.GetNavigationParameters().SetUser(user).SetValue("fromLogin", true);
                 regionManager.RequestNavigateInRootRegion(RegionViews.MainView, parameters);
-                regionManager.ReqeustNavigateInMainRegion(RegionViews.WelcomeView);
+                regionManager.ReqeustNavigateInMainRegion(RegionViews.GroupsView, parameters);
             }
         }
 

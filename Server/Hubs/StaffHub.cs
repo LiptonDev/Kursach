@@ -4,7 +4,7 @@ using ISTraining_Part.Core.ServerEvents;
 using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Server.DataBase;
+using Server.DataBase.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,16 +18,16 @@ namespace Server.Hubs
     public class StaffHub : Hub<IStaffHubEvents>, IStaffHub
     {
         /// <summary>
-        /// База данных.
+        /// Репозиторий сотрудников.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IStaffRepository repository;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StaffHub(IDataBase dataBase)
+        public StaffHub(IStaffRepository repository)
         {
-            this.dataBase = dataBase;
+            this.repository = repository;
         }
 
         #region Get region
@@ -37,7 +37,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
-            return dataBase.GetStaffsAsync();
+            return repository.GetStaffsAsync();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public async Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            var res = await dataBase.GetOrCreateFirstStaffAsync();
+            var res = await repository.GetOrCreateFirstStaffAsync();
 
             if (res && res.Arg) //Сотрудник был добавлен
             {
@@ -67,7 +67,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Add staff: {staff.FullName}");
 
-            var res = await dataBase.AddStaffAsync(staff);
+            var res = await repository.AddStaffAsync(staff);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, staff);
@@ -84,7 +84,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Save staff: {staff.FullName}");
 
-            var res = await dataBase.SaveStaffAsync(staff);
+            var res = await repository.SaveStaffAsync(staff);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, staff);
@@ -101,7 +101,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Remove staff: {staff.FullName}");
 
-            var res = await dataBase.RemoveStaffAsync(staff);
+            var res = await repository.RemoveStaffAsync(staff);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, staff);

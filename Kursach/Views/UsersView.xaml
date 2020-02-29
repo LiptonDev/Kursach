@@ -19,7 +19,8 @@
 
         <controls:AddButton Content="Добавить пользователя"/>
 
-        <ListView ItemsSource="{Binding Users}"
+        <ListView ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedItem}"
                   Grid.Row="1"
                   FontSize="16">
             <ListView.View>
@@ -27,20 +28,20 @@
                     <GridViewColumn Header="Логин" DisplayMemberBinding="{Binding Login}"/>
                     <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Права пользователя" DisplayMemberBinding="{Binding Mode, Converter={StaticResource EnumDescriptionConverter}}"/>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <controls:EditDeleteButtons/>
-                                    <Button Content="Логи входов"
-                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.ShowLogsCommand}"
-                                            CommandParameter="{Binding}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
+
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <controls:MenuItemEditButton/>
+                    <controls:MenuItemDeleteButton/>
+                    <controls:MenuItemAddButton/>
+                    <Separator/>
+                    <MenuItem Header="Логи входов"
+                              Command="{Binding ShowLogsCommand}"
+                              CommandParameter="{Binding SelectedItem}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
     </Grid>
 

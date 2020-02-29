@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ISTraining_Part.Core.ServerMethods
+﻿namespace ISTraining_Part.Core.ServerMethods
 {
     /// <summary>
     /// Список методов хаба чата.

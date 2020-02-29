@@ -1,5 +1,6 @@
 ﻿using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs.Attributes;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -17,11 +18,6 @@ namespace ISTraining_Part.Dialogs
         public ObservableCollection<SignInLog> Logs { get; }
 
         /// <summary>
-        /// Клиент.
-        /// </summary>
-        readonly IClient client;
-
-        /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public SignInLogsViewModel()
@@ -33,17 +29,15 @@ namespace ISTraining_Part.Dialogs
         /// </summary>
         public SignInLogsViewModel(User user, IClient client)
         {
-            this.client = client;
-
             Logs = new ObservableCollection<SignInLog>();
 
-            Load(user);
+            Load(client, user);
         }
 
         /// <summary>
         /// Загрузка логов.
         /// </summary>
-        private async void Load(User user)
+        private async void Load(IClient client, User user)
         {
             var res = await client.Users.GetSignInLogsAsync(user.Id);
             if (res)

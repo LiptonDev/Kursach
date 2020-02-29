@@ -1,5 +1,5 @@
 ﻿using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;

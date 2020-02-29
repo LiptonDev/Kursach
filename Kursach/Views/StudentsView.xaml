@@ -1,6 +1,7 @@
 ﻿<UserControl 
     x:Class="ISTraining_Part.Views.StudentsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,8 +9,6 @@
     xmlns:controls="clr-namespace:ISTraining_Part.Controls"
     xmlns:converters="clr-namespace:ISTraining_Part.Converters"
     xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
-    xmlns:behaviors="clr-namespace:ISTraining_Part.Behaviors"
-    x:Name="userControl"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vm:StudentsViewModel, IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True">
@@ -22,35 +21,24 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <controls:DivisionGroupComboBox/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <UniformGrid Grid.Row="1"
-                     Rows="1">
-            <controls:AddButton Content="Добавить студента"/>
+        <Button Content="{material:PackIcon Kind=ArrowBack}"
+                Command="{Binding GoBackCommand}"/>
 
-            <Button Content="Экспорт данных"
-                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True"
-                    Tag="{Binding DataContext, ElementName=userControl}">
-                <Button.ContextMenu>
-                    <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                        <MenuItem Header="Список групп"
-                                  Command="{Binding ExportToExcelCommand}"/>
-                        <MenuItem Header="Контингент несовершеннолетних"
-                                  Command="{Binding ExportMinorsCommand}"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
+        <controls:AddButton Content="Добавить студента" Grid.Column="1"/>
 
-            <controls:ImportFromExcelButton/>
-        </UniformGrid>
-
-        <ListView ItemsSource="{Binding Students}"
-                  Grid.Row="2"
-                  FontSize="16">
+        <ListView ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedItem}"
+                  Grid.Row="1"
+                  FontSize="16"
+                  Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding LastName}"/>
@@ -58,15 +46,18 @@
                     <GridViewColumn Header="Отчество" DisplayMemberBinding="{Binding MiddleName}"/>
                     <GridViewColumn Header="Отчислен" DisplayMemberBinding="{Binding Expelled, Converter={StaticResource ExpelledConverter}}"/>
                     <GridViewColumn Header="В академ. отпуске" DisplayMemberBinding="{Binding OnSabbatical, Converter={StaticResource OnSabbaticalConverter}}"/>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <controls:EditDeleteButtons/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
+
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <controls:MenuItemEditButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <controls:MenuItemDeleteButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <controls:MenuItemAddButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <Separator Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <controls:MenuItemDetailInfo/>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
     </Grid>
 

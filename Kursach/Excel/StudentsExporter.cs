@@ -1,5 +1,5 @@
 ﻿using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Экспорт данных о группе и студентах.
     /// </summary>
-    class StudentsExporter : BaseExporter, IExporter<IEnumerable<IGrouping<Group, Student>>>
+    class StudentsExporter : BaseExporter, IAsyncExporter<IEnumerable<IGrouping<Group, Student>>>
     {
         /// <summary>
         /// Конструктор.
@@ -27,13 +28,13 @@ namespace ISTraining_Part.Excel
         /// Экспорт данных о группе.
         /// </summary>
         /// <param name="group">Группа.</param>
-        public bool Export(IEnumerable<IGrouping<Group, Student>> students)
+        public Task<bool> Export(IEnumerable<IGrouping<Group, Student>> students)
         {
             if (students.Count() == 0)
-                return false;
+                return Task.FromResult(false);
 
             if (!SelectFile("Список групп"))
-                return false;
+                return Task.FromResult(false);
 
             using (var excel = new ExcelPackage())
             {
@@ -112,12 +113,12 @@ namespace ISTraining_Part.Excel
                 {
                     excel.SaveAs(new FileInfo(FileName));
                     Logger.Log.Info($"Экспорт информации о группе: {{fileName: {FileName}}}");
-                    return true;
+                    return Task.FromResult(true);
                 }
                 catch (Exception ex)
                 {
                     Logger.Log.Error($"Экспорт информации о группе: {{fileName: {FileName}}}", ex);
-                    return false;
+                    return Task.FromResult(false);
                 }
             }
         }

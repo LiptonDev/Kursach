@@ -39,5 +39,10 @@
         /// Управление чатом.
         /// </summary>
         IChat Chat { get; }
+
+        /// <summary>
+        /// Управление детальными данными.
+        /// </summary>
+        IDetailInfo DetailInfo { get; }
     }
 }

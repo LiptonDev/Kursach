@@ -32,7 +32,7 @@ namespace ISTraining_Part.Client.Design
             return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
             var students = Enumerable.Range(0, 15).Select(x => new Student
             {
@@ -42,7 +42,7 @@ namespace ISTraining_Part.Client.Design
                 Birthdate = DateTime.Now,
                 DecreeOfEnrollment = "ДА!",
                 Expelled = x % 2 == 0,
-                GroupId = x,
+                GroupId = groupId,
                 Notice = "NOTICE?!",
                 OnSabbatical = x % 5 == 0,
                 PoPkNumber = "1337",

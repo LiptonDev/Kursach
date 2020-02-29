@@ -77,6 +77,9 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.5\lib\net46\CommonServiceLocator.dll</HintPath>
@@ -157,11 +160,13 @@
     <Compile Include="Behaviors\BringNewItemIntoViewBehavior.cs" />
     <Compile Include="Behaviors\ContextMenuLeftClickBehavior.cs" />
     <Compile Include="Client\Classes\Chat.cs" />
+    <Compile Include="Client\Classes\DetailInfo.cs" />
     <Compile Include="Client\Delegates\ChangedDelegate.cs" />
     <Compile Include="Client\Classes\Client.cs" />
     <Compile Include="Client\Delegates\ChatMessageDelegate.cs" />
     <Compile Include="Client\Design\DesignChat.cs" />
     <Compile Include="Client\Design\DesignConfigurator.cs" />
+    <Compile Include="Client\Design\DesignDetailInfo.cs" />
     <Compile Include="Client\Design\DesignGroups.cs" />
     <Compile Include="Client\Design\DesignLogin.cs" />
     <Compile Include="Client\Design\DesignStaff.cs" />
@@ -172,6 +177,7 @@
     <Compile Include="Client\Classes\HubConfigurator.cs" />
     <Compile Include="Client\Interfaces\IChat.cs" />
     <Compile Include="Client\Interfaces\IClient.cs" />
+    <Compile Include="Client\Interfaces\IDetailInfo.cs" />
     <Compile Include="Client\Interfaces\IGroups.cs" />
     <Compile Include="Client\Interfaces\IHubConfigurator.cs" />
     <Compile Include="Client\Interfaces\ILogin.cs" />
@@ -190,17 +196,20 @@
     <Compile Include="Controls\DivisionGroupComboBox.xaml.cs">
       <DependentUpon>DivisionGroupComboBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditDeleteButtons.xaml.cs">
-      <DependentUpon>EditDeleteButtons.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\EditorButtons.xaml.cs">
       <DependentUpon>EditorButtons.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportToExcelButton.xaml.cs">
-      <DependentUpon>ExportToExcelButton.xaml</DependentUpon>
+    <Compile Include="Controls\MenuItemAddButton.xaml.cs">
+      <DependentUpon>MenuItemAddButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportFromExcelButton.xaml.cs">
-      <DependentUpon>ImportFromExcelButton.xaml</DependentUpon>
+    <Compile Include="Controls\MenuItemDeleteButton.xaml.cs">
+      <DependentUpon>MenuItemDeleteButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MenuItemDetailInfo.xaml.cs">
+      <DependentUpon>MenuItemDetailInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MenuItemEditButton.xaml.cs">
+      <DependentUpon>MenuItemEditButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SelectorButtons.xaml.cs">
       <DependentUpon>SelectorButtons.xaml</DependentUpon>
@@ -210,39 +219,48 @@
     <Compile Include="Converters\DivisionConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\UserModeToVisibility.cs" />
-    <Compile Include="Excel\GroupsImporter.cs" />
-    <Compile Include="Dialogs\IDialogsFactoryView.cs" />
-    <Compile Include="Dialogs\DialogsFactoryView.cs" />
-    <Compile Include="Dialogs\DialogManager.cs" />
-    <Compile Include="Dialogs\DialogNameAttribute.cs" />
-    <Compile Include="Dialogs\IDialogManager.cs" />
+    <Compile Include="Dialogs\DetailInfoEditorView.xaml.cs">
+      <DependentUpon>DetailInfoEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DetailInfoEditorViewModel.cs" />
+    <Compile Include="Dialogs\DetailInfoView.xaml.cs">
+      <DependentUpon>DetailInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DetailInfoViewModel.cs" />
+    <Compile Include="Excel\DivisionsContingentImporter.cs" />
+    <Compile Include="Dialogs\Manager\IDialogsFactoryView.cs" />
+    <Compile Include="Dialogs\Manager\DialogsFactoryView.cs" />
+    <Compile Include="Dialogs\Manager\DialogManager.cs" />
+    <Compile Include="Dialogs\Attributes\DialogNameAttribute.cs" />
+    <Compile Include="Dialogs\Manager\IDialogManager.cs" />
     <Compile Include="Excel\BaseExporter.cs" />
     <Compile Include="Excel\BaseImporter.cs" />
     <Compile Include="Excel\MinorStudentsExporter.cs" />
     <Compile Include="Excel\StudentsImporter.cs" />
-    <Compile Include="Excel\GroupsExporter.cs" />
+    <Compile Include="Excel\DivisionsContingentExporter.cs" />
     <Compile Include="Excel\IImporter.cs" />
-    <Compile Include="Dialogs\IEditMode.cs" />
+    <Compile Include="Dialogs\Interfaces\IEditMode.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
     <Compile Include="Excel\StudentsExporter.cs" />
     <Compile Include="Excel\IExporter.cs" />
     <Compile Include="Excel\StaffExporter.cs" />
-    <Compile Include="Dialogs\BaseEditModeViewModel.cs" />
-    <Compile Include="Dialogs\BaseSelectorViewModel.cs" />
+    <Compile Include="Dialogs\Classes\BaseEditModeViewModel.cs" />
+    <Compile Include="Dialogs\Classes\BaseSelectorViewModel.cs" />
     <Compile Include="Helpers\ChangeAllFields.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Providers\DataProvider.cs" />
     <Compile Include="Providers\IDataProvider.cs" />
+    <Compile Include="Providers\ProcessChangesHelper.cs" />
     <Compile Include="UI\BoundPasswordBox.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\SetThemeColor.cs" />
+    <Compile Include="ViewModels\Classes\BaseViewModel.cs" />
     <Compile Include="Dialogs\GroupEditorViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\GroupsViewModel.cs" />
-    <Compile Include="ViewModels\IBaseViewModel.cs" />
-    <Compile Include="ViewModels\IExcelExporterViewModel.cs" />
-    <Compile Include="ViewModels\IExcelImporterViewModel.cs" />
-    <Compile Include="Dialogs\ISelectorViewModel.cs" />
-    <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IBaseViewModel.cs" />
+    <Compile Include="Dialogs\Interfaces\ISelectorViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IDetail.cs" />
+    <Compile Include="ViewModels\Classes\NavigationViewModel.cs" />
     <Compile Include="Dialogs\SelectStaffViewModel.cs" />
     <Compile Include="Dialogs\SignInLogsViewModel.cs" />
     <Compile Include="Dialogs\SignUpViewModel.cs" />
@@ -287,45 +305,15 @@
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\WelcomeSlides\Slide1.xaml.cs">
-      <DependentUpon>Slide1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WelcomeSlides\Slide2.xaml.cs">
-      <DependentUpon>Slide2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WelcomeSlides\Slide3.xaml.cs">
-      <DependentUpon>Slide3.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WelcomeSlides\Slide4.xaml.cs">
-      <DependentUpon>Slide4.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WelcomeSlides\Slide5.xaml.cs">
-      <DependentUpon>Slide5.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WelcomeView.xaml.cs">
-      <DependentUpon>WelcomeView.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\AddButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DivisionGroupComboBox.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditDeleteButtons.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\EditorButtons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ExportToExcelButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ImportFromExcelButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -333,7 +321,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MenuItemAddButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MenuItemDeleteButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MenuItemDetailInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MenuItemEditButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SelectorButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DetailInfoEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DetailInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -461,30 +473,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UsersView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeSlides\Slide1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeSlides\Slide2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeSlides\Slide3.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeSlides\Slide4.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeSlides\Slide5.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WelcomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,9 @@
 ﻿using DevExpress.Mvvm;
 using DryIoc;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs.Attributes;
+using ISTraining_Part.Dialogs.Classes;
+using ISTraining_Part.Dialogs.Manager;
 using System.Windows.Input;
 
 namespace ISTraining_Part.Dialogs

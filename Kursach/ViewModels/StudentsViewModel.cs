@@ -2,17 +2,18 @@
 using DryIoc;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
-using ISTraining_Part.Excel;
+using ISTraining_Part.Core.Models.Enums;
+using ISTraining_Part.Core.ServerEvents;
+using ISTraining_Part.Dialogs.Manager;
 using ISTraining_Part.Providers;
+using ISTraining_Part.ViewModels.Classes;
+using ISTraining_Part.ViewModels.Interfaces;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Prism.Regions;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace ISTraining_Part.ViewModels
@@ -20,46 +21,22 @@ namespace ISTraining_Part.ViewModels
     /// <summary>
     /// Students view model.
     /// </summary>
-    class StudentsViewModel : BaseViewModel<Student>, IExcelExporterViewModel, IExcelImporterViewModel
+    class StudentsViewModel : BaseViewModel<Student>, IDetail
     {
         /// <summary>
-        /// Группы.
+        /// Группа.
         /// </summary>
-        public ListCollectionView Groups { get; }
-
-        /// <summary>
-        /// Студенты выбранной группы.
-        /// </summary>
-        public ListCollectionView Students { get; }
-
         Group selectedGroup;
-        /// <summary>
-        /// Выбранная группа.
-        /// </summary>
-        public Group SelectedGroup
-        {
-            get => selectedGroup;
-            set
-            {
-                selectedGroup = value;
-                Students.Refresh();
-            }
-        }
 
         /// <summary>
-        /// Экспорт данных.
+        /// Журнал.
         /// </summary>
-        readonly IExporter<IEnumerable<IGrouping<Group, Student>>> exporter;
+        IRegionNavigationJournal journal;
 
         /// <summary>
-        /// Экспорт несовершеннолетних.
+        /// Синхронизация.
         /// </summary>
-        readonly IExporter<IEnumerable<IGrouping<Group, Student>>> minorExporter;
-
-        /// <summary>
-        /// Импорт данных.
-        /// </summary>
-        readonly IAsyncImporter<IEnumerable<Student>> importer;
+        readonly TaskFactory sync;
 
         /// <summary>
         /// Конструктор для DesignTime.
@@ -73,56 +50,70 @@ namespace ISTraining_Part.ViewModels
         /// Конструктор.
         /// </summary>
         public StudentsViewModel(IDialogManager dialogManager,
-                                 IAsyncImporter<IEnumerable<Student>> importer,
                                  ISnackbarMessageQueue snackbarMessageQueue,
                                  IClient client,
                                  IDataProvider dataProvider,
-                                 IContainer container)
+                                 IContainer container,
+                                 TaskFactory sync)
             : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
-            this.exporter = container.Resolve<IExporter<IEnumerable<IGrouping<Group, Student>>>>();
-            this.minorExporter = container.Resolve<IExporter<IEnumerable<IGrouping<Group, Student>>>>("minor");
-            this.importer = importer;
+            this.sync = sync;
 
-            Students = new ListCollectionView(dataProvider.Students);
-            Students.Filter += StudentFilter;
-            Groups = new ListCollectionView(dataProvider.Groups);
-            Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
+            Items = new ObservableCollection<Student>();
 
-            ExportToExcelCommand = new DelegateCommand(ExportToExcel);
-            ImportFromExcelCommand = new AsyncCommand(ImportFromExcel);
-            ExportMinorsCommand = new DelegateCommand(ExportMinors);
+            client.Students.OnChanged += Students_OnChanged;
+            client.Students.Imported += Load;
+
+            GoBackCommand = new DelegateCommand(GoBack);
+            ShowDetailInfoCommand = new DelegateCommand<People>(ShowDetailInfo, s => s != null);
+            ShowDetailInfoEditorCommand = new DelegateCommand<People>(ShowDetailInfoEditor, s => s != null);
         }
 
         /// <summary>
-        /// Фильтрация студентов.
+        /// Команда возвращения назад.
         /// </summary>
-        /// <param name="student">Студент.</param>
-        /// <returns></returns>
-        private bool StudentFilter(object student)
+        public ICommand GoBackCommand { get; }
+
+        /// <summary>
+        /// Команда открытия детальной информации.
+        /// </summary>
+        public ICommand<People> ShowDetailInfoCommand { get; }
+
+        /// <summary>
+        /// Команда открытия редактирования детальной информации.
+        /// </summary>
+        public ICommand<People> ShowDetailInfoEditorCommand { get; }
+
+        /// <summary>
+        /// Открыть окно редактирования детальной информации.
+        /// </summary>
+        private async void ShowDetailInfoEditor(People student)
         {
-            if (selectedGroup == null)
-                return false;
+            var editor = await dialogManager.ShowDetailInfoEditor(student.Id, DetailInfoType.Student);
+            if (editor == null)
+                return;
 
-            var st = (Student)student;
+            var res = await client.DetailInfo.AddOrUpdateAsync(editor, DetailInfoType.Student);
+            var msg = res ? "Детальная информация сохранена" : res;
 
-            return st.GroupId == selectedGroup.Id;
+            snackbarMessageQueue.Enqueue(msg);
         }
 
         /// <summary>
-        /// Команда экспорта данных в Excel.
+        /// Открыть окно детальной информации.
         /// </summary>
-        public ICommand ExportToExcelCommand { get; }
+        private void ShowDetailInfo(People student)
+        {
+            dialogManager.ShowDetailInfo(student.Id, DetailInfoType.Student);
+        }
 
         /// <summary>
-        /// Команда экспорта несовершеннолетних в Excel.
+        /// Вернуться назад.
         /// </summary>
-        public ICommand ExportMinorsCommand { get; }
-
-        /// <summary>
-        /// Команда импорта данных из Excel.
-        /// </summary>
-        public ICommand ImportFromExcelCommand { get; }
+        private void GoBack()
+        {
+            journal.GoBack();
+        }
 
         /// <summary>
         /// Добавление студента.
@@ -171,50 +162,46 @@ namespace ISTraining_Part.ViewModels
         }
 
         /// <summary>
-        /// Экспорт информации о группе.
+        /// Переход на просмотр студентов.
         /// </summary>
-        public void ExportToExcel()
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var res = exporter.Export(dataProvider.Students.GroupBy(x => dataProvider.Groups.FirstOrDefault(g => g.Id == x.GroupId)));
-            var msg = res ? "Студенты экспортированы" : "Студенты не экспортированы";
+            base.OnNavigatedTo(navigationContext);
 
-            snackbarMessageQueue.Enqueue(msg);
+            journal = navigationContext.NavigationService.Journal;
+
+            selectedGroup = navigationContext.Parameters["group"] as Group;
+
+            Load();
         }
 
         /// <summary>
-        /// Экспорт несовершеннолетних.
+        /// Загрузка студентов в группе.
         /// </summary>
-        private void ExportMinors()
+        private async void Load()
         {
-            var res = minorExporter.Export(dataProvider.Students.GroupBy(x => dataProvider.Groups.FirstOrDefault(g => g.Id == x.GroupId)));
-            var msg = res ? "Несовершеннолетние экспортированы" : "Несовершеннолетние не экспортированы";
+            await sync.StartNew(() => Items.Clear());
 
-            snackbarMessageQueue.Enqueue(msg);
+            var res = await client.Students.GetStudentsAsync(selectedGroup.Id);
+
+            if (res)
+                await sync.StartNew(() => Items.AddRange(res.Response));
         }
 
         /// <summary>
-        /// Импорт данных о студентах.
+        /// Изменения в студентах.
         /// </summary>
-        public async Task ImportFromExcel()
+        private void Students_OnChanged(DbChangeStatus status, Student student)
         {
-            var students = await importer.Import();
-
-            if (students == null || students.Count() == 0)
+            if (student.GroupId != selectedGroup.Id)
                 return;
 
-            foreach (var item in students.Chunk(10)) //отправка данных по 10 студентов
-            {
-                var res = await client.Students.ImportStudentsAsync(item);
-
-                if (!res)
-                    return;
-            }
-
-            await client.Students.RaiseStudentsImported();
-
-            snackbarMessageQueue.Enqueue($"Добавлено студентов: {students.Count()}");
+            ProcessChangesHelper.ProcessChanges(status, student, Items, sync);
         }
 
+        /// <summary>
+        /// Log.
+        /// </summary>
         void Log(string msg, Student student)
         {
             Logger.Log.Info($"{msg}: {{fullName: {student.FullName}, groupId: {student.GroupId}}}");

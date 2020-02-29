@@ -2,8 +2,11 @@
 using DryIoc;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Properties;
 using ISTraining_Part.Providers;
+using ISTraining_Part.UI;
+using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
 using Prism.Regions;
@@ -23,6 +26,15 @@ namespace ISTraining_Part.ViewModels
         /// Статус меню.
         /// </summary>
         public bool LeftMenuOpened { get; set; }
+
+        /// <summary>
+        /// Темная тема.
+        /// </summary>
+        public bool IsDarkTheme
+        {
+            set => SetThemeColor.SetTheme(value);
+            get => Settings.Default.isDarkTheme;
+        }
 
         /// <summary>
         /// Менеджер регионов.
@@ -57,6 +69,7 @@ namespace ISTraining_Part.ViewModels
             User = new User
             {
                 Login = "DESIGN TIME USER",
+                Name = "DESIGN TIME NAME",
                 Mode = UserMode.Admin
             };
         }

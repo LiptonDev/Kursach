@@ -2,12 +2,12 @@
 using DryIoc;
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
-using ISTraining_Part.Dialogs;
+using ISTraining_Part.Dialogs.Manager;
 using ISTraining_Part.Providers;
+using ISTraining_Part.ViewModels.Classes;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignXaml.DialogsHelper;
 using MaterialDesignXaml.DialogsHelper.Enums;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ISTraining_Part.ViewModels
@@ -17,11 +17,6 @@ namespace ISTraining_Part.ViewModels
     /// </summary>
     class UsersViewModel : BaseViewModel<User>
     {
-        /// <summary>
-        /// Пользователи.
-        /// </summary>
-        public ObservableCollection<User> Users { get; }
-
         /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
@@ -39,7 +34,7 @@ namespace ISTraining_Part.ViewModels
                               IContainer container)
             : base(dialogManager, snackbarMessageQueue, client, dataProvider, container)
         {
-            Users = dataProvider.Users;
+            Items = dataProvider.Users;
 
             ShowLogsCommand = new DelegateCommand<User>(ShowLogs);
         }

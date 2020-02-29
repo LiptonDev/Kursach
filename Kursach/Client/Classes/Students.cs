@@ -53,9 +53,9 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync()
+        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
-            return TryInvokeAsync<IEnumerable<Student>>();
+            return TryInvokeAsync<IEnumerable<Student>>(args: groupId);
         }
 
         /// <summary>

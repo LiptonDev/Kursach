@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="clr-namespace:ISTraining_Part.Behaviors"
     xmlns:controls="clr-namespace:ISTraining_Part.Controls"
     xmlns:converters="clr-namespace:ISTraining_Part.Converters"
     xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
@@ -44,12 +45,37 @@
                      Grid.Row="1">
             <controls:AddButton Content="Добавить группу"/>
 
-            <controls:ExportToExcelButton/>
+            <Button Content="Экспорт данных"
+                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Контингент по подразделениям"
+                                  Command="{Binding DivisionsContingentExportCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Контингент несовершеннолетних"
+                                  Command="{Binding MinorStudentsExportCommand}"/>
+                        <MenuItem Header="Список групп"
+                                  Command="{Binding StudentsExportCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
 
-            <controls:ImportFromExcelButton/>
+            <Button Content="Импорт данных"
+                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Контингент по подразделениям"
+                                  Command="{Binding DivisionsContingentImportCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Список групп"
+                                  Command="{Binding StudentsImportCommand}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </UniformGrid>
 
         <ListView ItemsSource="{Binding Groups}"
+                  SelectedItem="{Binding SelectedItem}"
                   Grid.Row="2"
                   FontSize="16">
             <ListView.View>
@@ -57,15 +83,20 @@
                     <GridViewColumn Header="Группа" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Б/К" DisplayMemberBinding="{Binding IsBudget, Converter={StaticResource IsBudgetConverter}}"/>
                     <GridViewColumn Header="Очная/Заочная" DisplayMemberBinding="{Binding IsIntramural, Converter={StaticResource IsIntramuralConverter}}"/>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <controls:EditDeleteButtons/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
+
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <controls:MenuItemEditButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <controls:MenuItemDeleteButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <controls:MenuItemAddButton Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <Separator Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}"/>
+                    <MenuItem Header="Студенты"
+                              Command="{Binding ShowStudentsCommand}"
+                              CommandParameter="{Binding SelectedItem}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
     </Grid>
 

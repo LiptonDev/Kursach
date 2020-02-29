@@ -1,6 +1,7 @@
 ﻿using DryIoc;
-using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
+using ISTraining_Part.Dialogs.Attributes;
+using ISTraining_Part.Dialogs.Classes;
 using ISTraining_Part.Providers;
 using System.Linq;
 using System.Windows.Data;
@@ -38,16 +39,6 @@ namespace ISTraining_Part.Dialogs
         }
 
         /// <summary>
-        /// Менеджер диалогов.
-        /// </summary>
-        readonly IDialogManager dialogManager;
-
-        /// <summary>
-        /// Клиент.
-        /// </summary>
-        readonly IClient client;
-
-        /// <summary>
         /// Конструктор для DesignTime.
         /// </summary>
         public StudentEditorViewModel()
@@ -61,15 +52,10 @@ namespace ISTraining_Part.Dialogs
         public StudentEditorViewModel(Student student,
                                       bool isEditMode,
                                       int groupId,
-                                      IClient client,
                                       IDataProvider dataProvider,
-                                      IDialogManager dialogManager,
                                       IContainer container)
             : base(student, isEditMode, container)
         {
-            this.dialogManager = dialogManager;
-            this.client = client;
-
             Groups = new ListCollectionView(dataProvider.Groups);
             Groups.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Group.Division)));
 

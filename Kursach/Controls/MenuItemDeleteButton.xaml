@@ -1,0 +1,8 @@
+﻿<MenuItem
+    x:Class="ISTraining_Part.Controls.MenuItemDeleteButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    Header="Удалить"
+    Command="{Binding DeleteCommand}"
+    CommandParameter="{Binding SelectedItem}"
+    Style="{StaticResource MaterialDesignMenuItem}"/>

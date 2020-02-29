@@ -118,5 +118,29 @@ namespace ISTraining_Part.Properties {
                 this["server"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool isDarkTheme {
+            get {
+                return ((bool)(this["isDarkTheme"]));
+            }
+            set {
+                this["isDarkTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00000000")]
+        public global::System.Windows.Media.Color themeColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["themeColor"]));
+            }
+            set {
+                this["themeColor"] = value;
+            }
+        }
     }
 }

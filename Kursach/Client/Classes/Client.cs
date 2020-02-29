@@ -10,7 +10,14 @@ namespace ISTraining_Part.Client.Classes
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public Client(IUsers users, IStaff staff, IStudents students, IGroups groups, ILogin login, IChat chat, IHubConfigurator hubConfigurator)
+        public Client(IUsers users,
+                      IStaff staff,
+                      IStudents students,
+                      IGroups groups,
+                      ILogin login,
+                      IChat chat,
+                      IDetailInfo detailInfo,
+                      IHubConfigurator hubConfigurator)
         {
             Users = users;
             Staff = staff;
@@ -18,6 +25,7 @@ namespace ISTraining_Part.Client.Classes
             Groups = groups;
             Login = login;
             Chat = chat;
+            DetailInfo = detailInfo;
             HubConfigurator = hubConfigurator;
         }
 
@@ -50,6 +58,11 @@ namespace ISTraining_Part.Client.Classes
         /// Управление чатом.
         /// </summary>
         public IChat Chat { get; }
+
+        /// <summary>
+        /// Управление детальной информацией.
+        /// </summary>
+        public IDetailInfo DetailInfo { get; }
 
         /// <summary>
         /// Конфигуратор хаба.

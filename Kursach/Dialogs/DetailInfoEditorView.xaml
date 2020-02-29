@@ -1,0 +1,31 @@
+﻿<UserControl 
+    x:Class="ISTraining_Part.Dialogs.DetailInfoEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ISTraining_Part.Dialogs"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:controls="clr-namespace:ISTraining_Part.Controls"
+    mc:Ignorable="d" 
+    d:DataContext="{d:DesignInstance Type=local:DetailInfoEditorViewModel, IsDesignTimeCreatable=True}"
+    Style="{StaticResource MaxSizeUserControl}">
+
+    <StackPanel>
+        <TextBlock Style="{StaticResource IsEditModeTextBlock}"
+                   DataContext="{Binding Editor}"/>
+
+        <TextBox Text="{Binding Editor.EditableObject.Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 material:HintAssist.Hint="Номер телефона"/>
+
+        <TextBox Text="{Binding Editor.EditableObject.EMail, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 material:HintAssist.Hint="EMail"/>
+
+        <TextBox Text="{Binding Editor.EditableObject.Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 material:HintAssist.Hint="Адрес проживания"/>
+
+        <controls:EditorButtons DataContext="{Binding Editor}"/>
+    </StackPanel>
+    
+</UserControl>

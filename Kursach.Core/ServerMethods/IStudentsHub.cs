@@ -23,7 +23,7 @@ namespace ISTraining_Part.Core.ServerMethods
         /// </summary>
         /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync();
+        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId);
 
         /// <summary>
         /// Получение количества студентов в группах.

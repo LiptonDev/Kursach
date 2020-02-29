@@ -30,11 +30,6 @@ namespace ISTraining_Part.Providers
         public ObservableCollection<Group> Groups { get; }
 
         /// <summary>
-        /// Студенты.
-        /// </summary>
-        public ObservableCollection<Student> Students { get; }
-
-        /// <summary>
         /// Сообщения в чате.
         /// </summary>
         public ObservableCollection<ChatMessage> ChatMessages { get; }
@@ -64,15 +59,11 @@ namespace ISTraining_Part.Providers
             client.Groups.OnChanged += Groups_OnChanged;
             client.Groups.Imported += Groups_Imported;
 
-            client.Students.OnChanged += Students_OnChanged;
-            client.Students.Imported += Students_Imported;
-
             client.Chat.NewMessage += Chat_NewMessage;
 
             Users = new ObservableCollection<User>();
             Staff = new ObservableCollection<Staff>();
             Groups = new ObservableCollection<Group>();
-            Students = new ObservableCollection<Student>();
             ChatMessages = new ObservableCollection<ChatMessage>();
         }
 
@@ -84,24 +75,6 @@ namespace ISTraining_Part.Providers
         private void Chat_NewMessage(string senderName, string text)
         {
             sync.StartNew(() => ChatMessages.Add(new ChatMessage(senderName, text)));
-        }
-
-        /// <summary>
-        /// Импортированы студенты.
-        /// </summary>
-        /// <param name="groupId">ИД группы.</param>
-        private async void Students_Imported()
-        {
-            var res = await client.Students.GetStudentsAsync();
-
-            if (res)
-            {
-                await sync.StartNew(() =>
-                {
-                    Students.Clear();
-                    Students.AddRange(res.Response);
-                });
-            }
         }
 
         /// <summary>
@@ -139,7 +112,6 @@ namespace ISTraining_Part.Providers
                 await sync.StartNew(() => Staff.AddRange(staff.Response));
 
             Groups_Imported();
-            Students_Imported();
         }
 
         /// <summary>
@@ -150,16 +122,7 @@ namespace ISTraining_Part.Providers
             Users.Clear();
             Staff.Clear();
             Groups.Clear();
-            Students.Clear();
             ChatMessages.Clear();
-        }
-
-        /// <summary>
-        /// Изменения студента.
-        /// </summary>
-        private void Students_OnChanged(DbChangeStatus status, Student arg)
-        {
-            ProcessChanges(status, arg, Students);
         }
 
         /// <summary>
@@ -189,40 +152,13 @@ namespace ISTraining_Part.Providers
         /// <summary>
         /// Обработка изменения.
         /// </summary>
-        void ProcessChanges<T>(DbChangeStatus status, T arg, ObservableCollection<T> collection) where T : IId
+        void ProcessChanges<T>(DbChangeStatus status, T arg, ObservableCollection<T> collection)
         {
-            switch (status)
+            ProcessChangesHelper.ProcessChanges(status, arg, collection, sync);
+
+            if (status == DbChangeStatus.Remove && arg is Staff staff)
             {
-                case DbChangeStatus.Add:
-                    if (!collection.Contains(arg))
-                        sync.StartNew(() => collection.Add(arg));
-                    break;
-
-                case DbChangeStatus.Update:
-                    var item = collection.FirstOrDefault(x => x.Equals(arg));
-                    int index = collection.IndexOf(item);
-                    sync.StartNew(() =>
-                    {
-                        collection.RemoveAt(index);
-                        collection.Insert(index, arg);
-                    });
-                    break;
-
-                case DbChangeStatus.Remove:
-                    sync.StartNew(() =>
-                    {
-                        collection.Remove(arg);
-
-                        if (typeof(T) == typeof(Staff))
-                            Clear(Groups, x => x.CuratorId == arg.Id);
-                        else if (typeof(T) == typeof(Group))
-                            Clear(Students, x => x.GroupId == arg.Id);
-                    });
-                    break;
-
-                default:
-                    Logger.Log.Warn($"Необработанное событие изменения: {{type: {typeof(T)}, arg: {arg}, status: {status}}}");
-                    break;
+                Clear(Groups, x => x.CuratorId == staff.Id);
             }
         }
 

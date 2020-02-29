@@ -4,7 +4,7 @@ using ISTraining_Part.Core.ServerEvents;
 using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Server.DataBase;
+using Server.DataBase.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,16 +19,16 @@ namespace Server.Hubs
     public class UsersHub : Hub<IUsersHubEvents>, IUsersHub
     {
         /// <summary>
-        /// База данных.
+        /// Репозиторий пользователей.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IUsersRepository repository;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public UsersHub(IDataBase dataBase)
+        public UsersHub(IUsersRepository repository)
         {
-            this.dataBase = dataBase;
+            this.repository = repository;
         }
 
         #region Get region
@@ -38,7 +38,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<User>>> GetUsersAsync()
         {
-            return dataBase.GetUsersAsync();
+            return repository.GetUsersAsync();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
-            return dataBase.GetUserAsync(login, password, usePassword);
+            return repository.GetUserAsync(login, password, usePassword);
         }
         #endregion
 
@@ -62,7 +62,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
-            return dataBase.GetSignInLogsAsync(userId);
+            return repository.GetSignInLogsAsync(userId);
         }
         #endregion
 
@@ -76,7 +76,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Add user: {user.Login}");
 
-            var res = await dataBase.AddUserAsync(user);
+            var res = await repository.AddUserAsync(user);
 
             if (res)
                 Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Add, user);
@@ -93,7 +93,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Save user: {user.Login}");
 
-            var res = await dataBase.SaveUserAsync(user);
+            var res = await repository.SaveUserAsync(user);
 
             if (res)
                 Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Update, user);
@@ -110,7 +110,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Remove user: {user.Login}");
 
-            var res = await dataBase.RemoveUserAsync(user);
+            var res = await repository.RemoveUserAsync(user);
 
             if (res)
                 Clients.Group(Consts.AdminGroup).OnChanged(DbChangeStatus.Remove, user);

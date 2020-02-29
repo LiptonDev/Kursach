@@ -25,11 +25,6 @@ namespace ISTraining_Part.Providers
         ObservableCollection<Group> Groups { get; }
 
         /// <summary>
-        /// Студенты.
-        /// </summary>
-        ObservableCollection<Student> Students { get; }
-
-        /// <summary>
         /// Сообщения в чате.
         /// </summary>
         ObservableCollection<ChatMessage> ChatMessages { get; }

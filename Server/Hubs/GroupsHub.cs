@@ -4,7 +4,7 @@ using ISTraining_Part.Core.ServerEvents;
 using ISTraining_Part.Core.ServerMethods;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Server.DataBase;
+using Server.DataBase.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +19,16 @@ namespace Server.Hubs
     public class GroupsHub : Hub<IGroupsHubEvents>, IGroupsHub
     {
         /// <summary>
-        /// База данных.
+        /// Репозиторий групп.
         /// </summary>
-        readonly IDataBase dataBase;
+        readonly IGroupsRepository repository;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public GroupsHub(IDataBase dataBase)
+        public GroupsHub(IGroupsRepository repository)
         {
-            this.dataBase = dataBase;
+            this.repository = repository;
         }
 
         #region Get region
@@ -39,7 +39,7 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
-            return dataBase.GetGroupsAsync(divisionId);
+            return repository.GetGroupsAsync(divisionId);
         }
         #endregion
 
@@ -53,7 +53,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Import groups: {groups.Count()}");
 
-            var res = await dataBase.AddGroupsAsync(groups);
+            var res = await repository.AddGroupsAsync(groups);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).GroupsImport();
@@ -70,7 +70,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Add group: {group.Name}");
 
-            var res = await dataBase.AddGroupAsync(group);
+            var res = await repository.AddGroupAsync(group);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Add, group);
@@ -87,7 +87,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Save group: {group.Name}");
 
-            var res = await dataBase.SaveGroupAsync(group);
+            var res = await repository.SaveGroupAsync(group);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Update, group);
@@ -104,7 +104,7 @@ namespace Server.Hubs
         {
             Logger.Log.Info($"Remove group: {group.Name}");
 
-            var res = await dataBase.RemoveGroupAsync(group);
+            var res = await repository.RemoveGroupAsync(group);
 
             if (res)
                 Clients.Group(Consts.AuthorizedGroup).OnChanged(DbChangeStatus.Remove, group);

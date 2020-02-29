@@ -9,7 +9,7 @@ namespace ISTraining_Part.Core.Models
     /// <summary>
     /// Человек.
     /// </summary>
-    public class People : ValidateViewModel, IId
+    public class People : ValidateViewModel
     {
         /// <summary>
         /// Id.

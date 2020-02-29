@@ -5,7 +5,8 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using Owin;
-using Server.DataBase;
+using Server.DataBase.Classes;
+using Server.DataBase.Interfaces;
 using Server.Hubs;
 using System;
 
@@ -59,9 +60,15 @@ namespace Server
                                    typeof(StaffHub),
                                    typeof(GroupsHub),
                                    typeof(StudentsHub),
-                                   typeof(ChatHub));
+                                   typeof(ChatHub),
+                                   typeof(DetailInfoHub));
 
-            container.RegisterSingleton<IDataBase, DataBase.DataBase>();
+            container.RegisterSingleton<IRepository, Repository>();
+            container.RegisterSingleton<IUsersRepository, UsersRepository>();
+            container.RegisterSingleton<IGroupsRepository, GroupsRepository>();
+            container.RegisterSingleton<IStaffRepository, StaffRepository>();
+            container.RegisterSingleton<IStudentsRepository, StudentsRepository>();
+            container.RegisterSingleton<IDetailInfoRepository, DetailInfoRepository>();
         }
     }
 }
