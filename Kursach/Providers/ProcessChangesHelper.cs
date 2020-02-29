@@ -8,6 +8,8 @@ namespace ISTraining_Part.Providers
     {
         public static void ProcessChanges<T>(DbChangeStatus status, T arg, ObservableCollection<T> collection, TaskFactory sync)
         {
+            Logger.Log.Info($"Изменения в объекте: {{object: {typeof(T)}, status: {status}}}");
+
             switch (status)
             {
                 case DbChangeStatus.Add:
@@ -33,7 +35,7 @@ namespace ISTraining_Part.Providers
                     break;
 
                 default:
-                    Logger.Log.Warn($"Необработанное событие изменения: {{type: {typeof(T)}, arg: {arg}, status: {status}}}");
+                    Logger.Log.Warn($"Необработанное событие изменения: {{type: {typeof(T)}, status: {status}}}");
                     break;
             }
         }
