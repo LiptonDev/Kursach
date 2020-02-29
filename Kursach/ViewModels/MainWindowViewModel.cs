@@ -56,7 +56,7 @@ namespace ISTraining_Part.ViewModels
             this.regionManager = regionManager;
             this.dialogManager = dialogManager;
 
-            this.client.HubConfigurator.Connected += Client_Connected;
+            this.client.HubConfigurator.Connected += Client_Reconnected;
             this.client.HubConfigurator.Disconnected += Client_Disconnected;
             this.client.HubConfigurator.Reconnected += Client_Reconnected;
             this.client.HubConfigurator.Reconnecting += Client_Reconnecting;
@@ -74,7 +74,7 @@ namespace ISTraining_Part.ViewModels
 
         private void Client_Reconnected()
         {
-            Debug.WriteLine("Reconnected");
+            Debug.WriteLine("Connected");
             regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
 
@@ -83,12 +83,6 @@ namespace ISTraining_Part.ViewModels
             Debug.WriteLine("Disconnected");
             await Task.Delay(2000);
             await client.HubConfigurator.ConnectAsync();
-        }
-
-        private void Client_Connected()
-        {
-            Debug.WriteLine("Connected");
-            regionManager.RequestNavigateInRootRegion(RegionViews.LoginView, NavigationParametersFluent.GetNavigationParameters().SetValue("fromConnecting", null));
         }
     }
 }
