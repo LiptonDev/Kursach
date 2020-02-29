@@ -1,27 +1,21 @@
-﻿using DryIoc;
-using ISTraining_Part.Core.Models;
+﻿using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Excel.Classes;
+using ISTraining_Part.Excel.Interfaces;
 using ISTraining_Part.Providers;
-using MaterialDesignXaml.DialogsHelper;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ISTraining_Part.Excel
 {
     /// <summary>
     /// Импорт данных.
     /// </summary>
-    class StudentsImporter : BaseImporter, IAsyncImporter<IEnumerable<Student>>
+    class StudentsImporter : BaseImporter, IImporter<IEnumerable<Student>>
     {
-        /// <summary>
-        /// Identifier.
-        /// </summary>
-        readonly IDialogIdentifier dialogIdentifier;
-
         /// <summary>
         /// Поставщик данных.
         /// </summary>
@@ -30,16 +24,15 @@ namespace ISTraining_Part.Excel
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public StudentsImporter(IContainer container, IDialogManager dialogManager, IDataProvider dataProvider) : base(dialogManager)
+        public StudentsImporter(IDialogManager dialogManager, IDataProvider dataProvider) : base(dialogManager)
         {
-            this.dialogIdentifier = container.ResolveRootDialogIdentifier();
             this.dataProvider = dataProvider;
         }
 
         /// <summary>
         /// Импорт данных о студентах.
         /// </summary>
-        public async Task<IEnumerable<Student>> Import()
+        public IEnumerable<Student> Import()
         {
             if (!SelectFile())
                 return null;

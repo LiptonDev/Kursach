@@ -1,6 +1,8 @@
 ﻿using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Excel.Classes;
+using ISTraining_Part.Excel.Interfaces;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -117,12 +119,12 @@ namespace ISTraining_Part.Excel
                 try
                 {
                     excel.SaveAs(new FileInfo(FileName));
-                    Logger.Log.Info($"Экспорт информации о группах: {{fileName: {FileName}}}");
+                    Logger.Log.Info($"Экспорт информации о контингенте: {{fileName: {FileName}}}");
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log.Error($"Экспорт информации о группах: {{fileName: {FileName}}}", ex);
+                    Logger.Log.Error($"Экспорт информации о контингенте: {{fileName: {FileName}}}", ex);
                     return false;
                 }
             }

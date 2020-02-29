@@ -1,8 +1,11 @@
 ﻿using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Excel.Classes;
+using ISTraining_Part.Excel.Interfaces;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -94,10 +97,18 @@ namespace ISTraining_Part.Excel
 
                 worksheet.Cells.AutoFitColumns(10);
 
-                excel.SaveAs(new System.IO.FileInfo(FileName));
+                try
+                {
+                    excel.SaveAs(new FileInfo(FileName));
+                    Logger.Log.Info($"Экспорт информации о контингенте: {{fileName: {FileName}}}");
+                    return Task.FromResult(true);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error($"Экспорт информации о контингенте: {{fileName: {FileName}}}", ex);
+                    return Task.FromResult(false);
+                }
             }
-
-            return Task.FromResult(true);
         }
 
         bool IsMinor(Student student)

@@ -1,5 +1,7 @@
 ﻿using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Excel.Classes;
+using ISTraining_Part.Excel.Interfaces;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;

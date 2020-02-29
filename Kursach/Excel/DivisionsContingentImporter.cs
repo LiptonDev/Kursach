@@ -1,6 +1,8 @@
 ﻿using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Manager;
+using ISTraining_Part.Excel.Classes;
+using ISTraining_Part.Excel.Interfaces;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -83,14 +85,14 @@ namespace ISTraining_Part.Excel
                         }
                     }
 
-                    Logger.Log.Info($"Импорт данных о группах: {{fileName: {FileName}}}");
+                    Logger.Log.Info($"Импорт данных о контингенте: {{fileName: {FileName}}}");
 
                     return groups;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log.Error($"Импорт данных о группах: {{fileName: {FileName}}}", ex);
+                Logger.Log.Error($"Импорт данных о контингенте: {{fileName: {FileName}}}", ex);
 
                 return null;
             }
