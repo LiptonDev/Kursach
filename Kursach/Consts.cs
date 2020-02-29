@@ -3,7 +3,7 @@
     static class Consts
     {
         /// <summary>
-        /// Статус в программе.
+        /// Статус авторизации в программе.
         /// </summary>
         public static bool LoginStatus { get; set; }
     }
