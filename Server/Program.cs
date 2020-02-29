@@ -42,6 +42,10 @@ namespace Server
 
     class Startup
     {
+        /// <summary>
+        /// Создание конейнера и активатора хабов.
+        /// </summary>
+        /// <param name="app"></param>
         public void Configuration(IAppBuilder app)
         {
             var container = new Container();
@@ -53,6 +57,10 @@ namespace Server
             app.MapSignalR();
         }
 
+        /// <summary>
+        /// Создание контейнера.
+        /// </summary>
+        /// <param name="container">Контейнер.</param>
         void ConfigureContainer(IContainer container)
         {
             container.RegisterHubs(typeof(LoginHub),
