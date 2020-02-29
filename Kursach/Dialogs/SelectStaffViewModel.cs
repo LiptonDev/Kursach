@@ -1,11 +1,12 @@
-﻿using ISTraining_Part.Client.Interfaces;
+﻿using ISTraining_Part.Client.Design;
+using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Attributes;
 using ISTraining_Part.Dialogs.Classes;
 using ISTraining_Part.Providers;
 using MaterialDesignXaml.DialogsHelper;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Data;
 
 namespace ISTraining_Part.Dialogs
 {
@@ -20,6 +21,9 @@ namespace ISTraining_Part.Dialogs
         /// </summary>
         public SelectStaffViewModel()
         {
+            Items = new ObservableCollection<Staff>();
+            var res = new DesignStaff().GetStaffsAsync().Result;
+            Items.AddRange(res.Response);
         }
 
         /// <summary>
@@ -28,10 +32,9 @@ namespace ISTraining_Part.Dialogs
         public SelectStaffViewModel(int currentId, IDialogIdentifier dialogIdentifier, IClient client, IDataProvider dataProvider)
             : base(dialogIdentifier, client)
         {
-            var staff = dataProvider.Staff;
-            Items = new ListCollectionView(staff);
+            Items = dataProvider.Staff;
 
-            SelectedItem = staff.FirstOrDefault(x => x.Id == currentId);
+            SelectedItem = Items.FirstOrDefault(x => x.Id == currentId);
         }
     }
 }

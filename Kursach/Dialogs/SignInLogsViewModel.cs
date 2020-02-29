@@ -1,4 +1,5 @@
-﻿using ISTraining_Part.Client.Interfaces;
+﻿using ISTraining_Part.Client.Design;
+using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs.Attributes;
 using System.Collections.ObjectModel;
@@ -22,6 +23,9 @@ namespace ISTraining_Part.Dialogs
         /// </summary>
         public SignInLogsViewModel()
         {
+            Logs = new ObservableCollection<SignInLog>();
+            var res = new DesignUsers().GetSignInLogsAsync(0).Result;
+            Logs.AddRange(res.Response);
         }
 
         /// <summary>

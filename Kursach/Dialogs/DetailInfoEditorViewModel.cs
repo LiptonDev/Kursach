@@ -29,6 +29,7 @@ namespace ISTraining_Part.Dialogs
         /// </summary>
         public DetailInfoEditorViewModel()
         {
+            Editor = new BaseEditModeViewModel<DetailInfo>();
         }
 
         /// <summary>
@@ -57,10 +58,10 @@ namespace ISTraining_Part.Dialogs
             switch (type)
             {
                 case DetailInfoType.Staff:
-                    Editor.EditableObject.StaffId = id;
+                    Editor.EditableObject.Staff = id;
                     break;
                 case DetailInfoType.Student:
-                    Editor.EditableObject.StudentId = id;
+                    Editor.EditableObject.Student = id;
                     break;
             }
         }
