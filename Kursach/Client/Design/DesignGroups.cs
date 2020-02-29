@@ -12,7 +12,7 @@ namespace ISTraining_Part.Client.Design
 {
     class DesignGroups : IGroups
     {
-        public DesignGroups(IHubConfigurator hubConfigurator)
+        public DesignGroups()
         {
 
         }

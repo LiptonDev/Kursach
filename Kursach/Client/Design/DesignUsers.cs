@@ -46,6 +46,7 @@ namespace ISTraining_Part.Client.Design
             {
                 Login = "login",
                 Password = "password",
+                Name = "design name",
                 Id = x,
                 Mode = x % 2 == 0 ? UserMode.Admin : UserMode.Read
             });
