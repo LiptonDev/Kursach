@@ -49,6 +49,8 @@ namespace Server.Hubs
         /// <returns></returns>
         public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
         {
+            Logger.Log.Info($"Save detail info: {{student: {detailInfo.Student}, staff: {detailInfo.Staff}}}");
+
             return repository.AddOrUpdateAsync(detailInfo, type);
         }
     }
