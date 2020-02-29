@@ -61,7 +61,8 @@
             </Button>
 
             <Button Content="Импорт данных"
-                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True">
+                    behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True"
+                    Visibility="{Binding User.Mode, Converter={StaticResource RWUserModeToVisibility}}">
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Контингент по подразделениям"
