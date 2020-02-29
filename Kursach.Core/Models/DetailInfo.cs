@@ -51,13 +51,13 @@ namespace ISTraining_Part.Core.Models
         /// Id сотрудника.
         /// </summary>
         [JsonProperty("si")]
-        public int? StaffId { get; set; }
+        public int? Staff { get; set; }
 
         /// <summary>
         /// Id студента.
         /// </summary>
         [JsonProperty("sti")]
-        public int? StudentId { get; set; }
+        public int? Student { get; set; }
 
         /// <summary>
         /// Копия.
@@ -66,6 +66,11 @@ namespace ISTraining_Part.Core.Models
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public override string ToString()
+        {
+            return $"student: {Student}, staff: {Staff}";
         }
     }
 }
