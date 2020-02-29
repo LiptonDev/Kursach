@@ -6,6 +6,7 @@ using ISTraining_Part.Core.Models;
 using ISTraining_Part.Dialogs;
 using ISTraining_Part.Dialogs.Manager;
 using ISTraining_Part.Excel;
+using ISTraining_Part.Excel.Interfaces;
 using ISTraining_Part.Properties;
 using ISTraining_Part.Providers;
 using ISTraining_Part.UI;
@@ -126,7 +127,7 @@ namespace ISTraining_Part
             containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<IGrouping<Group, Student>>>, MinorStudentsExporter>("minor");
             containerRegistry.RegisterSingleton<IExporter<IEnumerable<Staff>>, StaffExporter>();
             containerRegistry.RegisterSingleton<IAsyncExporter<IEnumerable<Group>>, DivisionsContingentExporter>();
-            containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Student>>, StudentsImporter>();
+            containerRegistry.RegisterSingleton<IImporter<IEnumerable<Student>>, StudentsImporter>();
             containerRegistry.RegisterSingleton<IAsyncImporter<IEnumerable<Group>>, DivisionsContingentImporter>();
 
             //windows
