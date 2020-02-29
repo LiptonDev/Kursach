@@ -5,6 +5,9 @@ using System.Windows.Interactivity;
 
 namespace ISTraining_Part.Behaviors
 {
+    /// <summary>
+    /// Пролистывание к последнему добавленному объекту в ItemsControl.
+    /// </summary>
     public class BringNewItemIntoViewBehavior : Behavior<ItemsControl>
     {
         private INotifyCollectionChanged notifier;

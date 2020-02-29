@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace ISTraining_Part.Behaviors
 {
+    /// <summary>
+    /// Открытие ContextMenu через ЛКМ.
+    /// </summary>
     public static class ContextMenuLeftClickBehavior
     {
         public static bool GetIsLeftClickEnabled(DependencyObject obj)
