@@ -42,7 +42,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
             return repository.QueryAsync(con =>
             {
@@ -57,7 +57,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="groupIds">ИДы групп.</param>
         /// <returns></returns>
-        public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
+        public Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
             return repository.QueryAsync(async con =>
             {
@@ -81,7 +81,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student)
         {
             return repository.QueryAsync(async con =>
             {
@@ -95,7 +95,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="students">Студенты.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
+        public Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
             return repository.QueryAsync(async con =>
             {
@@ -109,7 +109,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student)
         {
             return repository.QueryAsync(con =>
             {
@@ -122,7 +122,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student)
         {
             return repository.QueryAsync(con =>
             {

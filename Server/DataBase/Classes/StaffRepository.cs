@@ -32,7 +32,7 @@ namespace Server.DataBase.Classes
         /// Получение всех работников.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
             return repository.QueryAsync(con =>
             {
@@ -44,9 +44,9 @@ namespace Server.DataBase.Classes
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public async Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
+        public async Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            KursachResponse<Staff, bool> response = null;
+            ISTrainingPartResponse<Staff, bool> response = null;
             bool added = false;
 
             var query = await repository.QueryAsync(async con =>
@@ -69,7 +69,7 @@ namespace Server.DataBase.Classes
                 else return staff;
             });
 
-            response = new KursachResponse<Staff, bool>(query.Code, added, query.Response);
+            response = new ISTrainingPartResponse<Staff, bool>(query.Code, added, query.Response);
 
             return response;
         }
@@ -81,7 +81,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff)
         {
             return repository.QueryAsync(async con =>
             {
@@ -95,7 +95,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff)
         {
             return repository.QueryAsync(con =>
             {
@@ -108,7 +108,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff)
         {
             return repository.QueryAsync(con =>
             {

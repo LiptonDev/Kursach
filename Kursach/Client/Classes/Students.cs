@@ -53,7 +53,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
             return TryInvokeAsync<IEnumerable<Student>>(args: groupId);
         }
@@ -64,7 +64,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="groupIds">ИДы групп.</param>
         /// <returns></returns>
-        public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
+        public Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
             return TryInvokeAsync<Dictionary<int, StudentsCount>>(args: groupIds);
         }
@@ -76,7 +76,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student)
         {
             return TryInvokeAsync<bool>(args: student);
         }
@@ -87,7 +87,7 @@ namespace ISTraining_Part.Client.Classes
         /// <param name="students">Студенты.</param>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
+        public Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
             return TryInvokeAsync<bool>(args: students);
         }
@@ -97,7 +97,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student)
         {
             return TryInvokeAsync<bool>(args: student);
         }
@@ -107,7 +107,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student)
         {
             return TryInvokeAsync<bool>(args: student);
         }

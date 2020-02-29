@@ -14,7 +14,7 @@ namespace ISTraining_Part.Core.ServerMethods
         /// <param name="login">Логин.</param>
         /// <param name="password">Пароль.</param>
         /// <returns></returns>
-        Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password);
+        Task<ISTrainingPartResponse<User, LoginResponse>> LoginAsync(string login, string password);
 
         /// <summary>
         /// Выход.

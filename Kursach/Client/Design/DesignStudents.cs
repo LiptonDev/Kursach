@@ -26,13 +26,13 @@ namespace ISTraining_Part.Client.Design
             return Task.CompletedTask;
         }
 
-        public Task<KursachResponse<bool>> AddStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student)
         {
             OnChanged?.Invoke(DbChangeStatus.Add, student);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
             var students = Enumerable.Range(0, 15).Select(x => new Student
             {
@@ -49,10 +49,10 @@ namespace ISTraining_Part.Client.Design
                 Id = x
             });
 
-            return Task.FromResult(new KursachResponse<IEnumerable<Student>>(KursachResponseCode.Ok, students));
+            return Task.FromResult(new ISTrainingPartResponse<IEnumerable<Student>>(ISTrainingPartResponseCode.Ok, students));
         }
 
-        public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
+        public Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
             var res = new Dictionary<int, StudentsCount>();
 
@@ -61,25 +61,25 @@ namespace ISTraining_Part.Client.Design
                 res.Add(i, new StudentsCount(rn.Next(15, 25), rn.Next(0, 5)));
             }
 
-            return Task.FromResult(new KursachResponse<Dictionary<int, StudentsCount>>(KursachResponseCode.Ok, res));
+            return Task.FromResult(new ISTrainingPartResponse<Dictionary<int, StudentsCount>>(ISTrainingPartResponseCode.Ok, res));
         }
 
-        public Task<KursachResponse<bool>> RemoveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student)
         {
             OnChanged?.Invoke(DbChangeStatus.Remove, student);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> SaveStudentAsync(Student student)
+        public Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student)
         {
             OnChanged?.Invoke(DbChangeStatus.Update, student);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
+        public Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
             Imported?.Invoke();
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
     }
 }

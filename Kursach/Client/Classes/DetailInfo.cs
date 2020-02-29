@@ -24,7 +24,7 @@ namespace ISTraining_Part.Client.Classes
         /// <param name="id">ИД человека.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        public Task<KursachResponse<Core.Models.DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
+        public Task<ISTrainingPartResponse<Core.Models.DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
         {
             return TryInvokeAsync<Core.Models.DetailInfo>(args: new object[] { id, type });
         }
@@ -34,7 +34,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="detailInfo">Детальная информация.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddOrUpdateAsync(Core.Models.DetailInfo detailInfo, DetailInfoType type)
+        public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(Core.Models.DetailInfo detailInfo, DetailInfoType type)
         {
             return TryInvokeAsync<bool>(args: new object[] { detailInfo, type });
         }

@@ -33,7 +33,7 @@ namespace ISTraining_Part.Client.Classes
         /// Получение всех работников.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
             return TryInvokeAsync<IEnumerable<Staff>>();
         }
@@ -42,7 +42,7 @@ namespace ISTraining_Part.Client.Classes
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
+        public Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
             return TryInvokeAsync<Staff, bool>();
         }
@@ -54,7 +54,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff)
         {
             return TryInvokeAsync<bool>(args: staff);
         }
@@ -64,7 +64,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff)
         {
             return TryInvokeAsync<bool>(args: staff);
         }
@@ -74,7 +74,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff)
         {
             return TryInvokeAsync<bool>(args: staff);
         }

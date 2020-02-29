@@ -23,7 +23,7 @@ namespace ISTraining_Part.Client.Classes
         /// <param name="login">Логин.</param>
         /// <param name="password">Пароль.</param>
         /// <returns></returns>
-        public Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
+        public Task<ISTrainingPartResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
             return TryInvokeAsync<User, LoginResponse>(argDefault: LoginResponse.ServerError, args: new object[] { login, password });
         }

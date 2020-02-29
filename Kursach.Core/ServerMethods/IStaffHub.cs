@@ -14,14 +14,14 @@ namespace ISTraining_Part.Core.ServerMethods
         /// Получение всех работников.
         /// </summary>
         /// <returns></returns>
-        Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync();
+        Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync();
 
         /// <summary>
         /// Получить первого (создать если нет) сотрудника.
         /// bool = true - сотрудник создан.
         /// </summary>
         /// <returns></returns>
-        Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync();
+        Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync();
         #endregion
 
         #region CUD region
@@ -30,21 +30,21 @@ namespace ISTraining_Part.Core.ServerMethods
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> AddStaffAsync(Staff staff);
+        Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff);
 
         /// <summary>
         /// Сохранить сотрудника.
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> SaveStaffAsync(Staff staff);
+        Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff);
 
         /// <summary>
         /// Удалить сотрудника.
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff);
+        Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff);
         #endregion
     }
 }

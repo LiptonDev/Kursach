@@ -13,7 +13,7 @@ namespace ISTraining_Part.Client.Design
 
         }
 
-        public Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
+        public Task<ISTrainingPartResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
             User user = new User
             {
@@ -25,7 +25,7 @@ namespace ISTraining_Part.Client.Design
             if (login == "read")
                 user.Mode = UserMode.Read;
 
-            return Task.FromResult(new KursachResponse<User, LoginResponse>(KursachResponseCode.Ok, LoginResponse.Ok, user));
+            return Task.FromResult(new ISTrainingPartResponse<User, LoginResponse>(ISTrainingPartResponseCode.Ok, LoginResponse.Ok, user));
         }
 
         public void Logout()

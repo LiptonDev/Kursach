@@ -40,7 +40,7 @@ namespace Server.Hubs
         /// <param name="login">Логин.</param>
         /// <param name="password">Пароль.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<User, LoginResponse>> LoginAsync(string login, string password)
+        public async Task<ISTrainingPartResponse<User, LoginResponse>> LoginAsync(string login, string password)
         {
             var id = Context.ConnectionId;
             var res = await usersRepository.GetUserAsync(login, password, true);
@@ -66,7 +66,7 @@ namespace Server.Hubs
                 Console.WriteLine($"{Context.ConnectionId} logged in");
             }
 
-            return new KursachResponse<User, LoginResponse>(res.Code, loginResponse, res.Response);
+            return new ISTrainingPartResponse<User, LoginResponse>(res.Code, loginResponse, res.Response);
         }
 
         /// <summary>

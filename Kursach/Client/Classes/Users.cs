@@ -33,7 +33,7 @@ namespace ISTraining_Part.Client.Classes
         /// Получение списка всех пользователей.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<User>>> GetUsersAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<User>>> GetUsersAsync()
         {
             return TryInvokeAsync<IEnumerable<User>>();
         }
@@ -45,7 +45,7 @@ namespace ISTraining_Part.Client.Classes
         /// <param name="password">Пароль.</param>
         /// <param name="usePassword">Проверять пароль.</param>
         /// <returns></returns>
-        public Task<KursachResponse<User>> GetUserAsync(string login, string password, bool usePassword)
+        public Task<ISTrainingPartResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
             return TryInvokeAsync<User>(args: new object[] { login, password, usePassword });
         }
@@ -57,7 +57,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="userId">ИД пользователя.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
+        public Task<ISTrainingPartResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
             return TryInvokeAsync<IEnumerable<SignInLog>>(args: userId);
         }
@@ -69,7 +69,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> AddUserAsync(User user)
         {
             return TryInvokeAsync<bool>(args: user);
         }
@@ -79,7 +79,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> SaveUserAsync(User user)
         {
             return TryInvokeAsync<bool>(args: user);
         }
@@ -89,7 +89,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> RemoveUserAsync(User user)
         {
             return TryInvokeAsync<bool>(args: user);
         }

@@ -37,7 +37,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="divisionId">Подразделение (от 0 до 2). -1 - все группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
+        public Task<ISTrainingPartResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
             return repository.GetGroupsAsync(divisionId);
         }
@@ -49,7 +49,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="groups">Группы.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
+        public async Task<ISTrainingPartResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
             Logger.Log.Info($"Import groups: {groups.Count()}");
 
@@ -66,7 +66,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddGroupAsync(Group group)
+        public async Task<ISTrainingPartResponse<bool>> AddGroupAsync(Group group)
         {
             Logger.Log.Info($"Add group: {group.Name}");
 
@@ -83,7 +83,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> SaveGroupAsync(Group group)
+        public async Task<ISTrainingPartResponse<bool>> SaveGroupAsync(Group group)
         {
             Logger.Log.Info($"Save group: {group.Name}");
 
@@ -100,7 +100,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> RemoveGroupAsync(Group group)
+        public async Task<ISTrainingPartResponse<bool>> RemoveGroupAsync(Group group)
         {
             Logger.Log.Info($"Remove group: {group.Name}");
 

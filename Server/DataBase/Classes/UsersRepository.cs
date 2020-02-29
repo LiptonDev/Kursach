@@ -32,7 +32,7 @@ namespace Server.DataBase.Classes
         /// Получение списка всех пользователей.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<User>>> GetUsersAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<User>>> GetUsersAsync()
         {
             return repository.QueryAsync(con =>
             {
@@ -47,7 +47,7 @@ namespace Server.DataBase.Classes
         /// <param name="password">Пароль.</param>
         /// <param name="usePassword">Проверять пароль.</param>
         /// <returns></returns>
-        public Task<KursachResponse<User>> GetUserAsync(string login, string password, bool usePassword)
+        public Task<ISTrainingPartResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
             return repository.QueryAsync(con =>
             {
@@ -64,7 +64,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="userId">ИД пользователя.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
+        public Task<ISTrainingPartResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
             return repository.QueryAsync(con =>
             {
@@ -92,7 +92,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> AddUserAsync(User user)
         {
             return repository.QueryAsync(async con =>
             {
@@ -106,7 +106,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> SaveUserAsync(User user)
         {
             return repository.QueryAsync(con =>
             {
@@ -119,7 +119,7 @@ namespace Server.DataBase.Classes
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveUserAsync(User user)
+        public Task<ISTrainingPartResponse<bool>> RemoveUserAsync(User user)
         {
             return repository.QueryAsync(con =>
             {

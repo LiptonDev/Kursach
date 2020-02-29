@@ -32,7 +32,7 @@ namespace Server.DataBase.Classes
         /// <param name="id">ИД человека.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        public Task<KursachResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
+        public Task<ISTrainingPartResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
         {
             return repository.QueryAsync(con =>
             {
@@ -46,7 +46,7 @@ namespace Server.DataBase.Classes
         /// <param name="detailInfo">Детальная информация.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
+        public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
         {
             return repository.QueryAsync(async con =>
             {

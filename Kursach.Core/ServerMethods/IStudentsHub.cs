@@ -23,7 +23,7 @@ namespace ISTraining_Part.Core.ServerMethods
         /// </summary>
         /// <param name="groupId">ИД группы (-1 для получения всех студентов).</param>
         /// <returns></returns>
-        Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId);
+        Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId);
 
         /// <summary>
         /// Получение количества студентов в группах.
@@ -31,7 +31,7 @@ namespace ISTraining_Part.Core.ServerMethods
         /// </summary>
         /// <param name="groupIds">ИДы групп.</param>
         /// <returns></returns>
-        Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds);
+        Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds);
         #endregion
 
         #region CUD region
@@ -40,28 +40,28 @@ namespace ISTraining_Part.Core.ServerMethods
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> AddStudentAsync(Student student);
+        Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student);
 
         /// <summary>
         /// Импорт студентов.
         /// </summary>
         /// <param name="students">Студенты.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students);
+        Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students);
 
         /// <summary>
         /// Сохранить студента.
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> SaveStudentAsync(Student student);
+        Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student);
 
         /// <summary>
         /// Удалить студента.
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> RemoveStudentAsync(Student student);
+        Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student);
         #endregion
     }
 }

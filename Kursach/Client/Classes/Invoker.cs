@@ -58,19 +58,19 @@ namespace ISTraining_Part.Client.Classes
         /// Отправить запрос.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<T>> TryInvokeAsync<T>([CallerMemberName]string method = null, T defaultValue = default, params object[] args)
+        public Task<ISTrainingPartResponse<T>> TryInvokeAsync<T>([CallerMemberName]string method = null, T defaultValue = default, params object[] args)
         {
             if (HubConfigurator.Hub.State != ConnectionState.Connected)
-                return Task.FromResult(new KursachResponse<T>(KursachResponseCode.ServerError, defaultValue));
+                return Task.FromResult(new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.ServerError, defaultValue));
 
             try
             {
-                return Proxy.Invoke<KursachResponse<T>>(method, args);
+                return Proxy.Invoke<ISTrainingPartResponse<T>>(method, args);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return Task.FromResult(new KursachResponse<T>(KursachResponseCode.ServerError, defaultValue));
+                return Task.FromResult(new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.ServerError, defaultValue));
             }
         }
 
@@ -78,19 +78,19 @@ namespace ISTraining_Part.Client.Classes
         /// Отправить запрос.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<T, TArg>> TryInvokeAsync<T, TArg>([CallerMemberName]string method = null, T defaultValue = default, TArg argDefault = default, params object[] args)
+        public Task<ISTrainingPartResponse<T, TArg>> TryInvokeAsync<T, TArg>([CallerMemberName]string method = null, T defaultValue = default, TArg argDefault = default, params object[] args)
         {
             if (HubConfigurator.Hub.State != ConnectionState.Connected)
-                return Task.FromResult(new KursachResponse<T, TArg>(KursachResponseCode.ServerError, argDefault, defaultValue));
+                return Task.FromResult(new ISTrainingPartResponse<T, TArg>(ISTrainingPartResponseCode.ServerError, argDefault, defaultValue));
 
             try
             {
-                return Proxy.Invoke<KursachResponse<T, TArg>>(method, args);
+                return Proxy.Invoke<ISTrainingPartResponse<T, TArg>>(method, args);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return Task.FromResult(new KursachResponse<T, TArg>(KursachResponseCode.ServerError, argDefault, defaultValue));
+                return Task.FromResult(new ISTrainingPartResponse<T, TArg>(ISTrainingPartResponseCode.ServerError, argDefault, defaultValue));
             }
         }
     }

@@ -20,19 +20,19 @@ namespace ISTraining_Part.Client.Design
         public event OnChanged<Group> OnChanged;
         public event Action Imported;
 
-        public Task<KursachResponse<bool>> AddGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> AddGroupAsync(Group group)
         {
             OnChanged?.Invoke(DbChangeStatus.Add, group);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
+        public Task<ISTrainingPartResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
             Imported?.Invoke();
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
+        public Task<ISTrainingPartResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
             var groups = Enumerable.Range(0, 15).Select(x => new Group
             {
@@ -47,19 +47,19 @@ namespace ISTraining_Part.Client.Design
                 SpoNpo = x % 2,
                 Id = x,
             });
-            return Task.FromResult(new KursachResponse<IEnumerable<Group>>(KursachResponseCode.Ok, groups));
+            return Task.FromResult(new ISTrainingPartResponse<IEnumerable<Group>>(ISTrainingPartResponseCode.Ok, groups));
         }
 
-        public Task<KursachResponse<bool>> RemoveGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> RemoveGroupAsync(Group group)
         {
             OnChanged?.Invoke(DbChangeStatus.Remove, group);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> SaveGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> SaveGroupAsync(Group group)
         {
             OnChanged?.Invoke(DbChangeStatus.Update, group);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
     }
 }

@@ -42,7 +42,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="divisionId">Подразделение (от 0 до 2). -1 - все группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
+        public Task<ISTrainingPartResponse<IEnumerable<Group>>> GetGroupsAsync(int divisionId = -1)
         {
             return TryInvokeAsync<IEnumerable<Group>>(args: divisionId);
         }
@@ -54,7 +54,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="groups">Группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
+        public Task<ISTrainingPartResponse<bool>> AddGroupsAsync(IEnumerable<Group> groups)
         {
             return TryInvokeAsync<bool>(args: groups);
         }
@@ -64,7 +64,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> AddGroupAsync(Group group)
         {
             return TryInvokeAsync<bool>(args: group);
         }
@@ -74,7 +74,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> SaveGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> SaveGroupAsync(Group group)
         {
             return TryInvokeAsync<bool>(args: group);
         }
@@ -84,7 +84,7 @@ namespace ISTraining_Part.Client.Classes
         /// </summary>
         /// <param name="group">Группа.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> RemoveGroupAsync(Group group)
+        public Task<ISTrainingPartResponse<bool>> RemoveGroupAsync(Group group)
         {
             return TryInvokeAsync<bool>(args: group);
         }

@@ -35,7 +35,7 @@ namespace Server.Hubs
         /// <param name="id">Id человека.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        public Task<KursachResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
+        public Task<ISTrainingPartResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
         {
             return repository.GetDetailInfoAsync(id, type);
         }
@@ -47,7 +47,7 @@ namespace Server.Hubs
         /// <param name="detailInfo">Детальная информация.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        public Task<KursachResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
+        public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
         {
             return repository.AddOrUpdateAsync(detailInfo, type);
         }

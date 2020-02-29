@@ -15,7 +15,7 @@ namespace ISTraining_Part.Core.ServerMethods
         /// <param name="id">Id человека.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        Task<KursachResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type);
+        Task<ISTrainingPartResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type);
 
         /// <summary>
         /// Добавить или сохранить детальную информацию.
@@ -24,6 +24,6 @@ namespace ISTraining_Part.Core.ServerMethods
         /// <param name="detailInfo">Детальная информация.</param>
         /// <param name="type">Тип человека.</param>
         /// <returns></returns>
-        Task<KursachResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type);
+        Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type);
     }
 }

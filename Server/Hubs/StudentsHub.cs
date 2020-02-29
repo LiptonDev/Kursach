@@ -49,7 +49,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
+        public Task<ISTrainingPartResponse<IEnumerable<Student>>> GetStudentsAsync(int groupId)
         {
             return repository.GetStudentsAsync(groupId);
         }
@@ -60,7 +60,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="groupIds">ИДы групп.</param>
         /// <returns></returns>
-        public Task<KursachResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
+        public Task<ISTrainingPartResponse<Dictionary<int, StudentsCount>>> GetStudentsCountAsync(IEnumerable<int> groupIds)
         {
             return repository.GetStudentsCountAsync(groupIds);
         }
@@ -72,7 +72,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddStudentAsync(Student student)
+        public async Task<ISTrainingPartResponse<bool>> AddStudentAsync(Student student)
         {
             Logger.Log.Info($"Add student: {student.FullName}");
 
@@ -90,7 +90,7 @@ namespace Server.Hubs
         /// <param name="students">Студенты.</param>
         /// <param name="groupId">ИД группы.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
+        public async Task<ISTrainingPartResponse<bool>> ImportStudentsAsync(IEnumerable<Student> students)
         {
             Logger.Log.Info($"Import students: {students.Count()}");
 
@@ -104,7 +104,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> SaveStudentAsync(Student student)
+        public async Task<ISTrainingPartResponse<bool>> SaveStudentAsync(Student student)
         {
             Logger.Log.Info($"Save student: {student.FullName}");
 
@@ -121,7 +121,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="student">Студент.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> RemoveStudentAsync(Student student)
+        public async Task<ISTrainingPartResponse<bool>> RemoveStudentAsync(Student student)
         {
             Logger.Log.Info($"Remove student: {student.FullName}");
 

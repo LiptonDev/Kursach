@@ -35,7 +35,7 @@ namespace Server.DataBase.Classes
         /// <param name="defaultValue">Значение при ошибке запроса.</param>
         /// <param name="callerName">Метод, вызывающий запрос.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<T>> QueryAsync<T>(Func<IDbConnection, Task<T>> func, T defaultValue = default, [CallerMemberName] string callerName = null)
+        public async Task<ISTrainingPartResponse<T>> QueryAsync<T>(Func<IDbConnection, Task<T>> func, T defaultValue = default, [CallerMemberName] string callerName = null)
         {
 
             using (var connection = new MySqlConnection(connectionString))
@@ -45,12 +45,12 @@ namespace Server.DataBase.Classes
                     await connection.OpenAsync();
                     var res = await func(connection);
 
-                    return new KursachResponse<T>(KursachResponseCode.Ok, res);
+                    return new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.Ok, res);
                 }
                 catch (Exception ex)
                 {
                     Logger.Log.Error($"Ошибка запроса к базе, caller: {callerName}", ex);
-                    return new KursachResponse<T>(KursachResponseCode.DbError, defaultValue);
+                    return new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.DbError, defaultValue);
                 }
             }
         }

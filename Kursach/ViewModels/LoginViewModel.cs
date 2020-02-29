@@ -117,7 +117,7 @@ namespace ISTraining_Part.ViewModels
                         break;
                 }
 
-                if (res.Code != KursachResponseCode.Ok)
+                if (res.Code != ISTrainingPartResponseCode.Ok)
                     msg = res;
 
                 await dialogIdentifier.ShowMessageBoxAsync(msg, MaterialMessageBoxButtons.Ok);

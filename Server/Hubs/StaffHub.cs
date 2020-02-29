@@ -35,7 +35,7 @@ namespace Server.Hubs
         /// Получение всех работников.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
             return repository.GetStaffsAsync();
         }
@@ -44,7 +44,7 @@ namespace Server.Hubs
         /// Получить первого (создать если нет) сотрудника.
         /// </summary>
         /// <returns></returns>
-        public async Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
+        public async Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
             var res = await repository.GetOrCreateFirstStaffAsync();
 
@@ -63,7 +63,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddStaffAsync(Staff staff)
+        public async Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff)
         {
             Logger.Log.Info($"Add staff: {staff.FullName}");
 
@@ -80,7 +80,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> SaveStaffAsync(Staff staff)
+        public async Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff)
         {
             Logger.Log.Info($"Save staff: {staff.FullName}");
 
@@ -97,7 +97,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="staff">Сотрудник.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff)
+        public async Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff)
         {
             Logger.Log.Info($"Remove staff: {staff.FullName}");
 

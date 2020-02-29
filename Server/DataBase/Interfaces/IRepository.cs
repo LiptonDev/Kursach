@@ -19,6 +19,6 @@ namespace Server.DataBase.Interfaces
         /// <param name="defaultValue">Значение при ошибке запроса.</param>
         /// <param name="callerName">Метод, вызывающий запрос.</param>
         /// <returns></returns>
-        Task<KursachResponse<T>> QueryAsync<T>(Func<IDbConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string callerName = null);
+        Task<ISTrainingPartResponse<T>> QueryAsync<T>(Func<IDbConnection, Task<T>> func, T defaultValue = default, [CallerMemberName]string callerName = null);
     }
 }

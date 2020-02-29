@@ -18,18 +18,18 @@ namespace ISTraining_Part.Client.Design
 
         public event OnChanged<Staff> OnChanged;
 
-        public Task<KursachResponse<bool>> AddStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> AddStaffAsync(Staff staff)
         {
             OnChanged?.Invoke(DbChangeStatus.Add, staff);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
+        public Task<ISTrainingPartResponse<Staff, bool>> GetOrCreateFirstStaffAsync()
         {
-            return Task.FromResult(new KursachResponse<Staff, bool>(KursachResponseCode.Ok, true, GetStaffsAsync().Result.Response.First()));
+            return Task.FromResult(new ISTrainingPartResponse<Staff, bool>(ISTrainingPartResponseCode.Ok, true, GetStaffsAsync().Result.Response.First()));
         }
 
-        public Task<KursachResponse<IEnumerable<Staff>>> GetStaffsAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<Staff>>> GetStaffsAsync()
         {
             var staff = Enumerable.Range(0, 10).Select(x => new Staff
             {
@@ -40,19 +40,19 @@ namespace ISTraining_Part.Client.Design
                 Id = x
             });
 
-            return Task.FromResult(new KursachResponse<IEnumerable<Staff>>(KursachResponseCode.Ok, staff));
+            return Task.FromResult(new ISTrainingPartResponse<IEnumerable<Staff>>(ISTrainingPartResponseCode.Ok, staff));
         }
 
-        public Task<KursachResponse<bool>> RemoveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> RemoveStaffAsync(Staff staff)
         {
             OnChanged?.Invoke(DbChangeStatus.Remove, staff);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<bool>> SaveStaffAsync(Staff staff)
+        public Task<ISTrainingPartResponse<bool>> SaveStaffAsync(Staff staff)
         {
             OnChanged?.Invoke(DbChangeStatus.Update, staff);
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
     }
 }

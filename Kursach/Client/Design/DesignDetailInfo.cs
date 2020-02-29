@@ -8,14 +8,14 @@ namespace ISTraining_Part.Client.Design
 {
     class DesignDetailInfo : IDetailInfo
     {
-        public Task<KursachResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
+        public Task<ISTrainingPartResponse<bool>> AddOrUpdateAsync(DetailInfo detailInfo, DetailInfoType type)
         {
-            return Task.FromResult(new KursachResponse<bool>(KursachResponseCode.Ok, true));
+            return Task.FromResult(new ISTrainingPartResponse<bool>(ISTrainingPartResponseCode.Ok, true));
         }
 
-        public Task<KursachResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
+        public Task<ISTrainingPartResponse<DetailInfo>> GetDetailInfoAsync(int id, DetailInfoType type)
         {
-            return Task.FromResult(new KursachResponse<DetailInfo>(KursachResponseCode.Ok, new DetailInfo
+            return Task.FromResult(new ISTrainingPartResponse<DetailInfo>(ISTrainingPartResponseCode.Ok, new DetailInfo
             {
                 Phone = "88005553535",
                 Address = "г.о.г. Бор",

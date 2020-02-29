@@ -36,8 +36,8 @@
   <ItemGroup>
     <Compile Include="ChangeIgnoreAttribute.cs" />
     <Compile Include="HubNames.cs" />
-    <Compile Include="KursachResponse.cs" />
-    <Compile Include="KursachResponseCode.cs" />
+    <Compile Include="ISTrainingPartResponse.cs" />
+    <Compile Include="ISTrainingPartResponseCode.cs" />
     <Compile Include="Models\DetailInfo.cs" />
     <Compile Include="Models\Enums\DetailInfoType.cs" />
     <Compile Include="Models\Group.cs" />

@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TArg"></typeparam>
-    public class KursachResponse<T, TArg> : KursachResponse<T>
+    public class ISTrainingPartResponse<T, TArg> : ISTrainingPartResponse<T>
     {
         /// <summary>
         /// Аргумент.
@@ -15,7 +15,7 @@
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public KursachResponse(KursachResponseCode code, TArg arg, T response) : base(code, response)
+        public ISTrainingPartResponse(ISTrainingPartResponseCode code, TArg arg, T response) : base(code, response)
         {
             Arg = arg;
         }
@@ -25,12 +25,12 @@
     /// Ответ от сервера.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class KursachResponse<T>
+    public class ISTrainingPartResponse<T>
     {
         /// <summary>
         /// Код.
         /// </summary>
-        public KursachResponseCode Code { get; }
+        public ISTrainingPartResponseCode Code { get; }
 
         /// <summary>
         /// Ответ.
@@ -40,26 +40,26 @@
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public KursachResponse(KursachResponseCode code, T response)
+        public ISTrainingPartResponse(ISTrainingPartResponseCode code, T response)
         {
             Code = code;
             Response = response;
         }
 
-        public static implicit operator bool(KursachResponse<T> response) => response.Code == KursachResponseCode.Ok;
-        public static implicit operator string(KursachResponse<T> response) => response.ToString();
+        public static implicit operator bool(ISTrainingPartResponse<T> response) => response.Code == ISTrainingPartResponseCode.Ok;
+        public static implicit operator string(ISTrainingPartResponse<T> response) => response.ToString();
 
         public override string ToString()
         {
             switch (Code)
             {
-                case KursachResponseCode.Ok:
+                case ISTrainingPartResponseCode.Ok:
                     return "Если вы видите это сообщение, значит что-то пошло не так...";
 
-                case KursachResponseCode.ServerError:
+                case ISTrainingPartResponseCode.ServerError:
                     return "Ошибка сервера";
 
-                case KursachResponseCode.DbError:
+                case ISTrainingPartResponseCode.DbError:
                     return "Ошибка базы данных";
 
                 default:

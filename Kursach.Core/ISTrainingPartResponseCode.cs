@@ -3,7 +3,7 @@
     /// <summary>
     /// Ответ от сервера.
     /// </summary>
-    public enum KursachResponseCode
+    public enum ISTrainingPartResponseCode
     {
         Ok,
         ServerError,

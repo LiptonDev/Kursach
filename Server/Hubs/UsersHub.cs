@@ -36,7 +36,7 @@ namespace Server.Hubs
         /// Получение списка всех пользователей.
         /// </summary>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<User>>> GetUsersAsync()
+        public Task<ISTrainingPartResponse<IEnumerable<User>>> GetUsersAsync()
         {
             return repository.GetUsersAsync();
         }
@@ -48,7 +48,7 @@ namespace Server.Hubs
         /// <param name="password">Пароль.</param>
         /// <param name="usePassword">Проверять пароль.</param>
         /// <returns></returns>
-        public Task<KursachResponse<User>> GetUserAsync(string login, string password, bool usePassword)
+        public Task<ISTrainingPartResponse<User>> GetUserAsync(string login, string password, bool usePassword)
         {
             return repository.GetUserAsync(login, password, usePassword);
         }
@@ -60,7 +60,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="userId">ИД пользователя.</param>
         /// <returns></returns>
-        public Task<KursachResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
+        public Task<ISTrainingPartResponse<IEnumerable<SignInLog>>> GetSignInLogsAsync(int userId)
         {
             return repository.GetSignInLogsAsync(userId);
         }
@@ -72,7 +72,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> AddUserAsync(User user)
+        public async Task<ISTrainingPartResponse<bool>> AddUserAsync(User user)
         {
             Logger.Log.Info($"Add user: {user.Login}");
 
@@ -89,7 +89,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> SaveUserAsync(User user)
+        public async Task<ISTrainingPartResponse<bool>> SaveUserAsync(User user)
         {
             Logger.Log.Info($"Save user: {user.Login}");
 
@@ -106,7 +106,7 @@ namespace Server.Hubs
         /// </summary>
         /// <param name="user">Пользователь.</param>
         /// <returns></returns>
-        public async Task<KursachResponse<bool>> RemoveUserAsync(User user)
+        public async Task<ISTrainingPartResponse<bool>> RemoveUserAsync(User user)
         {
             Logger.Log.Info($"Remove user: {user.Login}");
 
