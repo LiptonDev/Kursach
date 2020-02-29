@@ -156,7 +156,7 @@ namespace ISTraining_Part.ViewModels
         /// <param name="view">Страница.</param>
         private void Navigate(string view)
         {
-            regionManager.ReqeustNavigateInMainRegion(view, NavigationParametersFluent.GetNavigationParameters().SetUser(User));
+            regionManager.RequstNavigateInMainRegionWithUser(view, User);
             LeftMenuOpened = false;
         }
 
