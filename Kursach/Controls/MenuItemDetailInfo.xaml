@@ -2,7 +2,7 @@
     x:Class="ISTraining_Part.Controls.MenuItemDetailInfo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="clr-namespace:ISTraining_Part.ViewModels"
+    xmlns:vm="clr-namespace:ISTraining_Part.ViewModels.Interfaces"
     Header="Детальная информация"
     Style="{StaticResource MaterialDesignMenuItem}">
 
