@@ -1,6 +1,5 @@
 ﻿using ISTraining_Part.Properties;
 using MaterialDesignThemes.Wpf;
-using System;
 using System.Windows.Media;
 
 namespace ISTraining_Part.UI
