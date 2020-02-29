@@ -1,4 +1,4 @@
-﻿using System.Windows.Data;
+﻿using System.Collections.ObjectModel;
 
 namespace ISTraining_Part.Dialogs.Interfaces
 {
@@ -10,7 +10,7 @@ namespace ISTraining_Part.Dialogs.Interfaces
         /// <summary>
         /// Все данные.
         /// </summary>
-        ListCollectionView Items { get; }
+        ObservableCollection<T> Items { get; }
 
         /// <summary>
         /// Выбранные данные.
