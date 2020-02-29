@@ -43,7 +43,6 @@ namespace ISTraining_Part.Dialogs
         /// </summary>
         public StudentEditorViewModel()
         {
-
         }
 
         /// <summary>
