@@ -36,7 +36,7 @@ namespace Server.DataBase.Classes
         {
             return repository.QueryAsync(con =>
             {
-                return con.QueryFirstOrDefaultAsync<DetailInfo>($"SELECT * FROM detailInfo WHERE {type}Id = @peopleId", new { peopleId = id });
+                return con.QueryFirstOrDefaultAsync<DetailInfo>($"SELECT * FROM detailInfo WHERE {type} = @peopleId", new { peopleId = id });
             });
         }
 
