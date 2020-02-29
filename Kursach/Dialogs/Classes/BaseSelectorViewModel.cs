@@ -2,7 +2,7 @@
 using ISTraining_Part.Client.Interfaces;
 using ISTraining_Part.Dialogs.Interfaces;
 using MaterialDesignXaml.DialogsHelper;
-using System.Windows.Data;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace ISTraining_Part.Dialogs.Classes
@@ -15,7 +15,7 @@ namespace ISTraining_Part.Dialogs.Classes
         /// <summary>
         /// Все данные.
         /// </summary>
-        public ListCollectionView Items { get; protected set; }
+        public ObservableCollection<T> Items { get; protected set; }
 
         /// <summary>
         /// Выбранные данные.
