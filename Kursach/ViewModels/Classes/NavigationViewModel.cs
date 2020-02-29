@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using ISTraining_Part.Core;
 using ISTraining_Part.Core.Models;
 using Prism.Regions;
 
