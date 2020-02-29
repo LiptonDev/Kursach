@@ -124,6 +124,8 @@ namespace ISTraining_Part.Dialogs.Manager
 
             dialogIdentifier = dialogIdentifier ?? this.dialogIdentifier;
 
+            Logger.Log.Info($"Попытка показать диалог: {{view: {view}, viewmodel: {typeof(VM)}}}");
+
             var res = await dialogIdentifier.ShowAsync<T>(view);
 
             return res;
