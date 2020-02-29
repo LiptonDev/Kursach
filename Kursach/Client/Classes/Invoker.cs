@@ -60,18 +60,7 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<T>> TryInvokeAsync<T>([CallerMemberName]string method = null, T defaultValue = default, params object[] args)
         {
-            if (HubConfigurator.Hub.State != ConnectionState.Connected)
-                return Task.FromResult(new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.ServerError, defaultValue));
-
-            try
-            {
-                return Proxy.Invoke<ISTrainingPartResponse<T>>(method, args);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return Task.FromResult(new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.ServerError, defaultValue));
-            }
+            return baseTryInvokeAsync(method, new ISTrainingPartResponse<T>(ISTrainingPartResponseCode.ServerError, defaultValue), args);
         }
 
         /// <summary>
@@ -80,17 +69,25 @@ namespace ISTraining_Part.Client.Classes
         /// <returns></returns>
         public Task<ISTrainingPartResponse<T, TArg>> TryInvokeAsync<T, TArg>([CallerMemberName]string method = null, T defaultValue = default, TArg argDefault = default, params object[] args)
         {
+            return baseTryInvokeAsync(method, new ISTrainingPartResponse<T, TArg>(ISTrainingPartResponseCode.ServerError, argDefault, defaultValue), args);
+        }
+
+        Task<T> baseTryInvokeAsync<T>([CallerMemberName]string method = null, T defaultValue = default, params object[] args)
+        {
             if (HubConfigurator.Hub.State != ConnectionState.Connected)
-                return Task.FromResult(new ISTrainingPartResponse<T, TArg>(ISTrainingPartResponseCode.ServerError, argDefault, defaultValue));
+                return Task.FromResult(defaultValue);
 
             try
             {
-                return Proxy.Invoke<ISTrainingPartResponse<T, TArg>>(method, args);
+                return Proxy.Invoke<T>(method, args);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return Task.FromResult(new ISTrainingPartResponse<T, TArg>(ISTrainingPartResponseCode.ServerError, argDefault, defaultValue));
+
+                Logger.Log.Error($"Ошибка запроса к серверу: {{method: {method}, args: {string.Join(",", args)}}}", ex);
+
+                return Task.FromResult(defaultValue);
             }
         }
     }
