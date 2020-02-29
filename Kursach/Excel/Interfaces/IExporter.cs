@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ISTraining_Part.Excel
+namespace ISTraining_Part.Excel.Interfaces
 {
     /// <summary>
     /// Экспорт данных.

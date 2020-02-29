@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ISTraining_Part.Excel
+namespace ISTraining_Part.Excel.Interfaces
 {
     /// <summary>
     /// Импорт данных.
@@ -12,18 +12,6 @@ namespace ISTraining_Part.Excel
         /// </summary>
         /// <returns></returns>
         Task<T> Import();
-    }
-
-    /// <summary>
-    /// Импорт данных.
-    /// </summary>
-    interface IAsyncImporter<T, TArg>
-    {
-        /// <summary>
-        /// Импорт данных из Excel файла.
-        /// </summary>
-        /// <returns></returns>
-        Task<T> Import(TArg arg);
     }
 
     /// <summary>

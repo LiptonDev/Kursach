@@ -1,9 +1,9 @@
 ﻿using ISTraining_Part.Dialogs.Manager;
 using System;
 
-namespace ISTraining_Part.Excel
+namespace ISTraining_Part.Excel.Classes
 {
-    class BaseExporter
+    class BaseImporter
     {
         /// <summary>
         /// Менеджер диалогов.
@@ -18,19 +18,18 @@ namespace ISTraining_Part.Excel
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public BaseExporter(IDialogManager dialogManager)
+        public BaseImporter(IDialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
         /// <summary>
-        /// Выбор файла для экспорта.
+        /// Выбор файла.
         /// </summary>
-        /// <param name="defName">Начальное название файла.</param>
         /// <returns></returns>
-        public bool SelectFile(string defName)
+        public bool SelectFile()
         {
-            string fileName = dialogManager.SelectExportFileName(defName);
+            string fileName = dialogManager.SelectImportFile();
 
             FileName = fileName;
 
