@@ -67,6 +67,8 @@ namespace ISTraining_Part.ViewModels
             client.Students.OnChanged += Students_OnChanged;
             client.Students.Imported += Load;
 
+            client.Groups.OnChanged += Groups_OnChanged;
+
             GoBackCommand = new DelegateCommand(GoBack);
             ShowDetailInfoCommand = new DelegateCommand<People>(ShowDetailInfo, s => s != null);
             ShowDetailInfoEditorCommand = new DelegateCommand<People>(ShowDetailInfoEditor, s => s != null);
@@ -196,10 +198,30 @@ namespace ISTraining_Part.ViewModels
         /// </summary>
         private void Students_OnChanged(DbChangeStatus status, Student student)
         {
+            int index = Items.IndexOf(student);
+            if (index > -1 && student.GroupId != Items[index].GroupId)
+            {
+                sync.StartNew(() => Items.Remove(student));
+            }
+
             if (student.GroupId != selectedGroup.Id)
                 return;
 
             ProcessChangesHelper.ProcessChanges(status, student, Items, sync);
+        }
+
+        /// <summary>
+        /// Выбранная группа была удалена, вернуться назад.
+        /// </summary>
+        private void Groups_OnChanged(DbChangeStatus status, Group group)
+        {
+            if (status != DbChangeStatus.Remove)
+                return;
+
+            if (selectedGroup.Id == group.Id)
+            {
+                sync.StartNew(() => GoBack());
+            }
         }
 
         /// <summary>

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISTraining_Part.Core", "Kur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{0CE2998F-EA18-49F7-8159-66A3623321AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyProject", "EmptyProject\EmptyProject.csproj", "{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{0CE2998F-EA18-49F7-8159-66A3623321AF}.Debug-design|Any CPU.Build.0 = Debug|Any CPU
 		{0CE2998F-EA18-49F7-8159-66A3623321AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CE2998F-EA18-49F7-8159-66A3623321AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Debug-design|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Debug-design|Any CPU.Build.0 = Debug|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09DF254-ACE6-46DF-A3CE-8E1EB3C4B10F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,10 +13,6 @@ namespace ISTraining_Part.Providers
             switch (status)
             {
                 case DbChangeStatus.Add:
-                    if (!collection.Contains(arg))
-                        sync.StartNew(() => collection.Add(arg));
-                    break;
-
                 case DbChangeStatus.Update:
                     int index = collection.IndexOf(arg);
                     if (index > -1)
@@ -27,6 +23,7 @@ namespace ISTraining_Part.Providers
                             collection.Insert(index, arg);
                         });
                     }
+                    else sync.StartNew(() => collection.Add(arg));
                     break;
 
                 case DbChangeStatus.Remove:
